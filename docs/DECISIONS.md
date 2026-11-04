@@ -20,5 +20,14 @@ bir yerden değiştirilebilir.
 | D13 | v1.1 kapsamı | Apple Pay bağışı, teslim kanıtı, koruyuculuk takvimi, rozetler, liderlik tablosu MVP'de yok. "Bağışım nereye gitti?" ekranı açıklama ve "yakında" durumuyla var | — |
 | D14 | Tasarım | Dribbble "Pet Social App" referansından yalnızca görsel dil ve bileşen yapısı alındı. Marka, logo ve fotoğraf kopyalanmadı. Görseller SF Symbols ve sistem bileşenleriyle | `MamaDesign` |
 
+| D15 | Girişsiz gezinme | Harita, liste, nokta/ihtiyaç/hayvan detayı ve mahalle özeti girişsiz okunur (FR-P1). Bu durumda konumlar bulanık gelir, `private` noktalar hiç dönmez. Koruyucu adları ve profil istatistikleri yalnızca giriş yapanlara gösterilir | `supabase/migrations/…000011_anon_read_grants.sql` |
+| D16 | Supabase kurulumu | Free plan'deki 2 aktif proje limiti dolu olduğundan proje henüz açılmadı (karar: şimdilik kurma). Şema ve fonksiyonlar repoda hazır, yerelde `supabase/postgres` imajıyla test edildi | `supabase/README.md` |
+
 ## Bilerek ertelenenler
 Mesajlaşma, uygulama içi mağaza, barınak entegrasyonları (PRD 4), Android (v2).
+
+## Takip edilecek teknik işler
+- **Realtime:** PRD 7.3'te önerilen canlı durum güncellemesi yok. Harita görünürken 60 saniyede bir yenileniyor, ayrıca aşağı çekince ve öne gelince de yenileniyor. `spots` tablosu doğrudan okunamadığı için (konum gizliliği) canlı güncelleme Realtime Broadcast ile yapılmalı.
+- **ViewModel metinleri:** Görünümlerdeki metinler String Catalog'da (TR/EN). ViewModel'lerin ürettiği geri bildirim mesajları (toast ve hata) şimdilik yalnızca Türkçe.
+- **Görsel moderasyon** (D11), **APNs ve Sign in with Apple uçtan uca testi** gerçek Supabase projesi ve Apple Developer hesabıyla yapılacak.
+- **SwiftUI derlemesi:** Görünümler Linux'ta derlenemediği için kod incelemesinden geçti. İlk Xcode derlemesinde çıkacak küçük API düzeltmeleri beklenmeli; CI'daki `ios-build` işi bunu yakalar.

@@ -16,6 +16,7 @@ migrations/
   …0008_rpc_write.sql       yazma RPC'leri
   …0009_cron_push.sql       refresh_spot_statuses, push kuyruğu, pg_cron işleri
   …0010_storage.sql         photos bucket + politikalar
+  …0011_anon_read_grants.sql girişsiz gezinme için okuma RPC'leri (FR-P1, D15)
 functions/
   push-dispatch/            APNs gönderici (pg_cron → pg_net, her dakika)
   delete-account/           hesap silme (PRD 9.5)
@@ -38,7 +39,8 @@ tests/                      SQL testleri + run.sh
 2. **Auth** (Dashboard → Authentication → Providers):
    - Email: açık, e-posta doğrulaması açık.
    - Apple: açık. *Client IDs* = `app.petmama.mamaharitasi` (yerel iOS girişi; web akışı yoksa secret gerekmez).
-   - Redirect URL: `mamaharitasi://auth-callback` (iOS deep link'i farklıysa onu yaz).
+   - Site URL: şifre sıfırlama/e-posta doğrulama bağlantılarının açılacağı web sayfası. iOS uygulaması henüz
+     deep link işlemiyor; eklenince `mamaharitasi://auth-callback` Redirect URL'lere eklenmeli.
 
 3. **Bulanıklaştırma tuzu** (PRD 9.1): migration rastgele 32 baytlık tuz üretir (`private.app_settings`,
    anahtar `fuzz_salt`). Elle belirlemek için **yayından önce** SQL Editor'de:

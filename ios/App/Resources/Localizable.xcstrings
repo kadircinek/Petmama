@@ -1,0 +1,6661 @@
+{
+  "sourceLanguage": "tr",
+  "version": "1.0",
+  "strings": {
+    "\"Mama koydum\" dediğinde yalnızca noktaya olan uzaklık (metre) kaydedilir. Konum geçmişini asla saklamayız.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"Mama koydum\" dediğinde yalnızca noktaya olan uzaklık (metre) kaydedilir. Konum geçmişini asla saklamayız."
+          }
+        }
+      }
+    },
+    "\"Tümü\" sekmesinden hepsini görebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"Tümü\" sekmesinden hepsini görebilirsin."
+          }
+        }
+      }
+    },
+    "%@ aramasını sil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ aramasını sil"
+          }
+        }
+      }
+    },
+    "%@ fotoğrafı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ fotoğrafı"
+          }
+        }
+      }
+    },
+    "%@ ilgileniyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ilgileniyor"
+          }
+        }
+      }
+    },
+    "%@ için": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ için"
+          }
+        }
+      }
+    },
+    "%@ mama dağıtıldı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ mama dağıtıldı"
+          }
+        }
+      }
+    },
+    "%@ nokta beslendi · %@ ihtiyaç açık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ nokta beslendi · %@ ihtiyaç açık"
+          }
+        }
+      }
+    },
+    "%@ nokta mama bekliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ nokta mama bekliyor"
+          }
+        }
+      }
+    },
+    "%@ noktasına mama koyduğunu kaydeder": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ noktasına mama koyduğunu kaydeder"
+          }
+        }
+      }
+    },
+    "%@ okunmamış": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ okunmamış"
+          }
+        }
+      }
+    },
+    "%@ rozeti. Kilitli, yakında.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ rozeti. Kilitli, yakında."
+          }
+        }
+      }
+    },
+    "%@ uzakta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ uzakta"
+          }
+        }
+      }
+    },
+    "%@: %lld kez mama kondu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld kez mama kondu"
+          }
+        }
+      }
+    },
+    "%@: %lld kez mama kondu, %lld kez mama gerekli dendi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld kez mama kondu, %lld kez mama gerekli dendi"
+          }
+        }
+      }
+    },
+    "%lld nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld nokta"
+          }
+        }
+      }
+    },
+    "%lld nokta, %lld tanesi mama bekliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld nokta, %lld tanesi mama bekliyor"
+          }
+        }
+      }
+    },
+    "1 km": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 km"
+          }
+        }
+      }
+    },
+    "1 km içinde takip ettiğin bir şey yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 km içinde takip ettiğin bir şey yok"
+          }
+        }
+      }
+    },
+    "10 km": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 km"
+          }
+        }
+      }
+    },
+    "100 m içinde bir nokta bulamadık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 m içinde bir nokta bulamadık"
+          }
+        }
+      }
+    },
+    "100 m içinde bir nokta bulamadık. İstersen yeni bir nokta ekleyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 m içinde bir nokta bulamadık. İstersen yeni bir nokta ekleyebilirsin."
+          }
+        }
+      }
+    },
+    "100 m içindeki noktaya": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 m içindeki noktaya"
+          }
+        }
+      }
+    },
+    "112'yi ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "112'yi ara"
+          }
+        }
+      }
+    },
+    "12+ saat önce": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "12+ saat önce"
+          }
+        }
+      }
+    },
+    "12–24 saat önce mama kondu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "12–24 saat önce mama kondu"
+          }
+        }
+      }
+    },
+    "153'ü ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "153'ü ara"
+          }
+        }
+      }
+    },
+    "22:00–07:00 arası sessiz; geceleri rahatsız etmeyiz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "22:00–07:00 arası sessiz; geceleri rahatsız etmeyiz."
+          }
+        }
+      }
+    },
+    "24 saattir haber yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 saattir haber yok"
+          }
+        }
+      }
+    },
+    "3 farklı kişi bildirirse nokta haritadan kaldırılır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 farklı kişi bildirirse nokta haritadan kaldırılır."
+          }
+        }
+      }
+    },
+    "7 gün seri": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 gün seri"
+          }
+        }
+      }
+    },
+    "Acil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acil"
+          }
+        }
+      }
+    },
+    "Acil ihtiyaç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acil ihtiyaç"
+          }
+        }
+      }
+    },
+    "Acil veteriner bilgisi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acil veteriner bilgisi"
+          }
+        }
+      }
+    },
+    "Adet: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adet: %@"
+          }
+        }
+      }
+    },
+    "Adım %lld / %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adım %lld / %lld"
+          }
+        }
+      }
+    },
+    "Adın (haritada görünür)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adın (haritada görünür)"
+          }
+        }
+      }
+    },
+    "Agresif olabilir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agresif olabilir"
+          }
+        }
+      }
+    },
+    "Alanı temiz tut": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alanı temiz tut"
+          }
+        }
+      }
+    },
+    "Ana sayfayı aç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ana sayfayı aç"
+          }
+        }
+      }
+    },
+    "Anladım, devam": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anladım, devam"
+          }
+        }
+      }
+    },
+    "Apartman ve dükkân giriş kapılarının önüne koyma.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apartman ve dükkân giriş kapılarının önüne koyma."
+          }
+        }
+      }
+    },
+    "Apartman ve dükkân girişlerinin önü yerine ağaç dibi, bahçe kenarı gibi sakin köşeleri seç.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apartman ve dükkân girişlerinin önü yerine ağaç dibi, bahçe kenarı gibi sakin köşeleri seç."
+          }
+        }
+      }
+    },
+    "Apple ile giriş de demo kullanıcısıyla oturum açar.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple ile giriş de demo kullanıcısıyla oturum açar."
+          }
+        }
+      }
+    },
+    "Ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ara"
+          }
+        }
+      }
+    },
+    "Aradığın kayıt artık yok gibi görünüyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aradığın kayıt artık yok gibi görünüyor."
+          }
+        }
+      }
+    },
+    "Arama yapılamadı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arama yapılamadı"
+          }
+        }
+      }
+    },
+    "Artık bu noktanın koruyucususun. Teşekkürler!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artık bu noktanın koruyucususun. Teşekkürler!"
+          }
+        }
+      }
+    },
+    "Artık bırakma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artık bırakma"
+          }
+        }
+      }
+    },
+    "Artık bırakma; hayvanlar yedikten sonra kalanı topla.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artık bırakma; hayvanlar yedikten sonra kalanı topla."
+          }
+        }
+      }
+    },
+    "Atla": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atla"
+          }
+        }
+      }
+    },
+    "Avrupa Birliği (Frankfurt)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avrupa Birliği (Frankfurt)"
+          }
+        }
+      }
+    },
+    "Ayarlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar"
+          }
+        }
+      }
+    },
+    "Ayarları aç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarları aç"
+          }
+        }
+      }
+    },
+    "Ayrıntı (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayrıntı (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Az": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Az"
+          }
+        }
+      }
+    },
+    "Açık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık"
+          }
+        }
+      }
+    },
+    "Açık ihtiyaçlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık ihtiyaçlar"
+          }
+        }
+      }
+    },
+    "Aşı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aşı"
+          }
+        }
+      }
+    },
+    "Aşı bilgisi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aşı bilgisi"
+          }
+        }
+      }
+    },
+    "Aşı bilgisi (biliyorsan), ör. Kuduz 2026": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aşı bilgisi (biliyorsan), ör. Kuduz 2026"
+          }
+        }
+      }
+    },
+    "Bağlantı yok, check-in'in sırada; bağlantı gelince gönderilecek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantı yok, check-in'in sırada; bağlantı gelince gönderilecek."
+          }
+        }
+      }
+    },
+    "Bağış": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağış"
+          }
+        }
+      }
+    },
+    "Bağış alındı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağış alındı"
+          }
+        }
+      }
+    },
+    "Bağış sayfası Safari'de açılır. Ödeme bilgilerin Mama Haritası'na gelmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağış sayfası Safari'de açılır. Ödeme bilgilerin Mama Haritası'na gelmez."
+          }
+        }
+      }
+    },
+    "Bağışla destek ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağışla destek ol"
+          }
+        }
+      }
+    },
+    "Bağıştan mama kabına yolculuk": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağıştan mama kabına yolculuk"
+          }
+        }
+      }
+    },
+    "Bağışım nereye gitti?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağışım nereye gitti?"
+          }
+        }
+      }
+    },
+    "Bağışın ortak dernek aracılığıyla mamaya dönüşür. Yolculuğu adım adım burada izleyeceksin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağışın ortak dernek aracılığıyla mamaya dönüşür. Yolculuğu adım adım burada izleyeceksin."
+          }
+        }
+      }
+    },
+    "Başka bir sokak ya da park adı dene.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başka bir sokak ya da park adı dene."
+          }
+        }
+      }
+    },
+    "Başlangıç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başlangıç"
+          }
+        }
+      }
+    },
+    "Başvuruların ve soruların için bize e-postayla ulaşabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başvuruların ve soruların için bize e-postayla ulaşabilirsin."
+          }
+        }
+      }
+    },
+    "Belediyenin Beyaz Masa hattı: Alo 153": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belediyenin Beyaz Masa hattı: Alo 153"
+          }
+        }
+      }
+    },
+    "Belirli gün yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belirli gün yok"
+          }
+        }
+      }
+    },
+    "Ben ilgileniyorum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ben ilgileniyorum"
+          }
+        }
+      }
+    },
+    "Beslediğimiz noktaların uzun yaşaması komşularımızla iyi geçinmemize bağlı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beslediğimiz noktaların uzun yaşaması komşularımızla iyi geçinmemize bağlı."
+          }
+        }
+      }
+    },
+    "Beslediğin nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beslediğin nokta"
+          }
+        }
+      }
+    },
+    "Beslediğin noktaları ve sevdiğin hayvanları takip et, haberleri buraya gelsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beslediğin noktaları ve sevdiğin hayvanları takip et, haberleri buraya gelsin."
+          }
+        }
+      }
+    },
+    "Beslediğin noktayı komşularına anlat, birlikte sahiplenin. Sorun çıkarsa yeri birlikte değiştirmek kolaylaşır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beslediğin noktayı komşularına anlat, birlikte sahiplenin. Sorun çıkarsa yeri birlikte değiştirmek kolaylaşır."
+          }
+        }
+      }
+    },
+    "Bildirim almak için giriş yapman gerekiyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirim almak için giriş yapman gerekiyor."
+          }
+        }
+      }
+    },
+    "Bildirim ayarları için giriş yap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirim ayarları için giriş yap"
+          }
+        }
+      }
+    },
+    "Bildirim yarıçapı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirim yarıçapı"
+          }
+        }
+      }
+    },
+    "Bildirimler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimler"
+          }
+        }
+      }
+    },
+    "Bildirimlere izin ver": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bildirimlere izin ver"
+          }
+        }
+      }
+    },
+    "Bilinmiyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bilinmiyor"
+          }
+        }
+      }
+    },
+    "Bir hayvanın veterinere, kısırlaştırmaya veya barınağa ihtiyacı varsa bildirebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir hayvanın veterinere, kısırlaştırmaya veya barınağa ihtiyacı varsa bildirebilirsin."
+          }
+        }
+      }
+    },
+    "Bir ihtiyaç görürsen buradan paylaşabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir ihtiyaç görürsen buradan paylaşabilirsin."
+          }
+        }
+      }
+    },
+    "Bir kap mama, bir can": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir kap mama, bir can"
+          }
+        }
+      }
+    },
+    "Bir noktanın ya da hayvanın sayfasındaki kalbe dokun; yeni mama ve ihtiyaç haberleri burada toplansın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir noktanın ya da hayvanın sayfasındaki kalbe dokun; yeni mama ve ihtiyaç haberleri burada toplansın."
+          }
+        }
+      }
+    },
+    "Bir paket seç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir paket seç"
+          }
+        }
+      }
+    },
+    "Bir şeyler ters gitti. Birazdan tekrar dener misin?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir şeyler ters gitti. Birazdan tekrar dener misin?"
+          }
+        }
+      }
+    },
+    "Birden fazla seçebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birden fazla seçebilirsin."
+          }
+        }
+      }
+    },
+    "Biri mama gerekli dedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biri mama gerekli dedi"
+          }
+        }
+      }
+    },
+    "Birkaç gün içinde çözülmesi yeterli": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birkaç gün içinde çözülmesi yeterli"
+          }
+        }
+      }
+    },
+    "Bitiş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitiş"
+          }
+        }
+      }
+    },
+    "Bize ulaş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bize ulaş"
+          }
+        }
+      }
+    },
+    "Bu ay": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ay"
+          }
+        }
+      }
+    },
+    "Bu e-posta ile zaten bir hesap var.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu e-posta ile zaten bir hesap var."
+          }
+        }
+      }
+    },
+    "Bu filtreyle eşleşen nokta yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu filtreyle eşleşen nokta yok"
+          }
+        }
+      }
+    },
+    "Bu hafta %lld kez": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hafta %lld kez"
+          }
+        }
+      }
+    },
+    "Bu hayvanı bulamadık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hayvanı bulamadık"
+          }
+        }
+      }
+    },
+    "Bu hayvanı gördüm": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hayvanı gördüm"
+          }
+        }
+      }
+    },
+    "Bu ihtiyacı bulamadık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ihtiyacı bulamadık"
+          }
+        }
+      }
+    },
+    "Bu ihtiyaç çoktan çözülmüş. Yine de teşekkürler!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ihtiyaç çoktan çözülmüş. Yine de teşekkürler!"
+          }
+        }
+      }
+    },
+    "Bu ihtiyaç çözüldü mü?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ihtiyaç çözüldü mü?"
+          }
+        }
+      }
+    },
+    "Bu ihtiyaçla başka bir gönüllü ilgileniyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu ihtiyaçla başka bir gönüllü ilgileniyor."
+          }
+        }
+      }
+    },
+    "Bu işlem için yetkin yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu işlem için yetkin yok."
+          }
+        }
+      }
+    },
+    "Bu kullanıcıyı engelle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu kullanıcıyı engelle"
+          }
+        }
+      }
+    },
+    "Bu nokta artık aktif görünmüyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu nokta artık aktif görünmüyor."
+          }
+        }
+      }
+    },
+    "Bu nokta artık görünmüyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu nokta artık görünmüyor"
+          }
+        }
+      }
+    },
+    "Bu nokta artık yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu nokta artık yok"
+          }
+        }
+      }
+    },
+    "Bu nokta artık yok mu?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu nokta artık yok mu?"
+          }
+        }
+      }
+    },
+    "Bu nokta zaten var mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu nokta zaten var mı?"
+          }
+        }
+      }
+    },
+    "Bu noktanın henüz koruyucusu yok. Düzenli besliyorsan koruyucu olabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu noktanın henüz koruyucusu yok. Düzenli besliyorsan koruyucu olabilirsin."
+          }
+        }
+      }
+    },
+    "Bu noktaya az önce mama koyduğunu kaydettik. Biraz sonra tekrar deneyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu noktaya az önce mama koyduğunu kaydettik. Biraz sonra tekrar deneyebilirsin."
+          }
+        }
+      }
+    },
+    "Bu noktaya mama koyduğunu kaydedelim mi?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu noktaya mama koyduğunu kaydedelim mi?"
+          }
+        }
+      }
+    },
+    "Bu rehber tıbbi tavsiye değildir. Hasta veya yaralı bir hayvan görürsen bir veterinere danış ve \"İhtiyaç bildir\" ile gönüllülere haber ver.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu rehber tıbbi tavsiye değildir. Hasta veya yaralı bir hayvan görürsen bir veterinere danış ve \"İhtiyaç bildir\" ile gönüllülere haber ver."
+          }
+        }
+      }
+    },
+    "Bu sokağın ilk besleyicisi sen ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu sokağın ilk besleyicisi sen ol"
+          }
+        }
+      }
+    },
+    "Bu sürüm Kadıköy demo verisiyle çalışıyor. Denemek için şu bilgileri kullanabilirsin:": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu sürüm Kadıköy demo verisiyle çalışıyor. Denemek için şu bilgileri kullanabilirsin:"
+          }
+        }
+      }
+    },
+    "Bugün": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün"
+          }
+        }
+      }
+    },
+    "Bugün mahallende": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün mahallende"
+          }
+        }
+      }
+    },
+    "Bugün mahallene bir kap mama?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün mahallene bir kap mama?"
+          }
+        }
+      }
+    },
+    "Bunu yapmak için giriş yapman gerekiyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bunu yapmak için giriş yapman gerekiyor."
+          }
+        }
+      }
+    },
+    "Buradaki hayvanlar (%lld)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buradaki hayvanlar (%lld)"
+          }
+        }
+      }
+    },
+    "Check-in": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in"
+          }
+        }
+      }
+    },
+    "Check-in için konumuna bir kez bakmamız gerekiyor. Konumun kaydedilmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in için konumuna bir kez bakmamız gerekiyor. Konumun kaydedilmez."
+          }
+        }
+      }
+    },
+    "Check-in mesafesi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in mesafesi"
+          }
+        }
+      }
+    },
+    "Check-in'de yalnızca noktaya olan mesafe (metre) kaydedilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in'de yalnızca noktaya olan mesafe (metre) kaydedilir."
+          }
+        }
+      }
+    },
+    "Check-in'in noktanın yanında yapıldığını doğrulamak, güven puanı ve günlük limitler.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in'in noktanın yanında yapıldığını doğrulamak, güven puanı ve günlük limitler."
+          }
+        }
+      }
+    },
+    "Check-in'lerin, takip ettiğin noktalar ve hayvanlar, doğrulanmış besleyici rozetin burada görünür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in'lerin, takip ettiğin noktalar ve hayvanlar, doğrulanmış besleyici rozetin burada görünür."
+          }
+        }
+      }
+    },
+    "Check-in'lerinde ve koruyucu listelerinde bu ad görünür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in'lerinde ve koruyucu listelerinde bu ad görünür."
+          }
+        }
+      }
+    },
+    "Cihaz bildirim anahtarı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cihaz bildirim anahtarı"
+          }
+        }
+      }
+    },
+    "Cinsiyet": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cinsiyet"
+          }
+        }
+      }
+    },
+    "Cinsiyet bilinmiyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cinsiyet bilinmiyor"
+          }
+        }
+      }
+    },
+    "Cmt": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cmt"
+          }
+        }
+      }
+    },
+    "Cum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cum"
+          }
+        }
+      }
+    },
+    "Daha önce": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daha önce"
+          }
+        }
+      }
+    },
+    "Demo bilgilerini doldur": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo bilgilerini doldur"
+          }
+        }
+      }
+    },
+    "Demo modu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo modu"
+          }
+        }
+      }
+    },
+    "Dernek sayfasında bağış yap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernek sayfasında bağış yap"
+          }
+        }
+      }
+    },
+    "Detay": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detay"
+          }
+        }
+      }
+    },
+    "Devam": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devam"
+          }
+        }
+      }
+    },
+    "Devam ederek [Kullanım Koşulları](mama-legal://terms) ve [KVKK Aydınlatma Metni](mama-legal://kvkk)'ni kabul etmiş olursun.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devam ederek [Kullanım Koşulları](mama-legal://terms) ve [KVKK Aydınlatma Metni](mama-legal://kvkk)'ni kabul etmiş olursun."
+          }
+        }
+      }
+    },
+    "Dil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dil"
+          }
+        }
+      }
+    },
+    "Diğer": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer"
+          }
+        }
+      }
+    },
+    "Diğer işlemler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer işlemler"
+          }
+        }
+      }
+    },
+    "Diğer seçenekler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer seçenekler"
+          }
+        }
+      }
+    },
+    "Dişi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dişi"
+          }
+        }
+      }
+    },
+    "Dolu kap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dolu kap"
+          }
+        }
+      }
+    },
+    "Doğrulanmış besleyici": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doğrulanmış besleyici"
+          }
+        }
+      }
+    },
+    "Doğrulanmış besleyici ilerlemesi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doğrulanmış besleyici ilerlemesi"
+          }
+        }
+      }
+    },
+    "Durum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durum"
+          }
+        }
+      }
+    },
+    "E-posta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-posta"
+          }
+        }
+      }
+    },
+    "E-posta adresin veya Apple kimliğin, görünen adın, isteğe bağlı mahallen ve profil fotoğrafın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-posta adresin veya Apple kimliğin, görünen adın, isteğe bağlı mahallen ve profil fotoğrafın."
+          }
+        }
+      }
+    },
+    "E-posta veya şifre eşleşmedi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-posta veya şifre eşleşmedi."
+          }
+        }
+      }
+    },
+    "Ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekle"
+          }
+        }
+      }
+    },
+    "Ekle: nokta, hayvan, ihtiyaç veya mama koydum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekle: nokta, hayvan, ihtiyaç veya mama koydum"
+          }
+        }
+      }
+    },
+    "Eksik veya yanlış işlenmişse düzeltilmesini, gerekirse silinmesini isteme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eksik veya yanlış işlenmişse düzeltilmesini, gerekirse silinmesini isteme"
+          }
+        }
+      }
+    },
+    "En az %@ karakter": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En az %@ karakter"
+          }
+        }
+      }
+    },
+    "En az bir gün seç.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En az bir gün seç."
+          }
+        }
+      }
+    },
+    "En fazla 3 fotoğraf. Konum bilgisi fotoğraftan silinir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En fazla 3 fotoğraf. Konum bilgisi fotoğraftan silinir."
+          }
+        }
+      }
+    },
+    "En fazla 3 fotoğraf. Yaralı hayvan fotoğrafları başkalarına bulanık gösterilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En fazla 3 fotoğraf. Yaralı hayvan fotoğrafları başkalarına bulanık gösterilir."
+          }
+        }
+      }
+    },
+    "En fazla mesafe": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En fazla mesafe"
+          }
+        }
+      }
+    },
+    "En uzun süredir beslenmeyen": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En uzun süredir beslenmeyen"
+          }
+        }
+      }
+    },
+    "En yakın": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın"
+          }
+        }
+      }
+    },
+    "En yakın nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın nokta"
+          }
+        }
+      }
+    },
+    "En yakın noktalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın noktalar"
+          }
+        }
+      }
+    },
+    "En yakın noktayı arıyoruz…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın noktayı arıyoruz…"
+          }
+        }
+      }
+    },
+    "En yakın noktayı bulup tek dokunuşla kaydetmek için konumuna bir kez bakarız.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın noktayı bulup tek dokunuşla kaydetmek için konumuna bir kez bakarız."
+          }
+        }
+      }
+    },
+    "En yakın veteriner klinikleri": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En yakın veteriner klinikleri"
+          }
+        }
+      }
+    },
+    "Enerjik": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enerjik"
+          }
+        }
+      }
+    },
+    "Engeli kaldır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engeli kaldır"
+          }
+        }
+      }
+    },
+    "Engellediğin kimse yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engellediğin kimse yok."
+          }
+        }
+      }
+    },
+    "Engellediğin kişilerin içeriklerini görmezsin; onlar da senin bildirimlerini tetiklemez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engellediğin kişilerin içeriklerini görmezsin; onlar da senin bildirimlerini tetiklemez."
+          }
+        }
+      }
+    },
+    "Engellediğin kişinin içeriklerini görmezsin. Engeli Ayarlar'dan kaldırabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engellediğin kişinin içeriklerini görmezsin. Engeli Ayarlar'dan kaldırabilirsin."
+          }
+        }
+      }
+    },
+    "Engellenen kullanıcılar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Engellenen kullanıcılar"
+          }
+        }
+      }
+    },
+    "Erkek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkek"
+          }
+        }
+      }
+    },
+    "Evet": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evet"
+          }
+        }
+      }
+    },
+    "Evet, artık yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evet, artık yok"
+          }
+        }
+      }
+    },
+    "Evet, bu nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evet, bu nokta"
+          }
+        }
+      }
+    },
+    "Evet, çözüldü": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evet, çözüldü"
+          }
+        }
+      }
+    },
+    "Filtre ve sıralama": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtre ve sıralama"
+          }
+        }
+      }
+    },
+    "Filtreler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtreler"
+          }
+        }
+      }
+    },
+    "Filtreler, %lld filtre aktif": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtreler, %lld filtre aktif"
+          }
+        }
+      }
+    },
+    "Filtreleri gevşetmeyi dene.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtreleri gevşetmeyi dene."
+          }
+        }
+      }
+    },
+    "Filtreleri temizleyip tekrar bakabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtreleri temizleyip tekrar bakabilirsin."
+          }
+        }
+      }
+    },
+    "Filtreyi sıfırla": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtreyi sıfırla"
+          }
+        }
+      }
+    },
+    "Fotoğraf ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf ekle"
+          }
+        }
+      }
+    },
+    "Fotoğraf ve not": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf ve not"
+          }
+        }
+      }
+    },
+    "Fotoğraf yüklenemedi; check-in fotoğrafsız gönderildi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf yüklenemedi; check-in fotoğrafsız gönderildi."
+          }
+        }
+      }
+    },
+    "Fotoğraf yüklenemedi; nokta fotoğrafsız eklendi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf yüklenemedi; nokta fotoğrafsız eklendi."
+          }
+        }
+      }
+    },
+    "Fotoğraf yüklenmeden önce küçültülür ve içindeki konum bilgisi silinir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf yüklenmeden önce küçültülür ve içindeki konum bilgisi silinir."
+          }
+        }
+      }
+    },
+    "Fotoğraf çek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf çek"
+          }
+        }
+      }
+    },
+    "Fotoğraflar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar"
+          }
+        }
+      }
+    },
+    "Fotoğraflar yüklenmeden önce küçültülür, içlerindeki konum (EXIF/GPS) bilgisi silinir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar yüklenmeden önce küçültülür, içlerindeki konum (EXIF/GPS) bilgisi silinir."
+          }
+        }
+      }
+    },
+    "Fotoğraflı check-in daha çok puan kazandırır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflı check-in daha çok puan kazandırır"
+          }
+        }
+      }
+    },
+    "Fotoğrafı değiştir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğrafı değiştir"
+          }
+        }
+      }
+    },
+    "Fotoğrafı kaldır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğrafı kaldır"
+          }
+        }
+      }
+    },
+    "Galeriden seç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Galeriden seç"
+          }
+        }
+      }
+    },
+    "Genç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genç"
+          }
+        }
+      }
+    },
+    "Geri": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geri"
+          }
+        }
+      }
+    },
+    "Geri dön": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geri dön"
+          }
+        }
+      }
+    },
+    "Giriş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş"
+          }
+        }
+      }
+    },
+    "Giriş yap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş yap"
+          }
+        }
+      }
+    },
+    "Giriş yap, beslediğin noktaları takip et": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş yap, beslediğin noktaları takip et"
+          }
+        }
+      }
+    },
+    "Giriş yapan herkes tam konumu görür; giriş yapmayanlar yaklaşık konumu görür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş yapan herkes tam konumu görür; giriş yapmayanlar yaklaşık konumu görür."
+          }
+        }
+      }
+    },
+    "Giriş yapmayanlara hiç görünmez; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giriş yapmayanlara hiç görünmez; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür."
+          }
+        }
+      }
+    },
+    "Gizlilik": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik"
+          }
+        }
+      }
+    },
+    "Gizlilik politikası": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik politikası"
+          }
+        }
+      }
+    },
+    "Gizlilik ve KVKK": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik ve KVKK"
+          }
+        }
+      }
+    },
+    "Gizlilik ve KVKK özeti": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik ve KVKK özeti"
+          }
+        }
+      }
+    },
+    "Gizlilik özeti": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik özeti"
+          }
+        }
+      }
+    },
+    "Gönüllülerin hazırlıklı gelmesi için kısaca anlat.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gönüllülerin hazırlıklı gelmesi için kısaca anlat."
+          }
+        }
+      }
+    },
+    "Gördüklerini not al. Uygulamada da “Raporla → Şüpheli durum” ile bildirebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gördüklerini not al. Uygulamada da “Raporla → Şüpheli durum” ile bildirebilirsin."
+          }
+        }
+      }
+    },
+    "Görmek için dokun": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görmek için dokun"
+          }
+        }
+      }
+    },
+    "Görüldüğü noktalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görüldüğü noktalar"
+          }
+        }
+      }
+    },
+    "Görünen ad": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görünen ad"
+          }
+        }
+      }
+    },
+    "Günde en fazla %@ \"mama gerekli\" bildirimi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Günde en fazla %@ \"mama gerekli\" bildirimi."
+          }
+        }
+      }
+    },
+    "Günleri kaydet": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Günleri kaydet"
+          }
+        }
+      }
+    },
+    "Hakkında": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hakkında"
+          }
+        }
+      }
+    },
+    "Hakkında, ör. Sabahları bankların altında güneşlenir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hakkında, ör. Sabahları bankların altında güneşlenir."
+          }
+        }
+      }
+    },
+    "Hakların (KVKK md. 11)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hakların (KVKK md. 11)"
+          }
+        }
+      }
+    },
+    "Hangi hayvanlar?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hangi hayvanlar?"
+          }
+        }
+      }
+    },
+    "Hangi verileri işliyoruz?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hangi verileri işliyoruz?"
+          }
+        }
+      }
+    },
+    "Harita": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harita"
+          }
+        }
+      }
+    },
+    "Haritada mama noktalarını gör": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritada mama noktalarını gör"
+          }
+        }
+      }
+    },
+    "Haritada sana en yakın mama noktalarını görürsün.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritada sana en yakın mama noktalarını görürsün."
+          }
+        }
+      }
+    },
+    "Haritalar'da ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritalar'da ara"
+          }
+        }
+      }
+    },
+    "Haritayı hesapsız gezebilirsin; bildirimler ve takip için giriş gerekir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritayı hesapsız gezebilirsin; bildirimler ve takip için giriş gerekir."
+          }
+        }
+      }
+    },
+    "Haritayı kaydırarak iğneyi mama kabının olduğu yere getir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritayı kaydırarak iğneyi mama kabının olduğu yere getir."
+          }
+        }
+      }
+    },
+    "Haritayı ve bildirimleri sunmak": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haritayı ve bildirimleri sunmak"
+          }
+        }
+      }
+    },
+    "Hassas içerik olabilir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hassas içerik olabilir"
+          }
+        }
+      }
+    },
+    "Hassas içerik olabilir. Görmek için dokun.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hassas içerik olabilir. Görmek için dokun."
+          }
+        }
+      }
+    },
+    "Hatırlatmayı kapat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hatırlatmayı kapat"
+          }
+        }
+      }
+    },
+    "Hayvan": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvan"
+          }
+        }
+      }
+    },
+    "Hayvan ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvan ekle"
+          }
+        }
+      }
+    },
+    "Hayvan güvenliği ve moderasyon": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvan güvenliği ve moderasyon"
+          }
+        }
+      }
+    },
+    "Hayvan profili": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvan profili"
+          }
+        }
+      }
+    },
+    "Hayvana kasıtlı zarar veya zehirleme şüphesinde 112'yi ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvana kasıtlı zarar veya zehirleme şüphesinde 112'yi ara"
+          }
+        }
+      }
+    },
+    "Hayvanlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvanlar"
+          }
+        }
+      }
+    },
+    "Hayvanlar yedikten sonra kalan mamayı topla. Ortada bekleyen mama koku ve haşere yapar.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvanlar yedikten sonra kalan mamayı topla. Ortada bekleyen mama koku ve haşere yapar."
+          }
+        }
+      }
+    },
+    "Hayvanı ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayvanı ekle"
+          }
+        }
+      }
+    },
+    "Hayır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayır"
+          }
+        }
+      }
+    },
+    "Hayır, yine de ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hayır, yine de ekle"
+          }
+        }
+      }
+    },
+    "Henüz bildirimin yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz bildirimin yok"
+          }
+        }
+      }
+    },
+    "Henüz bir noktaya bağlı değil.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz bir noktaya bağlı değil."
+          }
+        }
+      }
+    },
+    "Henüz görülme kaydı yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz görülme kaydı yok"
+          }
+        }
+      }
+    },
+    "Henüz kayıt yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz kayıt yok"
+          }
+        }
+      }
+    },
+    "Henüz takip ettiğin bir şey yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz takip ettiğin bir şey yok"
+          }
+        }
+      }
+    },
+    "Hepsi isteğe bağlı. Kimlerin görebileceğini sen seç.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hepsi isteğe bağlı. Kimlerin görebileceğini sen seç."
+          }
+        }
+      }
+    },
+    "Her güncellemede üzerine yazılır; bildirimleri kapatırsan kullanılmaz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her güncellemede üzerine yazılır; bildirimleri kapatırsan kullanılmaz."
+          }
+        }
+      }
+    },
+    "Herkes 50–100 m bulanık konumu görür; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Herkes 50–100 m bulanık konumu görür; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür."
+          }
+        }
+      }
+    },
+    "Herkese açık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Herkese açık"
+          }
+        }
+      }
+    },
+    "Hesabı sil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabı sil"
+          }
+        }
+      }
+    },
+    "Hesabı silince": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabı silince"
+          }
+        }
+      }
+    },
+    "Hesabımı kalıcı olarak sil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabımı kalıcı olarak sil"
+          }
+        }
+      }
+    },
+    "Hesabın açık olduğu sürece": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın açık olduğu sürece"
+          }
+        }
+      }
+    },
+    "Hesabın silindi. Bugüne kadar koyduğun her kap mama için teşekkürler.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın silindi. Bugüne kadar koyduğun her kap mama için teşekkürler."
+          }
+        }
+      }
+    },
+    "Hesabın silinsin mi?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın silinsin mi?"
+          }
+        }
+      }
+    },
+    "Hesabını istediğin an uygulama içinden silebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabını istediğin an uygulama içinden silebilirsin."
+          }
+        }
+      }
+    },
+    "Hesabını silince kişisel verilerin silinir; eklediğin noktalar topluluk için anonim olarak kalır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabını silince kişisel verilerin silinir; eklediğin noktalar topluluk için anonim olarak kalır."
+          }
+        }
+      }
+    },
+    "Hesabını ve kişisel verilerini Ayarlar › Hesabı sil ile istediğin an silebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabını ve kişisel verilerini Ayarlar › Hesabı sil ile istediğin an silebilirsin."
+          }
+        }
+      }
+    },
+    "Hesap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesap"
+          }
+        }
+      }
+    },
+    "Hesap bilgileri": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesap bilgileri"
+          }
+        }
+      }
+    },
+    "Hesap bilgilerin, takip ettiklerin ve bildirimlerin hesabını kullandığın sürece saklanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesap bilgilerin, takip ettiklerin ve bildirimlerin hesabını kullandığın sürece saklanır."
+          }
+        }
+      }
+    },
+    "Hesap oluştur": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesap oluştur"
+          }
+        }
+      }
+    },
+    "Hesapsız da haritayı gezebilir, noktaları görebilirsin. Mama koymak için sonra giriş yapman yeterli.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesapsız da haritayı gezebilir, noktaları görebilirsin. Mama koymak için sonra giriş yapman yeterli."
+          }
+        }
+      }
+    },
+    "Hoş geldin": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoş geldin"
+          }
+        }
+      }
+    },
+    "Isırabilir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isırabilir"
+          }
+        }
+      }
+    },
+    "Isırabilir. Elle besleme, dokunmaya çalışma; mamayı kaba bırak.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isırabilir. Elle besleme, dokunmaya çalışma; mamayı kaba bırak."
+          }
+        }
+      }
+    },
+    "KVKK aydınlatma metni": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KVKK aydınlatma metni"
+          }
+        }
+      }
+    },
+    "KVKK aydınlatma metninin tamamı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KVKK aydınlatma metninin tamamı"
+          }
+        }
+      }
+    },
+    "Kaldırılmış ya da pasife alınmış olabilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaldırılmış ya da pasife alınmış olabilir."
+          }
+        }
+      }
+    },
+    "Kanuna aykırı işleme nedeniyle zarara uğradıysan giderilmesini talep etme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kanuna aykırı işleme nedeniyle zarara uğradıysan giderilmesini talep etme"
+          }
+        }
+      }
+    },
+    "Kap kirli veya kırık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kap kirli veya kırık"
+          }
+        }
+      }
+    },
+    "Kapat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapat"
+          }
+        }
+      }
+    },
+    "Kapatılan ihtiyaç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapatılan ihtiyaç"
+          }
+        }
+      }
+    },
+    "Kapların çevresini temiz bırak, poşet ve ambalajları geri al. Temiz bir nokta komşuların da gönlünü kazanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapların çevresini temiz bırak, poşet ve ambalajları geri al. Temiz bir nokta komşuların da gönlünü kazanır."
+          }
+        }
+      }
+    },
+    "Kapı önlerine koyma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapı önlerine koyma"
+          }
+        }
+      }
+    },
+    "Kapı önlerini temiz tut, artık bırakma, giriş kapılarının önüne koyma.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapı önlerini temiz tut, artık bırakma, giriş kapılarının önüne koyma."
+          }
+        }
+      }
+    },
+    "Kapı önlerini ve kapların çevresini temiz tut.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapı önlerini ve kapların çevresini temiz tut."
+          }
+        }
+      }
+    },
+    "Karakteri": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karakteri"
+          }
+        }
+      }
+    },
+    "Kartı kapat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kartı kapat"
+          }
+        }
+      }
+    },
+    "Karışık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karışık"
+          }
+        }
+      }
+    },
+    "Kaydedemedik": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaydedemedik"
+          }
+        }
+      }
+    },
+    "Kaydediliyor…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaydediliyor…"
+          }
+        }
+      }
+    },
+    "Kaydet": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaydet"
+          }
+        }
+      }
+    },
+    "Kayıp / bulunan": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıp / bulunan"
+          }
+        }
+      }
+    },
+    "Kayıt ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıt ol"
+          }
+        }
+      }
+    },
+    "Kedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kedi"
+          }
+        }
+      }
+    },
+    "Kedi ve köpek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kedi ve köpek"
+          }
+        }
+      }
+    },
+    "Kimler görebilir?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimler görebilir?"
+          }
+        }
+      }
+    },
+    "Kişisel verilerin silinir. Eklediğin noktalar ve hayvan kayıtları topluluk için anonim olarak kalır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kişisel verilerin silinir. Eklediğin noktalar ve hayvan kayıtları topluluk için anonim olarak kalır."
+          }
+        }
+      }
+    },
+    "Kişisel verilerinin işlenip işlenmediğini öğrenme ve bilgi talep etme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kişisel verilerinin işlenip işlenmediğini öğrenme ve bilgi talep etme"
+          }
+        }
+      }
+    },
+    "Komşularla iyi geçinmenin küçük yolları": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komşularla iyi geçinmenin küçük yolları"
+          }
+        }
+      }
+    },
+    "Komşularla konuş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komşularla konuş"
+          }
+        }
+      }
+    },
+    "Komşularınla konuş; birlikte sahiplenilen nokta yaşar.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komşularınla konuş; birlikte sahiplenilen nokta yaşar."
+          }
+        }
+      }
+    },
+    "Konum geçmişini saklamayız. \"Mama koydum\" dediğinde yalnızca noktaya olan mesafe (metre) kaydedilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum geçmişini saklamayız. \"Mama koydum\" dediğinde yalnızca noktaya olan mesafe (metre) kaydedilir."
+          }
+        }
+      }
+    },
+    "Konum geçmişini saklamayız; yalnızca check-in anındaki mesafe kaydedilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum geçmişini saklamayız; yalnızca check-in anındaki mesafe kaydedilir."
+          }
+        }
+      }
+    },
+    "Konum izni kapalı. Ayarlar'dan açabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum izni kapalı. Ayarlar'dan açabilirsin."
+          }
+        }
+      }
+    },
+    "Konum izni kapalı. En yakın noktayı bulmak için Ayarlar'dan açabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum izni kapalı. En yakın noktayı bulmak için Ayarlar'dan açabilirsin."
+          }
+        }
+      }
+    },
+    "Konum izni kapalı. Sahte check-in'leri önlemek için noktaya yakın olduğunu doğrulamamız gerekiyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum izni kapalı. Sahte check-in'leri önlemek için noktaya yakın olduğunu doğrulamamız gerekiyor."
+          }
+        }
+      }
+    },
+    "Konum seçme haritası. Haritayı kaydırarak iğneyi noktanın üstüne getir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konum seçme haritası. Haritayı kaydırarak iğneyi noktanın üstüne getir."
+          }
+        }
+      }
+    },
+    "Konuma izin ver": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konuma izin ver"
+          }
+        }
+      }
+    },
+    "Konumları kötüye kullanıma karşı korumak, raporları 24 saat içinde incelemek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumları kötüye kullanıma karşı korumak, raporları 24 saat içinde incelemek."
+          }
+        }
+      }
+    },
+    "Konumu doğrula": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumu doğrula"
+          }
+        }
+      }
+    },
+    "Konumum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumum"
+          }
+        }
+      }
+    },
+    "Konumumu yenile": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumumu yenile"
+          }
+        }
+      }
+    },
+    "Konumun kapalı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumun kapalı"
+          }
+        }
+      }
+    },
+    "Konumunu açarsan en yakın noktayı gösteririz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumunu açarsan en yakın noktayı gösteririz."
+          }
+        }
+      }
+    },
+    "Konumunu bilmemiz gerekiyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumunu bilmemiz gerekiyor"
+          }
+        }
+      }
+    },
+    "Konumunu kullanabilir miyiz?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konumunu kullanabilir miyiz?"
+          }
+        }
+      }
+    },
+    "Koruyucu ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyucu ol"
+          }
+        }
+      }
+    },
+    "Koruyucu uyarıları": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyucu uyarıları"
+          }
+        }
+      }
+    },
+    "Koruyucular": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyucular"
+          }
+        }
+      }
+    },
+    "Koruyucular noktayı sahiplenir: düzenli mama ve su koyar, kapları temiz tutar. Hangi günler uğrarsın?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyucular noktayı sahiplenir: düzenli mama ve su koyar, kapları temiz tutar. Hangi günler uğrarsın?"
+          }
+        }
+      }
+    },
+    "Koruyuculuk günlerin": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyuculuk günlerin"
+          }
+        }
+      }
+    },
+    "Koruyuculuk günlerini düzenle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyuculuk günlerini düzenle"
+          }
+        }
+      }
+    },
+    "Koruyuculuktan çık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyuculuktan çık"
+          }
+        }
+      }
+    },
+    "Koruyuculuktan çıktın. Emeğin için teşekkürler!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyuculuktan çıktın. Emeğin için teşekkürler!"
+          }
+        }
+      }
+    },
+    "Koruyucusu olduğun nokta uzun süre beslenmezse": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koruyucusu olduğun nokta uzun süre beslenmezse"
+          }
+        }
+      }
+    },
+    "Kulak küpesi veya kesiği var": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulak küpesi veya kesiği var"
+          }
+        }
+      }
+    },
+    "Kullanım koşulları": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanım koşulları"
+          }
+        }
+      }
+    },
+    "Kulübe / barınak": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulübe / barınak"
+          }
+        }
+      }
+    },
+    "Kulübe, kedi evi veya barınak": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulübe, kedi evi veya barınak"
+          }
+        }
+      }
+    },
+    "Kuru mama, sabit saat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuru mama, sabit saat"
+          }
+        }
+      }
+    },
+    "Kuru mamayı tercih et ve her gün aynı saatlerde koy. Hayvanlar düzene alışır, mama ortada beklemez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuru mamayı tercih et ve her gün aynı saatlerde koy. Hayvanlar düzene alışır, mama ortada beklemez."
+          }
+        }
+      }
+    },
+    "Köpek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Köpek"
+          }
+        }
+      }
+    },
+    "Kırmızı halka: acil ihtiyaç (yaralı/hasta hayvan)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kırmızı halka: acil ihtiyaç (yaralı/hasta hayvan)"
+          }
+        }
+      }
+    },
+    "Kısa bir ad (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısa bir ad (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Kısır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısır"
+          }
+        }
+      }
+    },
+    "Kısırlaştırma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısırlaştırma"
+          }
+        }
+      }
+    },
+    "Kısırlaştırma ihtiyacını bildir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısırlaştırma ihtiyacını bildir"
+          }
+        }
+      }
+    },
+    "Kısırlaştırılmamış bir hayvan görürsen \"İhtiyaç bildir\" ile kısırlaştırma talebi aç. Kulak küpesi veya kesiği kısırlık işaretidir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısırlaştırılmamış bir hayvan görürsen \"İhtiyaç bildir\" ile kısırlaştırma talebi aç. Kulak küpesi veya kesiği kısırlık işaretidir."
+          }
+        }
+      }
+    },
+    "Kısırlaştırılmış mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısırlaştırılmış mı?"
+          }
+        }
+      }
+    },
+    "Kısırlaştırılmış sokak hayvanlarının işaretidir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısırlaştırılmış sokak hayvanlarının işaretidir."
+          }
+        }
+      }
+    },
+    "Kış barınağı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kış barınağı"
+          }
+        }
+      }
+    },
+    "Kış kahramanı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kış kahramanı"
+          }
+        }
+      }
+    },
+    "Liste": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste"
+          }
+        }
+      }
+    },
+    "Liste ve İhtiyaçlar'da uygulanır; harita görünen bölgeyi gösterir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste ve İhtiyaçlar'da uygulanır; harita görünen bölgeyi gösterir."
+          }
+        }
+      }
+    },
+    "Lütfen yaklaşma; mamayı uzaktan bırak. Hem senin hem onun güvenliği için.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lütfen yaklaşma; mamayı uzaktan bırak. Hem senin hem onun güvenliği için."
+          }
+        }
+      }
+    },
+    "Mahalle (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahalle (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Mahalle koruyucusu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahalle koruyucusu"
+          }
+        }
+      }
+    },
+    "Mahallede verilen isim, ör. Pamuk": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahallede verilen isim, ör. Pamuk"
+          }
+        }
+      }
+    },
+    "Mahallendeki dostu tanıt. Bildiklerini yaz, bilmediklerini boş bırak.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahallendeki dostu tanıt. Bildiklerini yaz, bilmediklerini boş bırak."
+          }
+        }
+      }
+    },
+    "Mahallendeki mama ve su noktaları tek haritada. Yeşil yakın zamanda mama konduğunu, turuncu mama beklediğini gösterir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahallendeki mama ve su noktaları tek haritada. Yeşil yakın zamanda mama konduğunu, turuncu mama beklediğini gösterir."
+          }
+        }
+      }
+    },
+    "Mama Haritası": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası"
+          }
+        }
+      }
+    },
+    "Mama Haritası %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası %@"
+          }
+        }
+      }
+    },
+    "Mama Haritası destek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası destek"
+          }
+        }
+      }
+    },
+    "Mama Haritası tıbbi tavsiye vermez. Hayvanın durumu için bir veterinere danış.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası tıbbi tavsiye vermez. Hayvanın durumu için bir veterinere danış."
+          }
+        }
+      }
+    },
+    "Mama Haritası tıbbi tavsiye vermez. Paylaştıktan sonra en yakın veteriner kliniklerini göstereceğiz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası tıbbi tavsiye vermez. Paylaştıktan sonra en yakın veteriner kliniklerini göstereceğiz."
+          }
+        }
+      }
+    },
+    "Mama Haritası'nı kullanırken kişisel verilerini 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında nasıl işlediğimizi kısaca anlatıyoruz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası'nı kullanırken kişisel verilerini 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında nasıl işlediğimizi kısaca anlatıyoruz."
+          }
+        }
+      }
+    },
+    "Mama Haritası. Bir kap mama, bir can.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası. Bir kap mama, bir can."
+          }
+        }
+      }
+    },
+    "Mama bekliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama bekliyor"
+          }
+        }
+      }
+    },
+    "Mama bitti": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama bitti"
+          }
+        }
+      }
+    },
+    "Mama gerekli": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama gerekli"
+          }
+        }
+      }
+    },
+    "Mama gerekli dendi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama gerekli dendi"
+          }
+        }
+      }
+    },
+    "Mama gerekli diye bildir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama gerekli diye bildir"
+          }
+        }
+      }
+    },
+    "Mama kabı veya mama bırakılan yer": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama kabı veya mama bırakılan yer"
+          }
+        }
+      }
+    },
+    "Mama kondu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama kondu"
+          }
+        }
+      }
+    },
+    "Mama koy": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koy"
+          }
+        }
+      }
+    },
+    "Mama koy, bildir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koy, bildir"
+          }
+        }
+      }
+    },
+    "Mama koydum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koydum"
+          }
+        }
+      }
+    },
+    "Mama koyduğun yer haritada yoksa yeni bir nokta olarak ekleyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koyduğun yer haritada yoksa yeni bir nokta olarak ekleyebilirsin."
+          }
+        }
+      }
+    },
+    "Mama koyduğunda tek dokunuşla haber ver. Kap boşsa \"mama gerekli\" de; yakındaki gönüllüler haberdar olsun.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koyduğunda tek dokunuşla haber ver. Kap boşsa \"mama gerekli\" de; yakındaki gönüllüler haberdar olsun."
+          }
+        }
+      }
+    },
+    "Mama koymak ve nokta eklemek için giriş yap. Haritayı gezmek için hesap gerekmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama koymak ve nokta eklemek için giriş yap. Haritayı gezmek için hesap gerekmez."
+          }
+        }
+      }
+    },
+    "Mama noktası": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama noktası"
+          }
+        }
+      }
+    },
+    "Mama paketine destek ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama paketine destek ol"
+          }
+        }
+      }
+    },
+    "Mama, su ve barınak bir arada": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama, su ve barınak bir arada"
+          }
+        }
+      }
+    },
+    "Mesafe": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesafe"
+          }
+        }
+      }
+    },
+    "Metinde uygunsuz bir ifade var gibi görünüyor. Biraz düzenler misin?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metinde uygunsuz bir ifade var gibi görünüyor. Biraz düzenler misin?"
+          }
+        }
+      }
+    },
+    "Mükerrer kontrolü": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mükerrer kontrolü"
+          }
+        }
+      }
+    },
+    "Ne eklemek istersin?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne eklemek istersin?"
+          }
+        }
+      }
+    },
+    "Ne gerekiyor?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne gerekiyor?"
+          }
+        }
+      }
+    },
+    "Ne gördün? Kısaca anlat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne gördün? Kısaca anlat"
+          }
+        }
+      }
+    },
+    "Ne kadar koydun? (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne kadar koydun? (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Ne kadar saklıyoruz?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne kadar saklıyoruz?"
+          }
+        }
+      }
+    },
+    "Ne tür bir nokta?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne tür bir nokta?"
+          }
+        }
+      }
+    },
+    "Neden işliyoruz?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neden işliyoruz?"
+          }
+        }
+      }
+    },
+    "Nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta"
+          }
+        }
+      }
+    },
+    "Nokta detayı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta detayı"
+          }
+        }
+      }
+    },
+    "Nokta ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta ekle"
+          }
+        }
+      }
+    },
+    "Nokta yüklenemedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta yüklenemedi"
+          }
+        }
+      }
+    },
+    "Nokta özetini gösterir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta özetini gösterir"
+          }
+        }
+      }
+    },
+    "Nokta, sokak veya park ara": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nokta, sokak veya park ara"
+          }
+        }
+      }
+    },
+    "Noktalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktalar"
+          }
+        }
+      }
+    },
+    "Noktalar yüklenemedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktalar yüklenemedi"
+          }
+        }
+      }
+    },
+    "Noktalara teslim": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktalara teslim"
+          }
+        }
+      }
+    },
+    "Noktaya biraz daha yaklaşman gerekiyor: %@ uzaktasın, en fazla %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktaya biraz daha yaklaşman gerekiyor: %@ uzaktasın, en fazla %@."
+          }
+        }
+      }
+    },
+    "Noktayı ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktayı ekle"
+          }
+        }
+      }
+    },
+    "Noktayı takip ediyorsun. Değişikliklerden haberdar olacaksın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktayı takip ediyorsun. Değişikliklerden haberdar olacaksın."
+          }
+        }
+      }
+    },
+    "Noktayı takip et": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktayı takip et"
+          }
+        }
+      }
+    },
+    "Noktayı takip etmeyi bıraktın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktayı takip etmeyi bıraktın."
+          }
+        }
+      }
+    },
+    "Normal": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        }
+      }
+    },
+    "Not (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Okunmadı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Okunmadı"
+          }
+        }
+      }
+    },
+    "Orta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orta"
+          }
+        }
+      }
+    },
+    "Ortak dernek yakında açıklanacak": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ortak dernek yakında açıklanacak"
+          }
+        }
+      }
+    },
+    "Ortak derneğe yaptığın bağış, mama olarak en çok ihtiyaç olan noktalara ulaşır. Nereye gittiğini de görürsün.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ortak derneğe yaptığın bağış, mama olarak en çok ihtiyaç olan noktalara ulaşır. Nereye gittiğini de görürsün."
+          }
+        }
+      }
+    },
+    "Otomatik analiz sonucu aleyhine bir sonuca itiraz etme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otomatik analiz sonucu aleyhine bir sonuca itiraz etme"
+          }
+        }
+      }
+    },
+    "Paneli küçült": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paneli küçült"
+          }
+        }
+      }
+    },
+    "Paylaşamadık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paylaşamadık"
+          }
+        }
+      }
+    },
+    "Paylaşılıyor…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paylaşılıyor…"
+          }
+        }
+      }
+    },
+    "Paz": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paz"
+          }
+        }
+      }
+    },
+    "Per": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per"
+          }
+        }
+      }
+    },
+    "Pin renklerinin anlamı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pin renklerinin anlamı"
+          }
+        }
+      }
+    },
+    "Popüler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Popüler"
+          }
+        }
+      }
+    },
+    "Profil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil"
+          }
+        }
+      }
+    },
+    "Profil yükleniyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil yükleniyor"
+          }
+        }
+      }
+    },
+    "Profili düzenle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profili düzenle"
+          }
+        }
+      }
+    },
+    "Profilin güncellendi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profilin güncellendi."
+          }
+        }
+      }
+    },
+    "Pzt": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pzt"
+          }
+        }
+      }
+    },
+    "Raporla": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporla"
+          }
+        }
+      }
+    },
+    "Raporlar ve engellemeler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporlar ve engellemeler"
+          }
+        }
+      }
+    },
+    "Raporu gönder": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporu gönder"
+          }
+        }
+      }
+    },
+    "Raporun moderasyon ekibine gider ve 24 saat içinde incelenir. Kimliğin raporlanan kişiyle paylaşılmaz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporun moderasyon ekibine gider ve 24 saat içinde incelenir. Kimliğin raporlanan kişiyle paylaşılmaz."
+          }
+        }
+      }
+    },
+    "Renk / desen, ör. sarman, tekir, siyah": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renk / desen, ör. sarman, tekir, siyah"
+          }
+        }
+      }
+    },
+    "Renklerin anlamı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renklerin anlamı"
+          }
+        }
+      }
+    },
+    "Resmi kurumlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resmi kurumlar"
+          }
+        }
+      }
+    },
+    "Rozetler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozetler"
+          }
+        }
+      }
+    },
+    "Sadece takip ettiklerim": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sadece takip ettiklerim"
+          }
+        }
+      }
+    },
+    "Sahiplendirme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sahiplendirme"
+          }
+        }
+      }
+    },
+    "Sahte kayıtları önlemek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sahte kayıtları önlemek"
+          }
+        }
+      }
+    },
+    "Sakin": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sakin"
+          }
+        }
+      }
+    },
+    "Sal": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sal"
+          }
+        }
+      }
+    },
+    "Sana bildirim": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sana bildirim"
+          }
+        }
+      }
+    },
+    "Sana bildirim gönderebilmek için cihazının push anahtarı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sana bildirim gönderebilmek için cihazının push anahtarı."
+          }
+        }
+      }
+    },
+    "Sessiz saatler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sessiz saatler"
+          }
+        }
+      }
+    },
+    "Seçilen profil fotoğrafı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçilen profil fotoğrafı"
+          }
+        }
+      }
+    },
+    "Seçili nokta": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçili nokta"
+          }
+        }
+      }
+    },
+    "Seçimi geri al": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçimi geri al"
+          }
+        }
+      }
+    },
+    "Seçtiğin mesafede kayıtlı nokta yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçtiğin mesafede kayıtlı nokta yok."
+          }
+        }
+      }
+    },
+    "Sokak hayvanları için belediyenin veteriner birimine Beyaz Masa üzerinden ulaşabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sokak hayvanları için belediyenin veteriner birimine Beyaz Masa üzerinden ulaşabilirsin."
+          }
+        }
+      }
+    },
+    "Sokaktaki bir dostu tanıt": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sokaktaki bir dostu tanıt"
+          }
+        }
+      }
+    },
+    "Sokaktaki dostlarımızı beslerken komşularımızla da iyi geçinmek, beslemenin sürmesini sağlar. Birkaç küçük alışkanlık büyük fark yaratır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sokaktaki dostlarımızı beslerken komşularımızla da iyi geçinmek, beslemenin sürmesini sağlar. Birkaç küçük alışkanlık büyük fark yaratır."
+          }
+        }
+      }
+    },
+    "Son": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son"
+          }
+        }
+      }
+    },
+    "Son 12 saatte mama kondu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 12 saatte mama kondu"
+          }
+        }
+      }
+    },
+    "Son 7 gün": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 7 gün"
+          }
+        }
+      }
+    },
+    "Son 7 günde %@ noktaya uğrandı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 7 günde %@ noktaya uğrandı."
+          }
+        }
+      }
+    },
+    "Son aramalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son aramalar"
+          }
+        }
+      }
+    },
+    "Son görülme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son görülme"
+          }
+        }
+      }
+    },
+    "Son mama %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son mama %@"
+          }
+        }
+      }
+    },
+    "Son yaklaşık konum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son yaklaşık konum"
+          }
+        }
+      }
+    },
+    "Sonuç bulamadık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonuç bulamadık"
+          }
+        }
+      }
+    },
+    "Soruların için: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soruların için: %@"
+          }
+        }
+      }
+    },
+    "Sorumlu besleme rehberi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sorumlu besleme rehberi"
+          }
+        }
+      }
+    },
+    "Sorumlu besleme rehberini oku": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sorumlu besleme rehberini oku"
+          }
+        }
+      }
+    },
+    "Spam veya sahte": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam veya sahte"
+          }
+        }
+      }
+    },
+    "Su bitti": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su bitti"
+          }
+        }
+      }
+    },
+    "Su kabı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su kabı"
+          }
+        }
+      }
+    },
+    "Su kaplarını sık sık yıka ve tazele. Yazın gölgeye, kışın donmayacak bir yere koy.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su kaplarını sık sık yıka ve tazele. Yazın gölgeye, kışın donmayacak bir yere koy."
+          }
+        }
+      }
+    },
+    "Su kaplarını temizle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su kaplarını temizle"
+          }
+        }
+      }
+    },
+    "Su koydum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su koydum"
+          }
+        }
+      }
+    },
+    "Sunucularımız AB'de, Frankfurt'ta bulunur. Yurt dışına aktarım KVKK hükümleri açısından hukuki değerlendirmeye tabidir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunucularımız AB'de, Frankfurt'ta bulunur. Yurt dışına aktarım KVKK hükümleri açısından hukuki değerlendirmeye tabidir."
+          }
+        }
+      }
+    },
+    "Sıfırla": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıfırla"
+          }
+        }
+      }
+    },
+    "Sıradaki %lld check-in gönderildi. Teşekkürler!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıradaki %lld check-in gönderildi. Teşekkürler!"
+          }
+        }
+      }
+    },
+    "Sıralama": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıralama"
+          }
+        }
+      }
+    },
+    "TL karşılığı günlük kurla, yaklaşık hesaplanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TL karşılığı günlük kurla, yaklaşık hesaplanır."
+          }
+        }
+      }
+    },
+    "Taciz veya hakaret": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taciz veya hakaret"
+          }
+        }
+      }
+    },
+    "Tahmini yaş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tahmini yaş"
+          }
+        }
+      }
+    },
+    "Takibi bırak": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takibi bırak"
+          }
+        }
+      }
+    },
+    "Takip edilen noktalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip edilen noktalar"
+          }
+        }
+      }
+    },
+    "Takip ediyorsun. Yeni ihtiyaçlarını sana haber vereceğiz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip ediyorsun. Yeni ihtiyaçlarını sana haber vereceğiz."
+          }
+        }
+      }
+    },
+    "Takip et": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip et"
+          }
+        }
+      }
+    },
+    "Takip etmek için giriş yap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip etmek için giriş yap"
+          }
+        }
+      }
+    },
+    "Takip ettiklerim": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip ettiklerim"
+          }
+        }
+      }
+    },
+    "Takip ettiğin nokta ve hayvanlardaki değişiklikler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip ettiğin nokta ve hayvanlardaki değişiklikler"
+          }
+        }
+      }
+    },
+    "Takip ettiğin noktaları görmek için giriş yap.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takip ettiğin noktaları görmek için giriş yap."
+          }
+        }
+      }
+    },
+    "Tam metne sonra Profil › Ayarlar › Gizlilik ve KVKK bölümünden de ulaşabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tam metne sonra Profil › Ayarlar › Gizlilik ve KVKK bölümünden de ulaşabilirsin."
+          }
+        }
+      }
+    },
+    "Tamam": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamam"
+          }
+        }
+      }
+    },
+    "Tanıtımı geçer": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tanıtımı geçer"
+          }
+        }
+      }
+    },
+    "Taslak — hukuk onayı bekliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taslak — hukuk onayı bekliyor"
+          }
+        }
+      }
+    },
+    "Tekrar dene": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tekrar dene"
+          }
+        }
+      }
+    },
+    "Temiz su kabı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temiz su kabı"
+          }
+        }
+      }
+    },
+    "Temizle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temizle"
+          }
+        }
+      }
+    },
+    "Teslim fotoğrafları": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teslim fotoğrafları"
+          }
+        }
+      }
+    },
+    "Teslim kanıtları v1.1'de geliyor. Gönüllüler mamayı noktalara bıraktığında fotoğrafını, konumunu ve kilosunu burada göreceksin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teslim kanıtları v1.1'de geliyor. Gönüllüler mamayı noktalara bıraktığında fotoğrafını, konumunu ve kilosunu burada göreceksin."
+          }
+        }
+      }
+    },
+    "Teşekkürler! %@ mahallenin defterine eklendi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! %@ mahallenin defterine eklendi."
+          }
+        }
+      }
+    },
+    "Teşekkürler! Bildirimin alındı (%lld/%@).": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! Bildirimin alındı (%lld/%@)."
+          }
+        }
+      }
+    },
+    "Teşekkürler! Mama bekleyen noktayı sen kapattın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! Mama bekleyen noktayı sen kapattın."
+          }
+        }
+      }
+    },
+    "Teşekkürler! Mama koyduğun kaydedildi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! Mama koyduğun kaydedildi."
+          }
+        }
+      }
+    },
+    "Teşekkürler! Nokta haritadan kaldırıldı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! Nokta haritadan kaldırıldı."
+          }
+        }
+      }
+    },
+    "Teşekkürler! İhtiyaç paylaşıldı, yakındaki gönüllüler görecek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! İhtiyaç paylaşıldı, yakındaki gönüllüler görecek."
+          }
+        }
+      }
+    },
+    "Teşekkürler! İlgilendiğini herkes görecek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teşekkürler! İlgilendiğini herkes görecek."
+          }
+        }
+      }
+    },
+    "Tipi ve beslenen hayvanları seç. Ad isteğe bağlı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipi ve beslenen hayvanları seç. Ad isteğe bağlı."
+          }
+        }
+      }
+    },
+    "Toplu mama alımı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toplu mama alımı"
+          }
+        }
+      }
+    },
+    "Topluluk": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topluluk"
+          }
+        }
+      }
+    },
+    "Topluluğu ve hayvanları korumak için gönderdiğin raporlar ve engellediğin kullanıcılar.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topluluğu ve hayvanları korumak için gönderdiğin raporlar ve engellediğin kullanıcılar."
+          }
+        }
+      }
+    },
+    "Tümü": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tümü"
+          }
+        }
+      }
+    },
+    "Tümünü okundu işaretle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tümünü okundu işaretle"
+          }
+        }
+      }
+    },
+    "Tür": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tür"
+          }
+        }
+      }
+    },
+    "Türkçe ve İngilizce desteklenir. Dili iPhone Ayarlar › Mama Haritası › Dil bölümünden değiştirebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Türkçe ve İngilizce desteklenir. Dili iPhone Ayarlar › Mama Haritası › Dil bölümünden değiştirebilirsin."
+          }
+        }
+      }
+    },
+    "Uyarı (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarı (isteğe bağlı)"
+          }
+        }
+      }
+    },
+    "Uyarı profilin en üstünde gösterilir; hem insanların hem hayvanın güvenliği için.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarı profilin en üstünde gösterilir; hem insanların hem hayvanın güvenliği için."
+          }
+        }
+      }
+    },
+    "Uyarı yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarı yok"
+          }
+        }
+      }
+    },
+    "Uygula": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygula"
+          }
+        }
+      }
+    },
+    "Uygulama dili": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygulama dili"
+          }
+        }
+      }
+    },
+    "Uygunsuz içerik": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygunsuz içerik"
+          }
+        }
+      }
+    },
+    "Uysal": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uysal"
+          }
+        }
+      }
+    },
+    "Vazgeç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vazgeç"
+          }
+        }
+      }
+    },
+    "Veriler nerede?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veriler nerede?"
+          }
+        }
+      }
+    },
+    "Veteriner": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veteriner"
+          }
+        }
+      }
+    },
+    "Veteriner kliniği": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veteriner kliniği"
+          }
+        }
+      }
+    },
+    "Veteriner, kısırlaştırma, barınak…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veteriner, kısırlaştırma, barınak…"
+          }
+        }
+      }
+    },
+    "Veteriner, kısırlaştırma…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veteriner, kısırlaştırma…"
+          }
+        }
+      }
+    },
+    "Yaklaşmayın": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaklaşmayın"
+          }
+        }
+      }
+    },
+    "Yaklaşık konum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaklaşık konum"
+          }
+        }
+      }
+    },
+    "Yaklaşık konum gösteriliyor. Tam konumu koruyucular ve doğrulanmış besleyiciler görür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaklaşık konum gösteriliyor. Tam konumu koruyucular ve doğrulanmış besleyiciler görür."
+          }
+        }
+      }
+    },
+    "Yakında": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında"
+          }
+        }
+      }
+    },
+    "Yakında veteriner kliniği bulamadık.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında veteriner kliniği bulamadık."
+          }
+        }
+      }
+    },
+    "Yakındaki \"mama gerekli\"": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki \"mama gerekli\""
+          }
+        }
+      }
+    },
+    "Yakındaki bildirimleri açarsan yalnızca son yaklaşık konumun tutulur; her güncellemede üzerine yazılır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki bildirimleri açarsan yalnızca son yaklaşık konumun tutulur; her güncellemede üzerine yazılır."
+          }
+        }
+      }
+    },
+    "Yakındaki gönüllülere haber vereceğiz. Biri mama koyunca bildirim kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki gönüllülere haber vereceğiz. Biri mama koyunca bildirim kapanır."
+          }
+        }
+      }
+    },
+    "Yakındaki noktaları göstermek ve 'Mama koydum' dediğinde noktanın yanında olduğunu doğrulamak için. Konum geçmişini saklamayız.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki noktaları göstermek ve 'Mama koydum' dediğinde noktanın yanında olduğunu doğrulamak için. Konum geçmişini saklamayız."
+          }
+        }
+      }
+    },
+    "Yakındaki noktaları göstermek, \"mama gerekli\" haberlerini iletmek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki noktaları göstermek, \"mama gerekli\" haberlerini iletmek."
+          }
+        }
+      }
+    },
+    "Yakındaki noktayı otomatik seçeriz": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki noktayı otomatik seçeriz"
+          }
+        }
+      }
+    },
+    "Yakındaki takip ettiklerini görmek için konum iznini açabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki takip ettiklerini görmek için konum iznini açabilirsin."
+          }
+        }
+      }
+    },
+    "Yakındaki veterinerler aranıyor…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakındaki veterinerler aranıyor…"
+          }
+        }
+      }
+    },
+    "Yakınlaştırır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınlaştırır"
+          }
+        }
+      }
+    },
+    "Yakınında açık ihtiyaç yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında açık ihtiyaç yok"
+          }
+        }
+      }
+    },
+    "Yakınında açık ihtiyaç yok. Harika!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında açık ihtiyaç yok. Harika!"
+          }
+        }
+      }
+    },
+    "Yakınında henüz kayıtlı bir besleme noktası yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında henüz kayıtlı bir besleme noktası yok."
+          }
+        }
+      }
+    },
+    "Yakınında kayıtlı kedi evi yok. İlkini sen ekleyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında kayıtlı kedi evi yok. İlkini sen ekleyebilirsin."
+          }
+        }
+      }
+    },
+    "Yakınında kayıtlı nokta bulamadık. Haritada noktayı açıp oradan da ihtiyaç bildirebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında kayıtlı nokta bulamadık. Haritada noktayı açıp oradan da ihtiyaç bildirebilirsin."
+          }
+        }
+      }
+    },
+    "Yakınında kayıtlı nokta bulamadık. Hayvanı noktasız da ekleyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında kayıtlı nokta bulamadık. Hayvanı noktasız da ekleyebilirsin."
+          }
+        }
+      }
+    },
+    "Yakınında mama bekleyen bir nokta olduğunda veya takip ettiğin noktada bir şey değiştiğinde burada göreceksin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında mama bekleyen bir nokta olduğunda veya takip ettiğin noktada bir şey değiştiğinde burada göreceksin."
+          }
+        }
+      }
+    },
+    "Yakınında mama bekleyen hayvanlardan haberdar ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında mama bekleyen hayvanlardan haberdar ol"
+          }
+        }
+      }
+    },
+    "Yakınında mama gereken noktalar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında mama gereken noktalar"
+          }
+        }
+      }
+    },
+    "Yakınında şu an mama bekleyen nokta yok. Harika!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınında şu an mama bekleyen nokta yok. Harika!"
+          }
+        }
+      }
+    },
+    "Yakınındaki bir kap boşaldığında veya takip ettiğin noktada bir şey değiştiğinde haber verelim.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınındaki bir kap boşaldığında veya takip ettiğin noktada bir şey değiştiğinde haber verelim."
+          }
+        }
+      }
+    },
+    "Yakınındaki noktasını işaretleriz; konumun kaydedilmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınındaki noktasını işaretleriz; konumun kaydedilmez."
+          }
+        }
+      }
+    },
+    "Yalnızca uygulamayı kullanırken; arka planda konum istemeyiz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca uygulamayı kullanırken; arka planda konum istemeyiz."
+          }
+        }
+      }
+    },
+    "Yalnızca yakındaki bildirimler açıksa: yaklaşık 110 m'ye yuvarlanmış tek bir değer, her güncellemede üzerine yazılır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca yakındaki bildirimler açıksa: yaklaşık 110 m'ye yuvarlanmış tek bir değer, her güncellemede üzerine yazılır."
+          }
+        }
+      }
+    },
+    "Yanlış konum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yanlış konum"
+          }
+        }
+      }
+    },
+    "Yaralı veya hasta hayvan için": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaralı veya hasta hayvan için"
+          }
+        }
+      }
+    },
+    "Yarıçapı ve bildirim türlerini Ayarlar'dan değiştirebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yarıçapı ve bildirim türlerini Ayarlar'dan değiştirebilirsin."
+          }
+        }
+      }
+    },
+    "Yavru": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yavru"
+          }
+        }
+      }
+    },
+    "Yaş bilinmiyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaş bilinmiyor"
+          }
+        }
+      }
+    },
+    "Yaşlı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaşlı"
+          }
+        }
+      }
+    },
+    "Yemek artıkları, soğan, sarımsak, çikolata, kemik ve baharatlı yiyecekler hayvanlara zarar verir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yemek artıkları, soğan, sarımsak, çikolata, kemik ve baharatlı yiyecekler hayvanlara zarar verir."
+          }
+        }
+      }
+    },
+    "Yeni besleme noktası": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni besleme noktası"
+          }
+        }
+      }
+    },
+    "Yeni bir besleme noktası işaretle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni bir besleme noktası işaretle"
+          }
+        }
+      }
+    },
+    "Yeni nokta ekle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni nokta ekle"
+          }
+        }
+      }
+    },
+    "Yetişkin": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yetişkin"
+          }
+        }
+      }
+    },
+    "Yol tarifi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yol tarifi"
+          }
+        }
+      }
+    },
+    "Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme"
+          }
+        }
+      }
+    },
+    "Yüklemeden önce küçültülür; içindeki EXIF ve GPS konum bilgisi silinir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yüklemeden önce küçültülür; içindeki EXIF ve GPS konum bilgisi silinir."
+          }
+        }
+      }
+    },
+    "acil ihtiyaç var": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "acil ihtiyaç var"
+          }
+        }
+      }
+    },
+    "bekliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bekliyor"
+          }
+        }
+      }
+    },
+    "günlük kurla": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "günlük kurla"
+          }
+        }
+      }
+    },
+    "mama.connectivity": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mama.connectivity"
+          }
+        }
+      }
+    },
+    "tamamlandı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tamamlandı"
+          }
+        }
+      }
+    },
+    "v1.1'de": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "v1.1'de"
+          }
+        }
+      }
+    },
+    "veya e-posta ile": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "veya e-posta ile"
+          }
+        }
+      }
+    },
+    "yakında": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yakında"
+          }
+        }
+      }
+    },
+    "Çar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çar"
+          }
+        }
+      }
+    },
+    "Çekingen": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çekingen"
+          }
+        }
+      }
+    },
+    "Çevrende bir kap boşalınca": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çevrende bir kap boşalınca"
+          }
+        }
+      }
+    },
+    "Çevrimdışı: ihtiyaçlar güncellenemedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çevrimdışı: ihtiyaçlar güncellenemedi"
+          }
+        }
+      }
+    },
+    "Çevrimdışı: son görülen noktalar gösteriliyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çevrimdışı: son görülen noktalar gösteriliyor"
+          }
+        }
+      }
+    },
+    "Çocuklarla iyi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çocuklarla iyi"
+          }
+        }
+      }
+    },
+    "Çok yakında kayıtlı bir nokta var. Aynı yerse mevcut noktayı kullanmak haritayı düzenli tutar.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çok yakında kayıtlı bir nokta var. Aynı yerse mevcut noktayı kullanmak haritayı düzenli tutar."
+          }
+        }
+      }
+    },
+    "Çözüldü": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çözüldü"
+          }
+        }
+      }
+    },
+    "Çözüldü olarak işaretle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çözüldü olarak işaretle"
+          }
+        }
+      }
+    },
+    "Çözüldü olarak işaretleyince ihtiyacı açan kişiye haber veririz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çözüldü olarak işaretleyince ihtiyacı açan kişiye haber veririz."
+          }
+        }
+      }
+    },
+    "Çözülenleri göster": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çözülenleri göster"
+          }
+        }
+      }
+    },
+    "Çıkış yap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çıkış yap"
+          }
+        }
+      }
+    },
+    "Çıkış yaptın. Görüşmek üzere!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çıkış yaptın. Görüşmek üzere!"
+          }
+        }
+      }
+    },
+    "Çıkış yapılsın mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çıkış yapılsın mı?"
+          }
+        }
+      }
+    },
+    "Önce küçük bir hatırlatma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önce küçük bir hatırlatma"
+          }
+        }
+      }
+    },
+    "Ör. Arka bacağında yara var, topallıyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ör. Arka bacağında yara var, topallıyor."
+          }
+        }
+      }
+    },
+    "Örn. Moda": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Örn. Moda"
+          }
+        }
+      }
+    },
+    "Özel": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Özel"
+          }
+        }
+      }
+    },
+    "Ürkek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ürkek"
+          }
+        }
+      }
+    },
+    "Ürkek bir dost. Yavaş hareket et, ani yaklaşma; mamayı bırakıp biraz uzaklaş.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ürkek bir dost. Yavaş hareket et, ani yaklaşma; mamayı bırakıp biraz uzaklaş."
+          }
+        }
+      }
+    },
+    "Üstlenildi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Üstlenildi"
+          }
+        }
+      }
+    },
+    "ör. Apartmanın arka bahçesi, çitin yanı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ör. Apartmanın arka bahçesi, çitin yanı"
+          }
+        }
+      }
+    },
+    "ör. Çınarın dibinde, mavi kap": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ör. Çınarın dibinde, mavi kap"
+          }
+        }
+      }
+    },
+    "İhtiyacı paylaş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyacı paylaş"
+          }
+        }
+      }
+    },
+    "İhtiyaç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaç"
+          }
+        }
+      }
+    },
+    "İhtiyaç açıldı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaç açıldı"
+          }
+        }
+      }
+    },
+    "İhtiyaç bildir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaç bildir"
+          }
+        }
+      }
+    },
+    "İhtiyaç tipi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaç tipi"
+          }
+        }
+      }
+    },
+    "İhtiyaç çözücü": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaç çözücü"
+          }
+        }
+      }
+    },
+    "İhtiyaçlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaçlar"
+          }
+        }
+      }
+    },
+    "İhtiyaçlar yükleniyor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İhtiyaçlar yükleniyor"
+          }
+        }
+      }
+    },
+    "İlaç / pire-kene": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlaç / pire-kene"
+          }
+        }
+      }
+    },
+    "İletişim": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İletişim"
+          }
+        }
+      }
+    },
+    "İlk mama": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk mama"
+          }
+        }
+      }
+    },
+    "İnsan yemeği verme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İnsan yemeği verme"
+          }
+        }
+      }
+    },
+    "İsteğe bağlı. Bir noktaya bağlarsan nokta sayfasında da görünür.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İsteğe bağlı. Bir noktaya bağlarsan nokta sayfasında da görünür."
+          }
+        }
+      }
+    },
+    "İzin ver": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İzin ver"
+          }
+        }
+      }
+    },
+    "İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme"
+          }
+        }
+      }
+    },
+    "Şeffaf bağış": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şeffaf bağış"
+          }
+        }
+      }
+    },
+    "Şifre (en az 8 karakter)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şifre (en az 8 karakter)"
+          }
+        }
+      }
+    },
+    "Şifremi unuttum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şifremi unuttum"
+          }
+        }
+      }
+    },
+    "Şimdi değil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi değil"
+          }
+        }
+      }
+    },
+    "Şimdilik dernek aylık toplamı paylaşıyor; sayaç bu toplamla güncellenir. Teslim fotoğrafları ve bildirimler v1.1'de geliyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdilik dernek aylık toplamı paylaşıyor; sayaç bu toplamla güncellenir. Teslim fotoğrafları ve bildirimler v1.1'de geliyor."
+          }
+        }
+      }
+    },
+    "Şimdilik gez": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdilik gez"
+          }
+        }
+      }
+    },
+    "Şu an arama yapamadık. Bağlantın gelince tekrar dener misin?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an arama yapamadık. Bağlantın gelince tekrar dener misin?"
+          }
+        }
+      }
+    },
+    "Şu an açık bir ihtiyaç yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an açık bir ihtiyaç yok."
+          }
+        }
+      }
+    },
+    "Şu an açık ihtiyacı yok.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an açık ihtiyacı yok."
+          }
+        }
+      }
+    },
+    "Şu an bağlantı yok. Bağlantı gelince tekrar deneriz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an bağlantı yok. Bağlantı gelince tekrar deneriz."
+          }
+        }
+      }
+    },
+    "Şu an yakınında mama bekleyen nokta yok. Harika!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an yakınında mama bekleyen nokta yok. Harika!"
+          }
+        }
+      }
+    },
+    "Şüpheli durum / hayvana zarar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şüpheli durum / hayvana zarar"
+          }
+        }
+      }
+    }
+  }
+}

@@ -121,7 +121,7 @@ struct SymbolComposition: View {
                     .foregroundStyle(MamaColor.ink)
                     .frame(width: size * 0.26, height: size * 0.26)
                     .background(Circle().fill(MamaColor.card).shadow(color: .black.opacity(0.08), radius: 6, y: 2))
-                    .offset(x: cos(angle.radians) * size * 0.56, y: sin(angle.radians) * size * 0.56)
+                    .offset(x: CGFloat(cos(angle.radians)) * size * 0.56, y: CGFloat(sin(angle.radians)) * size * 0.56)
             }
         }
         .frame(width: size * 1.4, height: size * 1.3)

@@ -1,6 +1,7 @@
 #if canImport(UIKit)
 import CoreLocation
 import MamaCore
+import MamaDesign  // `Coordinate(_: CLLocationCoordinate2D)`
 
 /// CoreLocation tabanlı `LocationDriver`. Yalnızca "Uygulamayı kullanırken" izni (PRD 7.1).
 @MainActor

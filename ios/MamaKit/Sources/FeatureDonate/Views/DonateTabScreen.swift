@@ -18,7 +18,8 @@ public struct DonateTabScreen: View {
     }
 
     public var body: some View {
-        @Bindable var model = model
+        // `$model.quantity` doğrudan `@State`'in Binding'inden; yerel `@Bindable var` `.task`/`.refreshable`
+        // (`@Sendable`) kapanışlarında yakalanmasın.
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 DonationTransparencyCard(text: model.transparencyText)

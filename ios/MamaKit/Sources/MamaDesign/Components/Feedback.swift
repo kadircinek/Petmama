@@ -171,7 +171,7 @@ public struct PawBurstView: View {
                 Image(systemName: "pawprint.fill")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(MamaColor.statusFed)
-                    .offset(x: animate ? cos(angle) * 70 : 0, y: animate ? sin(angle) * 70 : 0)
+                    .offset(x: animate ? CGFloat(cos(angle) * 70) : 0, y: animate ? CGFloat(sin(angle) * 70) : 0)
                     .scaleEffect(animate ? 1 : 0.2)
                     .opacity(animate ? 0 : 1)
             }

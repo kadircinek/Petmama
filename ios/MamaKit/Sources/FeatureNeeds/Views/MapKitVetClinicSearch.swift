@@ -5,6 +5,7 @@ import MamaDesign
 
 /// `MKLocalSearch` ile "veteriner" araması (FR-I4). ViewModel yalnızca `VetClinicSearching` görür.
 struct MapKitVetClinicSearch: VetClinicSearching {
+    @MainActor
     func clinics(near center: Coordinate, radiusMeters: Double) async throws -> [VetClinic] {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = "veteriner"

@@ -16,19 +16,19 @@ struct SpotMapView: View {
 
     var body: some View {
         MapReader { proxy in
-            Map(position: $position, selection: selectionBinding) {
+            // Seçim yalnızca pin butonundan: `selection:` binding'i aynı dokunuşu ikinci kez işlerdi.
+            Map(position: $position) {
                 UserAnnotation()
                 ForEach(model.clusters) { cluster in
                     Annotation(annotationTitle(for: cluster), coordinate: cluster.coordinate.clCoordinate, anchor: .center) {
                         MapAnnotationContent(
                             cluster: cluster,
-                            isSelected: cluster.isSingle && cluster.spots.first?.id == model.selectedSpotId,
+                            isSelected: isSelected(cluster),
                             now: model.now
                         ) {
                             select(cluster.id)
                         }
                     }
-                    .tag(cluster.id)
                 }
                 .annotationTitles(.hidden)
             }
@@ -41,19 +41,17 @@ struct SpotMapView: View {
         }
     }
 
-    /// Haritanın seçimi modelden türetilir; tekil pin `spot.id.uuidString`, küme "cluster-…" etiketi taşır.
-    private var selectionBinding: Binding<String?> {
-        Binding(
-            get: { model.selectedSpotId?.uuidString },
-            set: { select($0) }
-        )
-    }
-
     private func select(_ id: String?) {
         guard let cluster = model.handleAnnotationSelection(id) else { return }
         withAnimation(.easeInOut(duration: 0.35)) {
             position = .region(model.zoomBounds(for: cluster).mkRegion)
         }
+    }
+
+    /// MapContentBuilder kapanışında tip denetimini hafif tutmak için ayrı.
+    private func isSelected(_ cluster: SpotCluster) -> Bool {
+        guard cluster.isSingle, let spot = cluster.spots.first else { return false }
+        return spot.id == model.selectedSpotId
     }
 
     private func annotationTitle(for cluster: SpotCluster) -> String {

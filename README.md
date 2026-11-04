@@ -59,7 +59,18 @@ scripts/linux-swift.sh test
 ```bash
 bash supabase/tests/run.sh
 ```
-CI (`.github/workflows/ci.yml`): Linux `swift test`, SQL testleri ve macOS'ta Xcode simülatör derlemesi.
+Son durum: Linux'ta **271 Swift testi** (MamaCore, Supabase DTO'ları, tüm ViewModel'ler, AppFeature) ve
+**315 SQL assertion'ı** (`supabase/postgres` Docker imajı) geçiyor. SwiftUI görünümleri Linux'ta derlenemediği için
+kod incelemesinden geçti; ilk gerçek derleme Xcode 16+ ile (veya CI'daki `ios-build` işiyle) yapılmalı.
+
+CI (`.github/workflows/ci.yml`): Linux `swift test`, String Catalog kontrolü, SQL testleri ve macOS'ta Xcode
+simülatör derlemesi.
+
+Yeni metin eklediysen:
+```bash
+python3 scripts/extract_strings.py
+```
+(İngilizce karşılıkları `scripts/l10n/en.json` dosyasına ekle.)
 
 ## PRD → kod eşlemesi (MVP)
 

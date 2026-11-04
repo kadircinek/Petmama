@@ -25,7 +25,7 @@ public struct MapTabScreen: View {
     }
 
     public var body: some View {
-        @Bindable var model = model
+        // `$model.x` doğrudan @State Binding'inden; yerel @Bindable, @Sendable kapanışlarda (.task/Task) yakalanmasın.
         ZStack {
             mapLayer
             switch model.mode {

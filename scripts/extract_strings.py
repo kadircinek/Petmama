@@ -48,6 +48,8 @@ def to_key(literal: str) -> str | None:
     literal = literal.replace('\\"', '"').replace("\\n", "\n")
     if not re.search(r"[A-Za-zÇĞİÖŞÜçğıöşü]", literal.replace("%lld", "").replace("%@", "")):
         return None
+    if re.fullmatch(r"[a-z0-9_.\-]+", literal) and ("." in literal or "_" in literal):
+        return None  # tanımlayıcı (kuyruk adı, anahtar), kullanıcı metni değil
     return literal
 
 

@@ -10,6 +10,12 @@
             "state": "translated",
             "value": "\"Mama koydum\" dediğinde yalnızca noktaya olan uzaklık (metre) kaydedilir. Konum geçmişini asla saklamayız."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you tap \"I fed them\", we only record your distance to the spot (in meters). We never store your location history."
+          }
         }
       }
     },
@@ -20,6 +26,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "\"Tümü\" sekmesinden hepsini görebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can see everything in the \"All\" tab."
           }
         }
       }
@@ -32,6 +44,12 @@
             "state": "translated",
             "value": "%@ aramasını sil"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete search for %@"
+          }
         }
       }
     },
@@ -42,6 +60,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ fotoğrafı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo of %@"
           }
         }
       }
@@ -54,6 +78,12 @@
             "state": "translated",
             "value": "%@ ilgileniyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is looking after this"
+          }
         }
       }
     },
@@ -64,6 +94,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ için"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For %@"
           }
         }
       }
@@ -76,6 +112,12 @@
             "state": "translated",
             "value": "%@ mama dağıtıldı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ of food distributed"
+          }
         }
       }
     },
@@ -86,6 +128,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ nokta beslendi · %@ ihtiyaç açık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ spots fed · %@ needs open"
           }
         }
       }
@@ -98,6 +146,12 @@
             "state": "translated",
             "value": "%@ nokta mama bekliyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ spots waiting for food"
+          }
         }
       }
     },
@@ -108,6 +162,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ noktasına mama koyduğunu kaydeder"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Records that you fed the animals at %@"
           }
         }
       }
@@ -120,6 +180,12 @@
             "state": "translated",
             "value": "%@ okunmamış"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ unread"
+          }
         }
       }
     },
@@ -130,6 +196,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ rozeti. Kilitli, yakında."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ badge. Locked, coming soon."
           }
         }
       }
@@ -142,6 +214,12 @@
             "state": "translated",
             "value": "%@ uzakta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ away"
+          }
         }
       }
     },
@@ -152,6 +230,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@: %lld kez mama kondu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: food put out %lld times"
           }
         }
       }
@@ -164,6 +248,12 @@
             "state": "translated",
             "value": "%@: %lld kez mama kondu, %lld kez mama gerekli dendi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: food put out %lld times, \"food needed\" reported %lld times"
+          }
         }
       }
     },
@@ -174,6 +264,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld nokta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld spots"
           }
         }
       }
@@ -186,6 +282,12 @@
             "state": "translated",
             "value": "%lld nokta, %lld tanesi mama bekliyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld spots, %lld waiting for food"
+          }
         }
       }
     },
@@ -193,6 +295,12 @@
       "extractionState": "manual",
       "localizations": {
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 km"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "1 km"
@@ -208,6 +316,12 @@
             "state": "translated",
             "value": "1 km içinde takip ettiğin bir şey yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're not following anything within 1 km"
+          }
         }
       }
     },
@@ -215,6 +329,12 @@
       "extractionState": "manual",
       "localizations": {
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 km"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "10 km"
@@ -230,6 +350,12 @@
             "state": "translated",
             "value": "100 m içinde bir nokta bulamadık"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find a spot within 100 m"
+          }
         }
       }
     },
@@ -240,6 +366,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "100 m içinde bir nokta bulamadık. İstersen yeni bir nokta ekleyebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find a spot within 100 m. You can add a new spot if you like."
           }
         }
       }
@@ -252,6 +384,12 @@
             "state": "translated",
             "value": "100 m içindeki noktaya"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To the spot within 100 m"
+          }
         }
       }
     },
@@ -262,6 +400,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "112'yi ara"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call 112"
           }
         }
       }
@@ -274,6 +418,12 @@
             "state": "translated",
             "value": "12+ saat önce"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "12+ hours ago"
+          }
         }
       }
     },
@@ -284,6 +434,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "12–24 saat önce mama kondu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food put out 12–24 hours ago"
           }
         }
       }
@@ -296,6 +452,12 @@
             "state": "translated",
             "value": "153'ü ara"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call 153"
+          }
         }
       }
     },
@@ -306,6 +468,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "22:00–07:00 arası sessiz; geceleri rahatsız etmeyiz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiet between 22:00 and 07:00; we won't disturb you at night."
           }
         }
       }
@@ -318,6 +486,12 @@
             "state": "translated",
             "value": "24 saattir haber yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No news for 24 hours"
+          }
         }
       }
     },
@@ -328,6 +502,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "3 farklı kişi bildirirse nokta haritadan kaldırılır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If 3 different people report it, the spot is removed from the map."
           }
         }
       }
@@ -340,6 +520,12 @@
             "state": "translated",
             "value": "7 gün seri"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7-day streak"
+          }
         }
       }
     },
@@ -350,6 +536,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Acil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urgent"
           }
         }
       }
@@ -362,6 +554,12 @@
             "state": "translated",
             "value": "Acil ihtiyaç"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urgent need"
+          }
         }
       }
     },
@@ -372,6 +570,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Acil veteriner bilgisi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emergency vet info"
           }
         }
       }
@@ -384,6 +588,12 @@
             "state": "translated",
             "value": "Adet: %@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quantity: %@"
+          }
         }
       }
     },
@@ -394,6 +604,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adım %lld / %lld"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Step %lld of %lld"
           }
         }
       }
@@ -406,6 +622,12 @@
             "state": "translated",
             "value": "Adın (haritada görünür)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your name (shown on the map)"
+          }
         }
       }
     },
@@ -416,6 +638,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Agresif olabilir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May be aggressive"
           }
         }
       }
@@ -428,6 +656,12 @@
             "state": "translated",
             "value": "Alanı temiz tut"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the area clean"
+          }
         }
       }
     },
@@ -438,6 +672,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ana sayfayı aç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open home"
           }
         }
       }
@@ -450,6 +690,12 @@
             "state": "translated",
             "value": "Anladım, devam"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it, continue"
+          }
         }
       }
     },
@@ -460,6 +706,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apartman ve dükkân giriş kapılarının önüne koyma."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't put food in front of building or shop entrances."
           }
         }
       }
@@ -472,6 +724,12 @@
             "state": "translated",
             "value": "Apartman ve dükkân girişlerinin önü yerine ağaç dibi, bahçe kenarı gibi sakin köşeleri seç."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instead of building and shop entrances, pick quiet corners like the base of a tree or the edge of a garden."
+          }
         }
       }
     },
@@ -482,6 +740,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apple ile giriş de demo kullanıcısıyla oturum açar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in with Apple also signs in with the demo user."
           }
         }
       }
@@ -494,6 +758,12 @@
             "state": "translated",
             "value": "Ara"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
         }
       }
     },
@@ -504,6 +774,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aradığın kayıt artık yok gibi görünüyor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The record you're looking for seems to be gone."
           }
         }
       }
@@ -516,6 +792,12 @@
             "state": "translated",
             "value": "Arama yapılamadı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search failed"
+          }
         }
       }
     },
@@ -526,6 +808,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Artık bu noktanın koruyucususun. Teşekkürler!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're now this spot's guardian. Thank you!"
           }
         }
       }
@@ -538,6 +826,12 @@
             "state": "translated",
             "value": "Artık bırakma"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't leave leftovers"
+          }
         }
       }
     },
@@ -548,6 +842,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Artık bırakma; hayvanlar yedikten sonra kalanı topla."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't leave leftovers; pick up what's left after the animals have eaten."
           }
         }
       }
@@ -560,6 +860,12 @@
             "state": "translated",
             "value": "Atla"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
         }
       }
     },
@@ -570,6 +876,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Avrupa Birliği (Frankfurt)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "European Union (Frankfurt)"
           }
         }
       }
@@ -582,6 +894,12 @@
             "state": "translated",
             "value": "Ayarlar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
         }
       }
     },
@@ -592,6 +910,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ayarları aç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
           }
         }
       }
@@ -604,6 +928,12 @@
             "state": "translated",
             "value": "Ayrıntı (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details (optional)"
+          }
         }
       }
     },
@@ -614,6 +944,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Az"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low"
           }
         }
       }
@@ -626,6 +962,12 @@
             "state": "translated",
             "value": "Açık"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open"
+          }
         }
       }
     },
@@ -636,6 +978,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Açık ihtiyaçlar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open needs"
           }
         }
       }
@@ -648,6 +996,12 @@
             "state": "translated",
             "value": "Aşı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vaccine"
+          }
         }
       }
     },
@@ -658,6 +1012,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aşı bilgisi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vaccine info"
           }
         }
       }
@@ -670,6 +1030,12 @@
             "state": "translated",
             "value": "Aşı bilgisi (biliyorsan), ör. Kuduz 2026"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vaccine info (if you know), e.g. Rabies 2026"
+          }
         }
       }
     },
@@ -680,6 +1046,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağlantı yok, check-in'in sırada; bağlantı gelince gönderilecek."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No connection. Your check-in is queued and will be sent once you're back online."
           }
         }
       }
@@ -692,6 +1064,12 @@
             "state": "translated",
             "value": "Bağış"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donation"
+          }
         }
       }
     },
@@ -702,6 +1080,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağış alındı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donation received"
           }
         }
       }
@@ -714,6 +1098,12 @@
             "state": "translated",
             "value": "Bağış sayfası Safari'de açılır. Ödeme bilgilerin Mama Haritası'na gelmez."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The donation page opens in Safari. Your payment details never reach Mama Haritası."
+          }
         }
       }
     },
@@ -724,6 +1114,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağışla destek ol"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donate to help"
           }
         }
       }
@@ -736,6 +1132,12 @@
             "state": "translated",
             "value": "Bağıştan mama kabına yolculuk"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From donation to food bowl"
+          }
         }
       }
     },
@@ -746,6 +1148,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağışım nereye gitti?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where did my donation go?"
           }
         }
       }
@@ -758,6 +1166,12 @@
             "state": "translated",
             "value": "Bağışın ortak dernek aracılığıyla mamaya dönüşür. Yolculuğu adım adım burada izleyeceksin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your donation turns into food through our partner association. You'll follow its journey here, step by step."
+          }
         }
       }
     },
@@ -768,6 +1182,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Başka bir sokak ya da park adı dene."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try another street or park name."
           }
         }
       }
@@ -780,6 +1200,12 @@
             "state": "translated",
             "value": "Başlangıç"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
         }
       }
     },
@@ -790,6 +1216,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Başvuruların ve soruların için bize e-postayla ulaşabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can email us for applications and questions."
           }
         }
       }
@@ -802,6 +1234,12 @@
             "state": "translated",
             "value": "Belediyenin Beyaz Masa hattı: Alo 153"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The municipality's Beyaz Masa line: Alo 153"
+          }
         }
       }
     },
@@ -812,6 +1250,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Belirli gün yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No specific days"
           }
         }
       }
@@ -824,6 +1268,12 @@
             "state": "translated",
             "value": "Ben ilgileniyorum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm on it"
+          }
         }
       }
     },
@@ -834,6 +1284,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beslediğimiz noktaların uzun yaşaması komşularımızla iyi geçinmemize bağlı."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whether the spots we feed last depends on getting along with our neighbors."
           }
         }
       }
@@ -846,6 +1302,12 @@
             "state": "translated",
             "value": "Beslediğin nokta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spot you feed"
+          }
         }
       }
     },
@@ -856,6 +1318,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beslediğin noktaları ve sevdiğin hayvanları takip et, haberleri buraya gelsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow the spots you feed and the animals you love, and their updates will show up here."
           }
         }
       }
@@ -868,6 +1336,12 @@
             "state": "translated",
             "value": "Beslediğin noktayı komşularına anlat, birlikte sahiplenin. Sorun çıkarsa yeri birlikte değiştirmek kolaylaşır."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tell your neighbors about the spot you feed and look after it together. If a problem comes up, it's easier to move the spot together."
+          }
         }
       }
     },
@@ -878,6 +1352,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildirim almak için giriş yapman gerekiyor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need to sign in to get notifications."
           }
         }
       }
@@ -890,6 +1370,12 @@
             "state": "translated",
             "value": "Bildirim ayarları için giriş yap"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in for notification settings"
+          }
         }
       }
     },
@@ -900,6 +1386,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildirim yarıçapı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notification radius"
           }
         }
       }
@@ -912,6 +1404,12 @@
             "state": "translated",
             "value": "Bildirimler"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
         }
       }
     },
@@ -922,6 +1420,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bildirimlere izin ver"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow notifications"
           }
         }
       }
@@ -934,6 +1438,12 @@
             "state": "translated",
             "value": "Bilinmiyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown"
+          }
         }
       }
     },
@@ -944,6 +1454,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bir hayvanın veterinere, kısırlaştırmaya veya barınağa ihtiyacı varsa bildirebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If an animal needs a vet, neutering or a shelter, you can report it."
           }
         }
       }
@@ -956,6 +1472,12 @@
             "state": "translated",
             "value": "Bir ihtiyaç görürsen buradan paylaşabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you see a need, you can share it here."
+          }
         }
       }
     },
@@ -966,6 +1488,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bir kap mama, bir can"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bowl of food, a life"
           }
         }
       }
@@ -978,6 +1506,12 @@
             "state": "translated",
             "value": "Bir noktanın ya da hayvanın sayfasındaki kalbe dokun; yeni mama ve ihtiyaç haberleri burada toplansın."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the heart on a spot's or animal's page to collect new food and need updates here."
+          }
         }
       }
     },
@@ -988,6 +1522,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bir paket seç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a package"
           }
         }
       }
@@ -1000,6 +1540,12 @@
             "state": "translated",
             "value": "Bir şeyler ters gitti. Birazdan tekrar dener misin?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong. Could you try again in a moment?"
+          }
         }
       }
     },
@@ -1010,6 +1556,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Birden fazla seçebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can choose more than one."
           }
         }
       }
@@ -1022,6 +1574,12 @@
             "state": "translated",
             "value": "Biri mama gerekli dedi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone reported food needed"
+          }
         }
       }
     },
@@ -1032,6 +1590,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Birkaç gün içinde çözülmesi yeterli"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's enough if it's resolved within a few days"
           }
         }
       }
@@ -1044,6 +1608,12 @@
             "state": "translated",
             "value": "Bitiş"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End"
+          }
         }
       }
     },
@@ -1054,6 +1624,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bize ulaş"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contact us"
           }
         }
       }
@@ -1066,6 +1642,12 @@
             "state": "translated",
             "value": "Bu ay"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month"
+          }
         }
       }
     },
@@ -1076,6 +1658,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu e-posta ile zaten bir hesap var."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An account with this email already exists."
           }
         }
       }
@@ -1088,6 +1676,12 @@
             "state": "translated",
             "value": "Bu filtreyle eşleşen nokta yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No spots match this filter"
+          }
         }
       }
     },
@@ -1098,6 +1692,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu hafta %lld kez"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld times this week"
           }
         }
       }
@@ -1110,6 +1710,12 @@
             "state": "translated",
             "value": "Bu hayvanı bulamadık"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find this animal"
+          }
         }
       }
     },
@@ -1120,6 +1726,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu hayvanı gördüm"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I saw this animal"
           }
         }
       }
@@ -1132,6 +1744,12 @@
             "state": "translated",
             "value": "Bu ihtiyacı bulamadık"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find this need"
+          }
         }
       }
     },
@@ -1142,6 +1760,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu ihtiyaç çoktan çözülmüş. Yine de teşekkürler!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This need has already been resolved. Thanks anyway!"
           }
         }
       }
@@ -1154,6 +1778,12 @@
             "state": "translated",
             "value": "Bu ihtiyaç çözüldü mü?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Has this need been resolved?"
+          }
         }
       }
     },
@@ -1164,6 +1794,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu ihtiyaçla başka bir gönüllü ilgileniyor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another volunteer is taking care of this need."
           }
         }
       }
@@ -1176,6 +1812,12 @@
             "state": "translated",
             "value": "Bu işlem için yetkin yok."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You don't have permission for this action."
+          }
         }
       }
     },
@@ -1186,6 +1828,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu kullanıcıyı engelle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Block this user"
           }
         }
       }
@@ -1198,6 +1846,12 @@
             "state": "translated",
             "value": "Bu nokta artık aktif görünmüyor."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This spot no longer appears active."
+          }
         }
       }
     },
@@ -1208,6 +1862,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu nokta artık görünmüyor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This spot is no longer visible"
           }
         }
       }
@@ -1220,6 +1880,12 @@
             "state": "translated",
             "value": "Bu nokta artık yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This spot is gone"
+          }
         }
       }
     },
@@ -1230,6 +1896,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu nokta artık yok mu?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is this spot gone?"
           }
         }
       }
@@ -1242,6 +1914,12 @@
             "state": "translated",
             "value": "Bu nokta zaten var mı?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is this spot already on the map?"
+          }
         }
       }
     },
@@ -1252,6 +1930,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu noktanın henüz koruyucusu yok. Düzenli besliyorsan koruyucu olabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This spot doesn't have a guardian yet. If you feed regularly, you can become one."
           }
         }
       }
@@ -1264,6 +1948,12 @@
             "state": "translated",
             "value": "Bu noktaya az önce mama koyduğunu kaydettik. Biraz sonra tekrar deneyebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We just recorded that you fed this spot. You can try again in a little while."
+          }
         }
       }
     },
@@ -1274,6 +1964,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu noktaya mama koyduğunu kaydedelim mi?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shall we record that you fed this spot?"
           }
         }
       }
@@ -1286,6 +1982,12 @@
             "state": "translated",
             "value": "Bu rehber tıbbi tavsiye değildir. Hasta veya yaralı bir hayvan görürsen bir veterinere danış ve \"İhtiyaç bildir\" ile gönüllülere haber ver."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This guide is not medical advice. If you see a sick or injured animal, consult a vet and let volunteers know with \"Report a need\"."
+          }
         }
       }
     },
@@ -1296,6 +1998,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bu sokağın ilk besleyicisi sen ol"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Be the first feeder on this street"
           }
         }
       }
@@ -1308,6 +2016,12 @@
             "state": "translated",
             "value": "Bu sürüm Kadıköy demo verisiyle çalışıyor. Denemek için şu bilgileri kullanabilirsin:"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This version runs on Kadıköy demo data. You can use these details to try it out:"
+          }
         }
       }
     },
@@ -1318,6 +2032,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bugün"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
           }
         }
       }
@@ -1330,6 +2050,12 @@
             "state": "translated",
             "value": "Bugün mahallende"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today in your neighborhood"
+          }
         }
       }
     },
@@ -1340,6 +2066,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bugün mahallene bir kap mama?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A bowl of food for your neighborhood today?"
           }
         }
       }
@@ -1352,6 +2084,12 @@
             "state": "translated",
             "value": "Bunu yapmak için giriş yapman gerekiyor."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need to sign in to do this."
+          }
         }
       }
     },
@@ -1363,6 +2101,12 @@
             "state": "translated",
             "value": "Buradaki hayvanlar (%lld)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animals here (%lld)"
+          }
         }
       }
     },
@@ -1370,6 +2114,12 @@
       "extractionState": "manual",
       "localizations": {
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Check-in"
@@ -1385,6 +2135,12 @@
             "state": "translated",
             "value": "Check-in için konumuna bir kez bakmamız gerekiyor. Konumun kaydedilmez."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We need to check your location once for the check-in. Your location isn't stored."
+          }
         }
       }
     },
@@ -1395,6 +2151,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check-in mesafesi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-in distance"
           }
         }
       }
@@ -1407,6 +2169,12 @@
             "state": "translated",
             "value": "Check-in'de yalnızca noktaya olan mesafe (metre) kaydedilir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the distance to the spot (in meters) is recorded at check-in."
+          }
         }
       }
     },
@@ -1417,6 +2185,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check-in'in noktanın yanında yapıldığını doğrulamak, güven puanı ve günlük limitler."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To verify the check-in was made near the spot, for trust scores and daily limits."
           }
         }
       }
@@ -1429,6 +2203,12 @@
             "state": "translated",
             "value": "Check-in'lerin, takip ettiğin noktalar ve hayvanlar, doğrulanmış besleyici rozetin burada görünür."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your check-ins, followed spots and animals, and verified feeder badge appear here."
+          }
         }
       }
     },
@@ -1439,6 +2219,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check-in'lerinde ve koruyucu listelerinde bu ad görünür."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This name appears on your check-ins and in guardian lists."
           }
         }
       }
@@ -1451,6 +2237,12 @@
             "state": "translated",
             "value": "Cihaz bildirim anahtarı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Device notification token"
+          }
         }
       }
     },
@@ -1461,6 +2253,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cinsiyet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sex"
           }
         }
       }
@@ -1473,6 +2271,12 @@
             "state": "translated",
             "value": "Cinsiyet bilinmiyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sex unknown"
+          }
         }
       }
     },
@@ -1483,6 +2287,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cmt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sat"
           }
         }
       }
@@ -1495,6 +2305,12 @@
             "state": "translated",
             "value": "Cum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fri"
+          }
         }
       }
     },
@@ -1505,6 +2321,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Daha önce"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earlier"
           }
         }
       }
@@ -1517,6 +2339,12 @@
             "state": "translated",
             "value": "Demo bilgilerini doldur"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill in demo details"
+          }
         }
       }
     },
@@ -1527,6 +2355,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Demo modu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo mode"
           }
         }
       }
@@ -1539,6 +2373,12 @@
             "state": "translated",
             "value": "Dernek sayfasında bağış yap"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donate on the association's page"
+          }
         }
       }
     },
@@ -1549,6 +2389,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Detay"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
           }
         }
       }
@@ -1561,6 +2407,12 @@
             "state": "translated",
             "value": "Devam"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
         }
       }
     },
@@ -1571,6 +2423,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Devam ederek [Kullanım Koşulları](mama-legal://terms) ve [KVKK Aydınlatma Metni](mama-legal://kvkk)'ni kabul etmiş olursun."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By continuing, you accept the [Terms of Use](mama-legal://terms) and the [KVKK Privacy Notice](mama-legal://kvkk)."
           }
         }
       }
@@ -1583,6 +2441,12 @@
             "state": "translated",
             "value": "Dil"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
         }
       }
     },
@@ -1593,6 +2457,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diğer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other"
           }
         }
       }
@@ -1605,6 +2475,12 @@
             "state": "translated",
             "value": "Diğer işlemler"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More actions"
+          }
         }
       }
     },
@@ -1615,6 +2491,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diğer seçenekler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More options"
           }
         }
       }
@@ -1627,6 +2509,12 @@
             "state": "translated",
             "value": "Dişi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Female"
+          }
         }
       }
     },
@@ -1637,6 +2525,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dolu kap"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full bowl"
           }
         }
       }
@@ -1649,6 +2543,12 @@
             "state": "translated",
             "value": "Doğrulanmış besleyici"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verified feeder"
+          }
         }
       }
     },
@@ -1659,6 +2559,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Doğrulanmış besleyici ilerlemesi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verified feeder progress"
           }
         }
       }
@@ -1671,6 +2577,12 @@
             "state": "translated",
             "value": "Durum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
+          }
         }
       }
     },
@@ -1681,6 +2593,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "E-posta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
           }
         }
       }
@@ -1693,6 +2611,12 @@
             "state": "translated",
             "value": "E-posta adresin veya Apple kimliğin, görünen adın, isteğe bağlı mahallen ve profil fotoğrafın."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your email address or Apple ID, your display name, your optional neighborhood and your profile photo."
+          }
         }
       }
     },
@@ -1703,6 +2627,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "E-posta veya şifre eşleşmedi."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email or password didn't match."
           }
         }
       }
@@ -1715,6 +2645,12 @@
             "state": "translated",
             "value": "Ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
         }
       }
     },
@@ -1725,6 +2661,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ekle: nokta, hayvan, ihtiyaç veya mama koydum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add: spot, animal, need or I fed them"
           }
         }
       }
@@ -1737,6 +2679,12 @@
             "state": "translated",
             "value": "Eksik veya yanlış işlenmişse düzeltilmesini, gerekirse silinmesini isteme"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Request correction if it's incomplete or wrong, and deletion if necessary"
+          }
         }
       }
     },
@@ -1747,6 +2695,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En az %@ karakter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At least %@ characters"
           }
         }
       }
@@ -1759,6 +2713,12 @@
             "state": "translated",
             "value": "En az bir gün seç."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose at least one day."
+          }
         }
       }
     },
@@ -1769,6 +2729,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En fazla 3 fotoğraf. Konum bilgisi fotoğraftan silinir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to 3 photos. Location data is removed from the photo."
           }
         }
       }
@@ -1781,6 +2747,12 @@
             "state": "translated",
             "value": "En fazla 3 fotoğraf. Yaralı hayvan fotoğrafları başkalarına bulanık gösterilir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to 3 photos. Photos of injured animals are shown blurred to others."
+          }
         }
       }
     },
@@ -1791,6 +2763,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En fazla mesafe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum distance"
           }
         }
       }
@@ -1803,6 +2781,12 @@
             "state": "translated",
             "value": "En uzun süredir beslenmeyen"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Longest without food"
+          }
         }
       }
     },
@@ -1813,6 +2797,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En yakın"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearest"
           }
         }
       }
@@ -1825,6 +2815,12 @@
             "state": "translated",
             "value": "En yakın nokta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearest spot"
+          }
         }
       }
     },
@@ -1835,6 +2831,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En yakın noktalar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearest spots"
           }
         }
       }
@@ -1847,6 +2849,12 @@
             "state": "translated",
             "value": "En yakın noktayı arıyoruz…"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking for the nearest spot…"
+          }
         }
       }
     },
@@ -1857,6 +2865,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En yakın noktayı bulup tek dokunuşla kaydetmek için konumuna bir kez bakarız."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We check your location once to find the nearest spot and record it with one tap."
           }
         }
       }
@@ -1869,6 +2883,12 @@
             "state": "translated",
             "value": "En yakın veteriner klinikleri"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearest vet clinics"
+          }
         }
       }
     },
@@ -1879,6 +2899,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Enerjik"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energetic"
           }
         }
       }
@@ -1891,6 +2917,12 @@
             "state": "translated",
             "value": "Engeli kaldır"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unblock"
+          }
         }
       }
     },
@@ -1901,6 +2933,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Engellediğin kimse yok."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You haven't blocked anyone."
           }
         }
       }
@@ -1913,6 +2951,12 @@
             "state": "translated",
             "value": "Engellediğin kişilerin içeriklerini görmezsin; onlar da senin bildirimlerini tetiklemez."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You won't see content from people you block, and they won't trigger your notifications."
+          }
         }
       }
     },
@@ -1923,6 +2967,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Engellediğin kişinin içeriklerini görmezsin. Engeli Ayarlar'dan kaldırabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You won't see content from the person you block. You can unblock them in Settings."
           }
         }
       }
@@ -1935,6 +2985,12 @@
             "state": "translated",
             "value": "Engellenen kullanıcılar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blocked users"
+          }
         }
       }
     },
@@ -1945,6 +3001,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erkek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Male"
           }
         }
       }
@@ -1957,6 +3019,12 @@
             "state": "translated",
             "value": "Evet"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes"
+          }
         }
       }
     },
@@ -1967,6 +3035,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Evet, artık yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes, it's gone"
           }
         }
       }
@@ -1979,6 +3053,12 @@
             "state": "translated",
             "value": "Evet, bu nokta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes, this spot"
+          }
         }
       }
     },
@@ -1989,6 +3069,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Evet, çözüldü"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes, it's resolved"
           }
         }
       }
@@ -2001,6 +3087,12 @@
             "state": "translated",
             "value": "Filtre ve sıralama"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filter and sort"
+          }
         }
       }
     },
@@ -2011,6 +3103,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Filtreler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filters"
           }
         }
       }
@@ -2023,6 +3121,12 @@
             "state": "translated",
             "value": "Filtreler, %lld filtre aktif"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filters, %lld filters active"
+          }
         }
       }
     },
@@ -2033,6 +3137,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Filtreleri gevşetmeyi dene."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try loosening the filters."
           }
         }
       }
@@ -2045,6 +3155,12 @@
             "state": "translated",
             "value": "Filtreleri temizleyip tekrar bakabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can clear the filters and look again."
+          }
         }
       }
     },
@@ -2055,6 +3171,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Filtreyi sıfırla"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset filter"
           }
         }
       }
@@ -2067,6 +3189,12 @@
             "state": "translated",
             "value": "Fotoğraf ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add photo"
+          }
         }
       }
     },
@@ -2077,6 +3205,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fotoğraf ve not"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo and note"
           }
         }
       }
@@ -2089,6 +3223,12 @@
             "state": "translated",
             "value": "Fotoğraf yüklenemedi; check-in fotoğrafsız gönderildi."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't upload the photo; the check-in was sent without a photo."
+          }
         }
       }
     },
@@ -2099,6 +3239,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fotoğraf yüklenemedi; nokta fotoğrafsız eklendi."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't upload the photo; the spot was added without a photo."
           }
         }
       }
@@ -2111,6 +3257,12 @@
             "state": "translated",
             "value": "Fotoğraf yüklenmeden önce küçültülür ve içindeki konum bilgisi silinir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The photo is downsized before uploading and its location data is removed."
+          }
         }
       }
     },
@@ -2121,6 +3273,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fotoğraf çek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take photo"
           }
         }
       }
@@ -2133,6 +3291,12 @@
             "state": "translated",
             "value": "Fotoğraflar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
+          }
         }
       }
     },
@@ -2143,6 +3307,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fotoğraflar yüklenmeden önce küçültülür, içlerindeki konum (EXIF/GPS) bilgisi silinir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos are downsized before uploading and their location data (EXIF/GPS) is removed."
           }
         }
       }
@@ -2155,6 +3325,12 @@
             "state": "translated",
             "value": "Fotoğraflı check-in daha çok puan kazandırır"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check-ins with a photo earn more points"
+          }
         }
       }
     },
@@ -2165,6 +3341,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fotoğrafı değiştir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change photo"
           }
         }
       }
@@ -2177,6 +3359,12 @@
             "state": "translated",
             "value": "Fotoğrafı kaldır"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove photo"
+          }
         }
       }
     },
@@ -2187,6 +3375,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Galeriden seç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose from library"
           }
         }
       }
@@ -2199,6 +3393,12 @@
             "state": "translated",
             "value": "Genç"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Young"
+          }
         }
       }
     },
@@ -2209,6 +3409,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geri"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
           }
         }
       }
@@ -2221,6 +3427,12 @@
             "state": "translated",
             "value": "Geri dön"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go back"
+          }
         }
       }
     },
@@ -2231,6 +3443,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Giriş"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in"
           }
         }
       }
@@ -2243,6 +3461,12 @@
             "state": "translated",
             "value": "Giriş yap"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in"
+          }
         }
       }
     },
@@ -2253,6 +3477,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Giriş yap, beslediğin noktaları takip et"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to follow the spots you feed"
           }
         }
       }
@@ -2265,6 +3495,12 @@
             "state": "translated",
             "value": "Giriş yapan herkes tam konumu görür; giriş yapmayanlar yaklaşık konumu görür."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everyone who is signed in sees the exact location; people who aren't signed in see the approximate location."
+          }
         }
       }
     },
@@ -2275,6 +3511,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Giriş yapmayanlara hiç görünmez; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never shown to people who aren't signed in; only guardians and verified feeders see the exact location."
           }
         }
       }
@@ -2287,6 +3529,12 @@
             "state": "translated",
             "value": "Gizlilik"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
         }
       }
     },
@@ -2297,6 +3545,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gizlilik politikası"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy policy"
           }
         }
       }
@@ -2309,6 +3563,12 @@
             "state": "translated",
             "value": "Gizlilik ve KVKK"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy and KVKK"
+          }
         }
       }
     },
@@ -2319,6 +3579,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gizlilik ve KVKK özeti"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy and KVKK summary"
           }
         }
       }
@@ -2331,6 +3597,12 @@
             "state": "translated",
             "value": "Gizlilik özeti"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy summary"
+          }
         }
       }
     },
@@ -2341,6 +3613,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gönüllülerin hazırlıklı gelmesi için kısaca anlat."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Describe it briefly so volunteers can come prepared."
           }
         }
       }
@@ -2353,6 +3631,12 @@
             "state": "translated",
             "value": "Gördüklerini not al. Uygulamada da “Raporla → Şüpheli durum” ile bildirebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take note of what you see. You can also report it in the app with \"Report → Suspicious activity\"."
+          }
         }
       }
     },
@@ -2363,6 +3647,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Görmek için dokun"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to view"
           }
         }
       }
@@ -2375,6 +3665,12 @@
             "state": "translated",
             "value": "Görüldüğü noktalar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where it's been seen"
+          }
         }
       }
     },
@@ -2385,6 +3681,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Görünen ad"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display name"
           }
         }
       }
@@ -2397,6 +3699,12 @@
             "state": "translated",
             "value": "Günde en fazla %@ \"mama gerekli\" bildirimi."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to %@ \"food needed\" notifications per day."
+          }
         }
       }
     },
@@ -2407,6 +3715,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Günleri kaydet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save days"
           }
         }
       }
@@ -2419,6 +3733,12 @@
             "state": "translated",
             "value": "Hakkında"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
         }
       }
     },
@@ -2429,6 +3749,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hakkında, ör. Sabahları bankların altında güneşlenir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About, e.g. Sunbathes under the benches in the morning."
           }
         }
       }
@@ -2441,6 +3767,12 @@
             "state": "translated",
             "value": "Hakların (KVKK md. 11)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your rights (KVKK art. 11)"
+          }
         }
       }
     },
@@ -2451,6 +3783,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hangi hayvanlar?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which animals?"
           }
         }
       }
@@ -2463,6 +3801,12 @@
             "state": "translated",
             "value": "Hangi verileri işliyoruz?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What data do we process?"
+          }
         }
       }
     },
@@ -2473,6 +3817,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Harita"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Map"
           }
         }
       }
@@ -2485,6 +3835,12 @@
             "state": "translated",
             "value": "Haritada mama noktalarını gör"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See feeding spots on the map"
+          }
         }
       }
     },
@@ -2495,6 +3851,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haritada sana en yakın mama noktalarını görürsün."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll see the feeding spots nearest to you on the map."
           }
         }
       }
@@ -2507,6 +3869,12 @@
             "state": "translated",
             "value": "Haritalar'da ara"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search in Maps"
+          }
         }
       }
     },
@@ -2517,6 +3885,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haritayı hesapsız gezebilirsin; bildirimler ve takip için giriş gerekir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can browse the map without an account; you need to sign in for notifications and following."
           }
         }
       }
@@ -2529,6 +3903,12 @@
             "state": "translated",
             "value": "Haritayı kaydırarak iğneyi mama kabının olduğu yere getir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag the map to move the pin to where the food bowl is."
+          }
         }
       }
     },
@@ -2539,6 +3919,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haritayı ve bildirimleri sunmak"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Providing the map and notifications"
           }
         }
       }
@@ -2551,6 +3937,12 @@
             "state": "translated",
             "value": "Hassas içerik olabilir"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May be sensitive content"
+          }
         }
       }
     },
@@ -2561,6 +3953,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hassas içerik olabilir. Görmek için dokun."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May be sensitive content. Tap to view."
           }
         }
       }
@@ -2573,6 +3971,12 @@
             "state": "translated",
             "value": "Hatırlatmayı kapat"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn off reminder"
+          }
         }
       }
     },
@@ -2583,6 +3987,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hayvan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animal"
           }
         }
       }
@@ -2595,6 +4005,12 @@
             "state": "translated",
             "value": "Hayvan ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add animal"
+          }
         }
       }
     },
@@ -2605,6 +4021,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hayvan güvenliği ve moderasyon"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animal safety and moderation"
           }
         }
       }
@@ -2617,6 +4039,12 @@
             "state": "translated",
             "value": "Hayvan profili"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animal profile"
+          }
         }
       }
     },
@@ -2627,6 +4055,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hayvana kasıtlı zarar veya zehirleme şüphesinde 112'yi ara"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you suspect deliberate harm or poisoning of an animal, call 112"
           }
         }
       }
@@ -2639,6 +4073,12 @@
             "state": "translated",
             "value": "Hayvanlar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animals"
+          }
         }
       }
     },
@@ -2649,6 +4089,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hayvanlar yedikten sonra kalan mamayı topla. Ortada bekleyen mama koku ve haşere yapar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick up leftover food after the animals have eaten. Food left out attracts smells and pests."
           }
         }
       }
@@ -2661,6 +4107,12 @@
             "state": "translated",
             "value": "Hayvanı ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add the animal"
+          }
         }
       }
     },
@@ -2671,6 +4123,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hayır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
           }
         }
       }
@@ -2683,6 +4141,12 @@
             "state": "translated",
             "value": "Hayır, yine de ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No, add anyway"
+          }
         }
       }
     },
@@ -2693,6 +4157,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Henüz bildirimin yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have no notifications yet"
           }
         }
       }
@@ -2705,6 +4175,12 @@
             "state": "translated",
             "value": "Henüz bir noktaya bağlı değil."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not linked to a spot yet."
+          }
         }
       }
     },
@@ -2715,6 +4191,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Henüz görülme kaydı yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No sightings yet"
           }
         }
       }
@@ -2727,6 +4209,12 @@
             "state": "translated",
             "value": "Henüz kayıt yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No records yet"
+          }
         }
       }
     },
@@ -2737,6 +4225,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Henüz takip ettiğin bir şey yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're not following anything yet"
           }
         }
       }
@@ -2749,6 +4243,12 @@
             "state": "translated",
             "value": "Hepsi isteğe bağlı. Kimlerin görebileceğini sen seç."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All optional. You choose who can see them."
+          }
         }
       }
     },
@@ -2759,6 +4259,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Her güncellemede üzerine yazılır; bildirimleri kapatırsan kullanılmaz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overwritten with every update; not used if you turn notifications off."
           }
         }
       }
@@ -2771,6 +4277,12 @@
             "state": "translated",
             "value": "Herkes 50–100 m bulanık konumu görür; tam konumu yalnızca koruyucular ve doğrulanmış besleyiciler görür."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everyone sees a blurred location (50–100 m); only guardians and verified feeders see the exact location."
+          }
         }
       }
     },
@@ -2781,6 +4293,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Herkese açık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Public"
           }
         }
       }
@@ -2793,6 +4311,12 @@
             "state": "translated",
             "value": "Hesabı sil"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete account"
+          }
         }
       }
     },
@@ -2803,6 +4327,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesabı silince"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you delete your account"
           }
         }
       }
@@ -2815,6 +4345,12 @@
             "state": "translated",
             "value": "Hesabımı kalıcı olarak sil"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permanently delete my account"
+          }
         }
       }
     },
@@ -2825,6 +4361,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesabın açık olduğu sürece"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As long as your account is open"
           }
         }
       }
@@ -2837,6 +4379,12 @@
             "state": "translated",
             "value": "Hesabın silindi. Bugüne kadar koyduğun her kap mama için teşekkürler."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account has been deleted. Thank you for every bowl of food you've put out so far."
+          }
         }
       }
     },
@@ -2847,6 +4395,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesabın silinsin mi?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete your account?"
           }
         }
       }
@@ -2859,6 +4413,12 @@
             "state": "translated",
             "value": "Hesabını istediğin an uygulama içinden silebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can delete your account from within the app at any time."
+          }
         }
       }
     },
@@ -2869,6 +4429,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesabını silince kişisel verilerin silinir; eklediğin noktalar topluluk için anonim olarak kalır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you delete your account, your personal data is deleted; the spots you added stay on for the community anonymously."
           }
         }
       }
@@ -2881,6 +4447,12 @@
             "state": "translated",
             "value": "Hesabını ve kişisel verilerini Ayarlar › Hesabı sil ile istediğin an silebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can delete your account and personal data at any time via Settings › Delete account."
+          }
         }
       }
     },
@@ -2891,6 +4463,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesap"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account"
           }
         }
       }
@@ -2903,6 +4481,12 @@
             "state": "translated",
             "value": "Hesap bilgileri"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account details"
+          }
         }
       }
     },
@@ -2913,6 +4497,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesap bilgilerin, takip ettiklerin ve bildirimlerin hesabını kullandığın sürece saklanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account details, followed items and notifications are kept for as long as you use your account."
           }
         }
       }
@@ -2925,6 +4515,12 @@
             "state": "translated",
             "value": "Hesap oluştur"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create account"
+          }
         }
       }
     },
@@ -2935,6 +4531,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hesapsız da haritayı gezebilir, noktaları görebilirsin. Mama koymak için sonra giriş yapman yeterli."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can browse the map and see spots without an account. Just sign in later to feed."
           }
         }
       }
@@ -2947,6 +4549,12 @@
             "state": "translated",
             "value": "Hoş geldin"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome"
+          }
         }
       }
     },
@@ -2957,6 +4565,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Isırabilir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May bite"
           }
         }
       }
@@ -2969,6 +4583,12 @@
             "state": "translated",
             "value": "Isırabilir. Elle besleme, dokunmaya çalışma; mamayı kaba bırak."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May bite. Don't hand-feed or try to touch; leave the food in the bowl."
+          }
         }
       }
     },
@@ -2979,6 +4599,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "KVKK aydınlatma metni"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KVKK privacy notice"
           }
         }
       }
@@ -2991,6 +4617,12 @@
             "state": "translated",
             "value": "KVKK aydınlatma metninin tamamı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full KVKK privacy notice"
+          }
         }
       }
     },
@@ -3001,6 +4633,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kaldırılmış ya da pasife alınmış olabilir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It may have been removed or deactivated."
           }
         }
       }
@@ -3013,6 +4651,12 @@
             "state": "translated",
             "value": "Kanuna aykırı işleme nedeniyle zarara uğradıysan giderilmesini talep etme"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Request compensation if you suffered harm due to unlawful processing"
+          }
         }
       }
     },
@@ -3023,6 +4667,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kap kirli veya kırık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bowl is dirty or broken"
           }
         }
       }
@@ -3035,6 +4685,12 @@
             "state": "translated",
             "value": "Kapat"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
         }
       }
     },
@@ -3045,6 +4701,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kapatılan ihtiyaç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closed need"
           }
         }
       }
@@ -3057,6 +4719,12 @@
             "state": "translated",
             "value": "Kapların çevresini temiz bırak, poşet ve ambalajları geri al. Temiz bir nokta komşuların da gönlünü kazanır."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave the area around the bowls clean and take away bags and packaging. A tidy spot wins over your neighbors too."
+          }
         }
       }
     },
@@ -3067,6 +4735,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kapı önlerine koyma"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't put it at doorways"
           }
         }
       }
@@ -3079,6 +4753,12 @@
             "state": "translated",
             "value": "Kapı önlerini temiz tut, artık bırakma, giriş kapılarının önüne koyma."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep doorways clean, don't leave leftovers, and don't put food in front of entrances."
+          }
         }
       }
     },
@@ -3089,6 +4769,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kapı önlerini ve kapların çevresini temiz tut."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep doorways and the area around the bowls clean."
           }
         }
       }
@@ -3101,6 +4787,12 @@
             "state": "translated",
             "value": "Karakteri"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temperament"
+          }
         }
       }
     },
@@ -3111,6 +4803,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kartı kapat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close card"
           }
         }
       }
@@ -3123,6 +4821,12 @@
             "state": "translated",
             "value": "Karışık"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mixed"
+          }
         }
       }
     },
@@ -3133,6 +4837,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kaydedemedik"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't save"
           }
         }
       }
@@ -3145,6 +4855,12 @@
             "state": "translated",
             "value": "Kaydediliyor…"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving…"
+          }
         }
       }
     },
@@ -3155,6 +4871,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kaydet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
           }
         }
       }
@@ -3167,6 +4889,12 @@
             "state": "translated",
             "value": "Kayıp / bulunan"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lost / found"
+          }
         }
       }
     },
@@ -3177,6 +4905,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kayıt ol"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign up"
           }
         }
       }
@@ -3189,6 +4923,12 @@
             "state": "translated",
             "value": "Kedi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cat"
+          }
         }
       }
     },
@@ -3199,6 +4939,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kedi ve köpek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cats and dogs"
           }
         }
       }
@@ -3211,6 +4957,12 @@
             "state": "translated",
             "value": "Kimler görebilir?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Who can see this?"
+          }
         }
       }
     },
@@ -3221,6 +4973,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kişisel verilerin silinir. Eklediğin noktalar ve hayvan kayıtları topluluk için anonim olarak kalır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your personal data is deleted. The spots and animal records you added stay on for the community anonymously."
           }
         }
       }
@@ -3233,6 +4991,12 @@
             "state": "translated",
             "value": "Kişisel verilerinin işlenip işlenmediğini öğrenme ve bilgi talep etme"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn whether your personal data is being processed and request information"
+          }
         }
       }
     },
@@ -3243,6 +5007,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Komşularla iyi geçinmenin küçük yolları"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Small ways to get along with neighbors"
           }
         }
       }
@@ -3255,6 +5025,12 @@
             "state": "translated",
             "value": "Komşularla konuş"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talk to your neighbors"
+          }
         }
       }
     },
@@ -3265,6 +5041,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Komşularınla konuş; birlikte sahiplenilen nokta yaşar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talk to your neighbors; a spot looked after together lasts."
           }
         }
       }
@@ -3277,6 +5059,12 @@
             "state": "translated",
             "value": "Konum geçmişini saklamayız. \"Mama koydum\" dediğinde yalnızca noktaya olan mesafe (metre) kaydedilir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We don't store location history. When you tap \"I fed them\", only the distance to the spot (in meters) is recorded."
+          }
         }
       }
     },
@@ -3287,6 +5075,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konum geçmişini saklamayız; yalnızca check-in anındaki mesafe kaydedilir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We don't store location history; only the distance at the time of check-in is recorded."
           }
         }
       }
@@ -3299,6 +5093,12 @@
             "state": "translated",
             "value": "Konum izni kapalı. Ayarlar'dan açabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location access is off. You can turn it on in Settings."
+          }
         }
       }
     },
@@ -3309,6 +5109,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konum izni kapalı. En yakın noktayı bulmak için Ayarlar'dan açabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location access is off. You can turn it on in Settings to find the nearest spot."
           }
         }
       }
@@ -3321,6 +5127,12 @@
             "state": "translated",
             "value": "Konum izni kapalı. Sahte check-in'leri önlemek için noktaya yakın olduğunu doğrulamamız gerekiyor."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location access is off. To prevent fake check-ins, we need to verify you're near the spot."
+          }
         }
       }
     },
@@ -3331,6 +5143,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konum seçme haritası. Haritayı kaydırarak iğneyi noktanın üstüne getir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location picker map. Drag the map to move the pin onto the spot."
           }
         }
       }
@@ -3343,6 +5161,12 @@
             "state": "translated",
             "value": "Konuma izin ver"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow location"
+          }
         }
       }
     },
@@ -3353,6 +5177,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konumları kötüye kullanıma karşı korumak, raporları 24 saat içinde incelemek."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To protect locations from misuse and review reports within 24 hours."
           }
         }
       }
@@ -3365,6 +5195,12 @@
             "state": "translated",
             "value": "Konumu doğrula"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verify location"
+          }
         }
       }
     },
@@ -3375,6 +5211,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konumum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My location"
           }
         }
       }
@@ -3387,6 +5229,12 @@
             "state": "translated",
             "value": "Konumumu yenile"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh my location"
+          }
         }
       }
     },
@@ -3397,6 +5245,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konumun kapalı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your location is off"
           }
         }
       }
@@ -3409,6 +5263,12 @@
             "state": "translated",
             "value": "Konumunu açarsan en yakın noktayı gösteririz."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you turn on location, we'll show you the nearest spot."
+          }
         }
       }
     },
@@ -3419,6 +5279,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Konumunu bilmemiz gerekiyor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We need to know your location"
           }
         }
       }
@@ -3431,6 +5297,12 @@
             "state": "translated",
             "value": "Konumunu kullanabilir miyiz?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can we use your location?"
+          }
         }
       }
     },
@@ -3441,6 +5313,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koruyucu ol"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Become a guardian"
           }
         }
       }
@@ -3453,6 +5331,12 @@
             "state": "translated",
             "value": "Koruyucu uyarıları"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardian alerts"
+          }
         }
       }
     },
@@ -3463,6 +5347,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koruyucular"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardians"
           }
         }
       }
@@ -3475,6 +5365,12 @@
             "state": "translated",
             "value": "Koruyucular noktayı sahiplenir: düzenli mama ve su koyar, kapları temiz tutar. Hangi günler uğrarsın?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardians take ownership of a spot: they put out food and water regularly and keep the bowls clean. Which days will you stop by?"
+          }
         }
       }
     },
@@ -3485,6 +5381,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koruyuculuk günlerin"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your guardian days"
           }
         }
       }
@@ -3497,6 +5399,12 @@
             "state": "translated",
             "value": "Koruyuculuk günlerini düzenle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit guardian days"
+          }
         }
       }
     },
@@ -3507,6 +5415,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koruyuculuktan çık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Step down as guardian"
           }
         }
       }
@@ -3519,6 +5433,12 @@
             "state": "translated",
             "value": "Koruyuculuktan çıktın. Emeğin için teşekkürler!"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've stepped down as guardian. Thank you for your effort!"
+          }
         }
       }
     },
@@ -3529,6 +5449,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Koruyucusu olduğun nokta uzun süre beslenmezse"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If a spot you guard goes unfed for a long time"
           }
         }
       }
@@ -3541,6 +5467,12 @@
             "state": "translated",
             "value": "Kulak küpesi veya kesiği var"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Has an ear tag or notch"
+          }
         }
       }
     },
@@ -3551,6 +5483,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kullanım koşulları"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms of use"
           }
         }
       }
@@ -3563,6 +5501,12 @@
             "state": "translated",
             "value": "Kulübe / barınak"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kennel / shelter"
+          }
         }
       }
     },
@@ -3573,6 +5517,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kulübe, kedi evi veya barınak"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kennel, cat house or shelter"
           }
         }
       }
@@ -3585,6 +5535,12 @@
             "state": "translated",
             "value": "Kuru mama, sabit saat"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dry food, fixed time"
+          }
         }
       }
     },
@@ -3595,6 +5551,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kuru mamayı tercih et ve her gün aynı saatlerde koy. Hayvanlar düzene alışır, mama ortada beklemez."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prefer dry food and put it out at the same times every day. Animals get used to the routine and food doesn't sit out."
           }
         }
       }
@@ -3607,6 +5569,12 @@
             "state": "translated",
             "value": "Köpek"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dog"
+          }
         }
       }
     },
@@ -3617,6 +5585,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kırmızı halka: acil ihtiyaç (yaralı/hasta hayvan)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red ring: urgent need (injured/sick animal)"
           }
         }
       }
@@ -3629,6 +5603,12 @@
             "state": "translated",
             "value": "Kısa bir ad (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A short name (optional)"
+          }
         }
       }
     },
@@ -3639,6 +5619,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kısır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutered"
           }
         }
       }
@@ -3651,6 +5637,12 @@
             "state": "translated",
             "value": "Kısırlaştırma"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutering"
+          }
         }
       }
     },
@@ -3661,6 +5653,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kısırlaştırma ihtiyacını bildir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report a neutering need"
           }
         }
       }
@@ -3673,6 +5671,12 @@
             "state": "translated",
             "value": "Kısırlaştırılmamış bir hayvan görürsen \"İhtiyaç bildir\" ile kısırlaştırma talebi aç. Kulak küpesi veya kesiği kısırlık işaretidir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you see an unneutered animal, open a neutering request with \"Report a need\". An ear tag or notch means it's neutered."
+          }
         }
       }
     },
@@ -3683,6 +5687,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kısırlaştırılmış mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is it neutered?"
           }
         }
       }
@@ -3695,6 +5705,12 @@
             "state": "translated",
             "value": "Kısırlaştırılmış sokak hayvanlarının işaretidir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It marks neutered street animals."
+          }
         }
       }
     },
@@ -3705,6 +5721,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kış barınağı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Winter shelter"
           }
         }
       }
@@ -3717,6 +5739,12 @@
             "state": "translated",
             "value": "Kış kahramanı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Winter hero"
+          }
         }
       }
     },
@@ -3727,6 +5755,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Liste"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List"
           }
         }
       }
@@ -3739,6 +5773,12 @@
             "state": "translated",
             "value": "Liste ve İhtiyaçlar'da uygulanır; harita görünen bölgeyi gösterir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applies to the List and Needs; the map shows the visible area."
+          }
         }
       }
     },
@@ -3749,6 +5789,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lütfen yaklaşma; mamayı uzaktan bırak. Hem senin hem onun güvenliği için."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please don't approach; leave the food from a distance. It's safer for both of you."
           }
         }
       }
@@ -3761,6 +5807,12 @@
             "state": "translated",
             "value": "Mahalle (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neighborhood (optional)"
+          }
         }
       }
     },
@@ -3771,6 +5823,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mahalle koruyucusu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neighborhood guardian"
           }
         }
       }
@@ -3783,6 +5841,12 @@
             "state": "translated",
             "value": "Mahallede verilen isim, ör. Pamuk"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The name used in the neighborhood, e.g. Pamuk"
+          }
         }
       }
     },
@@ -3793,6 +5857,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mahallendeki dostu tanıt. Bildiklerini yaz, bilmediklerini boş bırak."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduce the friend in your neighborhood. Write what you know, leave the rest blank."
           }
         }
       }
@@ -3805,6 +5875,12 @@
             "state": "translated",
             "value": "Mahallendeki mama ve su noktaları tek haritada. Yeşil yakın zamanda mama konduğunu, turuncu mama beklediğini gösterir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feeding and water spots in your neighborhood, on one map. Green means food was put out recently, orange means waiting for food."
+          }
         }
       }
     },
@@ -3812,6 +5888,12 @@
       "extractionState": "manual",
       "localizations": {
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Mama Haritası"
@@ -3827,6 +5909,12 @@
             "state": "translated",
             "value": "Mama Haritası %@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası %@"
+          }
         }
       }
     },
@@ -3837,6 +5925,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama Haritası destek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası support"
           }
         }
       }
@@ -3849,6 +5943,12 @@
             "state": "translated",
             "value": "Mama Haritası tıbbi tavsiye vermez. Hayvanın durumu için bir veterinere danış."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası does not give medical advice. Consult a vet about an animal's condition."
+          }
         }
       }
     },
@@ -3859,6 +5959,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama Haritası tıbbi tavsiye vermez. Paylaştıktan sonra en yakın veteriner kliniklerini göstereceğiz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası does not give medical advice. After you share, we'll show you the nearest vet clinics."
           }
         }
       }
@@ -3871,6 +5977,12 @@
             "state": "translated",
             "value": "Mama Haritası'nı kullanırken kişisel verilerini 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında nasıl işlediğimizi kısaca anlatıyoruz."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A short explanation of how we process your personal data when you use Mama Haritası, under Law No. 6698 on the Protection of Personal Data (KVKK, Turkish data protection law)."
+          }
         }
       }
     },
@@ -3881,6 +5993,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama Haritası. Bir kap mama, bir can."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası. A bowl of food, a life."
           }
         }
       }
@@ -3893,6 +6011,12 @@
             "state": "translated",
             "value": "Mama bekliyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for food"
+          }
         }
       }
     },
@@ -3903,6 +6027,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama bitti"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of food"
           }
         }
       }
@@ -3915,6 +6045,12 @@
             "state": "translated",
             "value": "Mama gerekli"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food needed"
+          }
         }
       }
     },
@@ -3925,6 +6061,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama gerekli dendi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food needed reported"
           }
         }
       }
@@ -3937,6 +6079,12 @@
             "state": "translated",
             "value": "Mama gerekli diye bildir"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report food needed"
+          }
         }
       }
     },
@@ -3947,6 +6095,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama kabı veya mama bırakılan yer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food bowl or place where food is left"
           }
         }
       }
@@ -3959,6 +6113,12 @@
             "state": "translated",
             "value": "Mama kondu"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food put out"
+          }
         }
       }
     },
@@ -3969,6 +6129,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama koy"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Put out food"
           }
         }
       }
@@ -3981,6 +6147,12 @@
             "state": "translated",
             "value": "Mama koy, bildir"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feed and report"
+          }
         }
       }
     },
@@ -3991,6 +6163,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama koydum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I fed them"
           }
         }
       }
@@ -4003,6 +6181,12 @@
             "state": "translated",
             "value": "Mama koyduğun yer haritada yoksa yeni bir nokta olarak ekleyebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the place where you put out food isn't on the map, you can add it as a new spot."
+          }
         }
       }
     },
@@ -4013,6 +6197,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama koyduğunda tek dokunuşla haber ver. Kap boşsa \"mama gerekli\" de; yakındaki gönüllüler haberdar olsun."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let us know with one tap when you put out food. If the bowl is empty, say \"food needed\" so nearby volunteers know."
           }
         }
       }
@@ -4025,6 +6215,12 @@
             "state": "translated",
             "value": "Mama koymak ve nokta eklemek için giriş yap. Haritayı gezmek için hesap gerekmez."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to feed and add spots. No account needed to browse the map."
+          }
         }
       }
     },
@@ -4035,6 +6231,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama noktası"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feeding spot"
           }
         }
       }
@@ -4047,6 +6249,12 @@
             "state": "translated",
             "value": "Mama paketine destek ol"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support a food package"
+          }
         }
       }
     },
@@ -4057,6 +6265,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mama, su ve barınak bir arada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food, water and shelter together"
           }
         }
       }
@@ -4069,6 +6283,12 @@
             "state": "translated",
             "value": "Mesafe"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance"
+          }
         }
       }
     },
@@ -4079,6 +6299,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Metinde uygunsuz bir ifade var gibi görünüyor. Biraz düzenler misin?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The text seems to contain inappropriate wording. Could you edit it a little?"
           }
         }
       }
@@ -4091,6 +6317,12 @@
             "state": "translated",
             "value": "Mükerrer kontrolü"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate check"
+          }
         }
       }
     },
@@ -4101,6 +6333,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ne eklemek istersin?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What would you like to add?"
           }
         }
       }
@@ -4113,6 +6351,12 @@
             "state": "translated",
             "value": "Ne gerekiyor?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What is needed?"
+          }
         }
       }
     },
@@ -4123,6 +6367,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ne gördün? Kısaca anlat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What did you see? Briefly describe"
           }
         }
       }
@@ -4135,6 +6385,12 @@
             "state": "translated",
             "value": "Ne kadar koydun? (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How much did you put out? (optional)"
+          }
         }
       }
     },
@@ -4145,6 +6401,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ne kadar saklıyoruz?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long do we keep it?"
           }
         }
       }
@@ -4157,6 +6419,12 @@
             "state": "translated",
             "value": "Ne tür bir nokta?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What kind of spot?"
+          }
         }
       }
     },
@@ -4167,6 +6435,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neden işliyoruz?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Why do we process it?"
           }
         }
       }
@@ -4179,6 +6453,12 @@
             "state": "translated",
             "value": "Nokta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spot"
+          }
         }
       }
     },
@@ -4189,6 +6469,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nokta detayı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spot details"
           }
         }
       }
@@ -4201,6 +6487,12 @@
             "state": "translated",
             "value": "Nokta ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add spot"
+          }
         }
       }
     },
@@ -4211,6 +6503,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nokta yüklenemedi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load the spot"
           }
         }
       }
@@ -4223,6 +6521,12 @@
             "state": "translated",
             "value": "Nokta özetini gösterir"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the spot summary"
+          }
         }
       }
     },
@@ -4233,6 +6537,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nokta, sokak veya park ara"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search spot, street or park"
           }
         }
       }
@@ -4245,6 +6555,12 @@
             "state": "translated",
             "value": "Noktalar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spots"
+          }
         }
       }
     },
@@ -4255,6 +6571,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Noktalar yüklenemedi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load spots"
           }
         }
       }
@@ -4267,6 +6589,12 @@
             "state": "translated",
             "value": "Noktalara teslim"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delivered to spots"
+          }
         }
       }
     },
@@ -4277,6 +6605,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Noktaya biraz daha yaklaşman gerekiyor: %@ uzaktasın, en fazla %@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need to get a bit closer to the spot: you're %@ away, the maximum is %@."
           }
         }
       }
@@ -4289,6 +6623,12 @@
             "state": "translated",
             "value": "Noktayı ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add the spot"
+          }
         }
       }
     },
@@ -4299,6 +6639,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Noktayı takip ediyorsun. Değişikliklerden haberdar olacaksın."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're following this spot. You'll be notified of changes."
           }
         }
       }
@@ -4311,6 +6657,12 @@
             "state": "translated",
             "value": "Noktayı takip et"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow spot"
+          }
         }
       }
     },
@@ -4322,6 +6674,12 @@
             "state": "translated",
             "value": "Noktayı takip etmeyi bıraktın."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You stopped following the spot."
+          }
         }
       }
     },
@@ -4329,6 +6687,12 @@
       "extractionState": "manual",
       "localizations": {
         "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Normal"
@@ -4344,6 +6708,12 @@
             "state": "translated",
             "value": "Not (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note (optional)"
+          }
         }
       }
     },
@@ -4354,6 +6724,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Okunmadı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unread"
           }
         }
       }
@@ -4366,6 +6742,12 @@
             "state": "translated",
             "value": "Orta"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
         }
       }
     },
@@ -4376,6 +6758,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ortak dernek yakında açıklanacak"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partner association to be announced soon"
           }
         }
       }
@@ -4388,6 +6776,12 @@
             "state": "translated",
             "value": "Ortak derneğe yaptığın bağış, mama olarak en çok ihtiyaç olan noktalara ulaşır. Nereye gittiğini de görürsün."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your donation to the partner association reaches the spots that need food the most. You'll see where it went, too."
+          }
         }
       }
     },
@@ -4398,6 +6792,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otomatik analiz sonucu aleyhine bir sonuca itiraz etme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Object to a result against you from an automated analysis"
           }
         }
       }
@@ -4410,6 +6810,12 @@
             "state": "translated",
             "value": "Paneli küçült"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimize panel"
+          }
         }
       }
     },
@@ -4420,6 +6826,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Paylaşamadık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't share"
           }
         }
       }
@@ -4432,6 +6844,12 @@
             "state": "translated",
             "value": "Paylaşılıyor…"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharing…"
+          }
         }
       }
     },
@@ -4442,6 +6860,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Paz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sun"
           }
         }
       }
@@ -4454,6 +6878,12 @@
             "state": "translated",
             "value": "Per"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu"
+          }
         }
       }
     },
@@ -4464,6 +6894,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pin renklerinin anlamı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What the pin colors mean"
           }
         }
       }
@@ -4476,6 +6912,12 @@
             "state": "translated",
             "value": "Popüler"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Popular"
+          }
         }
       }
     },
@@ -4486,6 +6928,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Profil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile"
           }
         }
       }
@@ -4498,6 +6946,12 @@
             "state": "translated",
             "value": "Profil yükleniyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading profile"
+          }
         }
       }
     },
@@ -4508,6 +6962,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Profili düzenle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit profile"
           }
         }
       }
@@ -4520,6 +6980,12 @@
             "state": "translated",
             "value": "Profilin güncellendi."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your profile has been updated."
+          }
         }
       }
     },
@@ -4530,6 +6996,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pzt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mon"
           }
         }
       }
@@ -4542,6 +7014,12 @@
             "state": "translated",
             "value": "Raporla"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report"
+          }
         }
       }
     },
@@ -4552,6 +7030,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Raporlar ve engellemeler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reports and blocks"
           }
         }
       }
@@ -4564,6 +7048,12 @@
             "state": "translated",
             "value": "Raporu gönder"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send report"
+          }
         }
       }
     },
@@ -4574,6 +7064,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Raporun moderasyon ekibine gider ve 24 saat içinde incelenir. Kimliğin raporlanan kişiyle paylaşılmaz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your report goes to the moderation team and is reviewed within 24 hours. Your identity isn't shared with the person reported."
           }
         }
       }
@@ -4586,6 +7082,12 @@
             "state": "translated",
             "value": "Renk / desen, ör. sarman, tekir, siyah"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color / pattern, e.g. ginger, tabby, black"
+          }
         }
       }
     },
@@ -4596,6 +7098,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Renklerin anlamı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What the colors mean"
           }
         }
       }
@@ -4608,6 +7116,12 @@
             "state": "translated",
             "value": "Resmi kurumlar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Official authorities"
+          }
         }
       }
     },
@@ -4618,6 +7132,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozetler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Badges"
           }
         }
       }
@@ -4630,6 +7150,12 @@
             "state": "translated",
             "value": "Sadece takip ettiklerim"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only those I follow"
+          }
         }
       }
     },
@@ -4640,6 +7166,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sahiplendirme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adoption"
           }
         }
       }
@@ -4652,6 +7184,12 @@
             "state": "translated",
             "value": "Sahte kayıtları önlemek"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To prevent fake records"
+          }
         }
       }
     },
@@ -4662,6 +7200,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sakin"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm"
           }
         }
       }
@@ -4674,6 +7218,12 @@
             "state": "translated",
             "value": "Sal"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tue"
+          }
         }
       }
     },
@@ -4684,6 +7234,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sana bildirim"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notify you"
           }
         }
       }
@@ -4696,6 +7252,12 @@
             "state": "translated",
             "value": "Sana bildirim gönderebilmek için cihazının push anahtarı."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your device's push token, so we can send you notifications."
+          }
         }
       }
     },
@@ -4706,6 +7268,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sessiz saatler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiet hours"
           }
         }
       }
@@ -4718,6 +7286,12 @@
             "state": "translated",
             "value": "Seçilen profil fotoğrafı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected profile photo"
+          }
         }
       }
     },
@@ -4728,6 +7302,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seçili nokta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected spot"
           }
         }
       }
@@ -4740,6 +7320,12 @@
             "state": "translated",
             "value": "Seçimi geri al"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo selection"
+          }
         }
       }
     },
@@ -4750,6 +7336,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seçtiğin mesafede kayıtlı nokta yok."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are no spots in the distance you selected."
           }
         }
       }
@@ -4762,6 +7354,12 @@
             "state": "translated",
             "value": "Sokak hayvanları için belediyenin veteriner birimine Beyaz Masa üzerinden ulaşabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For street animals, you can reach the municipality's veterinary unit through Beyaz Masa."
+          }
         }
       }
     },
@@ -4772,6 +7370,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sokaktaki bir dostu tanıt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduce a friend from the street"
           }
         }
       }
@@ -4784,6 +7388,12 @@
             "state": "translated",
             "value": "Sokaktaki dostlarımızı beslerken komşularımızla da iyi geçinmek, beslemenin sürmesini sağlar. Birkaç küçük alışkanlık büyük fark yaratır."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getting along with our neighbors while feeding our friends on the street keeps the feeding going. A few small habits make a big difference."
+          }
         }
       }
     },
@@ -4794,6 +7404,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Son"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last"
           }
         }
       }
@@ -4806,6 +7422,12 @@
             "state": "translated",
             "value": "Son 12 saatte mama kondu"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food put out in the last 12 hours"
+          }
         }
       }
     },
@@ -4816,6 +7438,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Son 7 gün"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last 7 days"
           }
         }
       }
@@ -4828,6 +7456,12 @@
             "state": "translated",
             "value": "Son 7 günde %@ noktaya uğrandı."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ spots visited in the last 7 days."
+          }
         }
       }
     },
@@ -4838,6 +7472,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Son aramalar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent searches"
           }
         }
       }
@@ -4850,6 +7490,12 @@
             "state": "translated",
             "value": "Son görülme"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last seen"
+          }
         }
       }
     },
@@ -4860,6 +7506,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Son mama %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last food %@"
           }
         }
       }
@@ -4872,6 +7524,12 @@
             "state": "translated",
             "value": "Son yaklaşık konum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last approximate location"
+          }
         }
       }
     },
@@ -4882,6 +7540,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sonuç bulamadık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results found"
           }
         }
       }
@@ -4894,6 +7558,12 @@
             "state": "translated",
             "value": "Soruların için: %@"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For your questions: %@"
+          }
         }
       }
     },
@@ -4904,6 +7574,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sorumlu besleme rehberi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Responsible feeding guide"
           }
         }
       }
@@ -4916,6 +7592,12 @@
             "state": "translated",
             "value": "Sorumlu besleme rehberini oku"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read the responsible feeding guide"
+          }
         }
       }
     },
@@ -4926,6 +7608,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Spam veya sahte"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spam or fake"
           }
         }
       }
@@ -4938,6 +7626,12 @@
             "state": "translated",
             "value": "Su bitti"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of water"
+          }
         }
       }
     },
@@ -4948,6 +7642,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Su kabı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Water bowl"
           }
         }
       }
@@ -4960,6 +7660,12 @@
             "state": "translated",
             "value": "Su kaplarını sık sık yıka ve tazele. Yazın gölgeye, kışın donmayacak bir yere koy."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wash and refill water bowls often. Place them in the shade in summer and somewhere they won't freeze in winter."
+          }
         }
       }
     },
@@ -4970,6 +7676,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Su kaplarını temizle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean the water bowls"
           }
         }
       }
@@ -4982,6 +7694,12 @@
             "state": "translated",
             "value": "Su koydum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I gave water"
+          }
         }
       }
     },
@@ -4992,6 +7710,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sunucularımız AB'de, Frankfurt'ta bulunur. Yurt dışına aktarım KVKK hükümleri açısından hukuki değerlendirmeye tabidir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Our servers are in the EU, in Frankfurt. Transfers abroad are subject to legal assessment under KVKK provisions."
           }
         }
       }
@@ -5004,6 +7728,12 @@
             "state": "translated",
             "value": "Sıfırla"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
         }
       }
     },
@@ -5014,6 +7744,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sıradaki %lld check-in gönderildi. Teşekkürler!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld queued check-ins sent. Thank you!"
           }
         }
       }
@@ -5026,6 +7762,12 @@
             "state": "translated",
             "value": "Sıralama"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort"
+          }
         }
       }
     },
@@ -5036,6 +7778,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "TL karşılığı günlük kurla, yaklaşık hesaplanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The TL equivalent is approximated at the daily rate."
           }
         }
       }
@@ -5048,6 +7796,12 @@
             "state": "translated",
             "value": "Taciz veya hakaret"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harassment or insults"
+          }
         }
       }
     },
@@ -5058,6 +7812,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tahmini yaş"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated age"
           }
         }
       }
@@ -5070,6 +7830,12 @@
             "state": "translated",
             "value": "Takibi bırak"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfollow"
+          }
         }
       }
     },
@@ -5080,6 +7846,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Takip edilen noktalar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Followed spots"
           }
         }
       }
@@ -5092,6 +7864,12 @@
             "state": "translated",
             "value": "Takip ediyorsun. Yeni ihtiyaçlarını sana haber vereceğiz."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're following. We'll let you know about its new needs."
+          }
         }
       }
     },
@@ -5102,6 +7880,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Takip et"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow"
           }
         }
       }
@@ -5114,6 +7898,12 @@
             "state": "translated",
             "value": "Takip etmek için giriş yap"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to follow"
+          }
         }
       }
     },
@@ -5124,6 +7914,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Takip ettiklerim"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Following"
           }
         }
       }
@@ -5136,6 +7932,12 @@
             "state": "translated",
             "value": "Takip ettiğin nokta ve hayvanlardaki değişiklikler"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes at the spots and animals you follow"
+          }
         }
       }
     },
@@ -5146,6 +7948,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Takip ettiğin noktaları görmek için giriş yap."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to see the spots you follow."
           }
         }
       }
@@ -5158,6 +7966,12 @@
             "state": "translated",
             "value": "Tam metne sonra Profil › Ayarlar › Gizlilik ve KVKK bölümünden de ulaşabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can also find the full text later under Profile › Settings › Privacy and KVKK."
+          }
         }
       }
     },
@@ -5168,6 +7982,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tamam"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         }
       }
@@ -5180,6 +8000,12 @@
             "state": "translated",
             "value": "Tanıtımı geçer"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skips the intro"
+          }
         }
       }
     },
@@ -5190,6 +8016,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Taslak — hukuk onayı bekliyor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draft — awaiting legal approval"
           }
         }
       }
@@ -5202,6 +8034,12 @@
             "state": "translated",
             "value": "Tekrar dene"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
         }
       }
     },
@@ -5212,6 +8050,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Temiz su kabı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean water bowl"
           }
         }
       }
@@ -5224,6 +8068,12 @@
             "state": "translated",
             "value": "Temizle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
         }
       }
     },
@@ -5234,6 +8084,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teslim fotoğrafları"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delivery photos"
           }
         }
       }
@@ -5246,6 +8102,12 @@
             "state": "translated",
             "value": "Teslim kanıtları v1.1'de geliyor. Gönüllüler mamayı noktalara bıraktığında fotoğrafını, konumunu ve kilosunu burada göreceksin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delivery proof is coming in v1.1. When volunteers leave food at spots, you'll see its photo, location and weight here."
+          }
         }
       }
     },
@@ -5256,6 +8118,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teşekkürler! %@ mahallenin defterine eklendi."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! %@ was added to the neighborhood's log."
           }
         }
       }
@@ -5268,6 +8136,12 @@
             "state": "translated",
             "value": "Teşekkürler! Bildirimin alındı (%lld/%@)."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! Your report was received (%lld/%@)."
+          }
         }
       }
     },
@@ -5278,6 +8152,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teşekkürler! Mama bekleyen noktayı sen kapattın."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! You closed a spot that was waiting for food."
           }
         }
       }
@@ -5290,6 +8170,12 @@
             "state": "translated",
             "value": "Teşekkürler! Mama koyduğun kaydedildi."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! Your feeding was recorded."
+          }
         }
       }
     },
@@ -5300,6 +8186,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teşekkürler! Nokta haritadan kaldırıldı."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! The spot was removed from the map."
           }
         }
       }
@@ -5312,6 +8204,12 @@
             "state": "translated",
             "value": "Teşekkürler! İhtiyaç paylaşıldı, yakındaki gönüllüler görecek."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! The need was shared, and nearby volunteers will see it."
+          }
         }
       }
     },
@@ -5322,6 +8220,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teşekkürler! İlgilendiğini herkes görecek."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you! Everyone will see that you're on it."
           }
         }
       }
@@ -5334,6 +8238,12 @@
             "state": "translated",
             "value": "Tipi ve beslenen hayvanları seç. Ad isteğe bağlı."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the type and the animals fed. Name is optional."
+          }
         }
       }
     },
@@ -5344,6 +8254,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toplu mama alımı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bulk food purchase"
           }
         }
       }
@@ -5356,6 +8272,12 @@
             "state": "translated",
             "value": "Topluluk"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Community"
+          }
         }
       }
     },
@@ -5366,6 +8288,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Topluluğu ve hayvanları korumak için gönderdiğin raporlar ve engellediğin kullanıcılar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reports you've sent and users you've blocked to protect the community and animals."
           }
         }
       }
@@ -5378,6 +8306,12 @@
             "state": "translated",
             "value": "Tümü"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
+          }
         }
       }
     },
@@ -5388,6 +8322,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tümünü okundu işaretle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark all as read"
           }
         }
       }
@@ -5400,6 +8340,12 @@
             "state": "translated",
             "value": "Tür"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Species"
+          }
         }
       }
     },
@@ -5410,6 +8356,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Türkçe ve İngilizce desteklenir. Dili iPhone Ayarlar › Mama Haritası › Dil bölümünden değiştirebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turkish and English are supported. You can change the language under iPhone Settings › Mama Haritası › Language."
           }
         }
       }
@@ -5422,6 +8374,12 @@
             "state": "translated",
             "value": "Uyarı (isteğe bağlı)"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning (optional)"
+          }
         }
       }
     },
@@ -5432,6 +8390,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uyarı profilin en üstünde gösterilir; hem insanların hem hayvanın güvenliği için."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The warning is shown at the top of the profile, for the safety of both people and the animal."
           }
         }
       }
@@ -5444,6 +8408,12 @@
             "state": "translated",
             "value": "Uyarı yok"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No warning"
+          }
         }
       }
     },
@@ -5454,6 +8424,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uygula"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply"
           }
         }
       }
@@ -5466,6 +8442,12 @@
             "state": "translated",
             "value": "Uygulama dili"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App language"
+          }
         }
       }
     },
@@ -5476,6 +8458,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uygunsuz içerik"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inappropriate content"
           }
         }
       }
@@ -5488,6 +8476,12 @@
             "state": "translated",
             "value": "Uysal"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gentle"
+          }
         }
       }
     },
@@ -5498,6 +8492,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vazgeç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
@@ -5510,6 +8510,12 @@
             "state": "translated",
             "value": "Veriler nerede?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where is the data?"
+          }
         }
       }
     },
@@ -5520,6 +8526,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Veteriner"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vet"
           }
         }
       }
@@ -5532,6 +8544,12 @@
             "state": "translated",
             "value": "Veteriner kliniği"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vet clinic"
+          }
         }
       }
     },
@@ -5542,6 +8560,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Veteriner, kısırlaştırma, barınak…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vet, neutering, shelter…"
           }
         }
       }
@@ -5554,6 +8578,12 @@
             "state": "translated",
             "value": "Veteriner, kısırlaştırma…"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vet, neutering…"
+          }
         }
       }
     },
@@ -5564,6 +8594,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yaklaşmayın"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep away"
           }
         }
       }
@@ -5576,6 +8612,12 @@
             "state": "translated",
             "value": "Yaklaşık konum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Approximate location"
+          }
         }
       }
     },
@@ -5586,6 +8628,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yaklaşık konum gösteriliyor. Tam konumu koruyucular ve doğrulanmış besleyiciler görür."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing approximate location. Guardians and verified feeders see the exact location."
           }
         }
       }
@@ -5598,6 +8646,12 @@
             "state": "translated",
             "value": "Yakında"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soon"
+          }
         }
       }
     },
@@ -5608,6 +8662,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakında veteriner kliniği bulamadık."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find a vet clinic nearby."
           }
         }
       }
@@ -5620,6 +8680,12 @@
             "state": "translated",
             "value": "Yakındaki \"mama gerekli\""
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nearby \"food needed\""
+          }
         }
       }
     },
@@ -5630,6 +8696,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakındaki bildirimleri açarsan yalnızca son yaklaşık konumun tutulur; her güncellemede üzerine yazılır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you turn on nearby notifications, only your last approximate location is kept; it's overwritten with every update."
           }
         }
       }
@@ -5642,6 +8714,12 @@
             "state": "translated",
             "value": "Yakındaki gönüllülere haber vereceğiz. Biri mama koyunca bildirim kapanır."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We'll let nearby volunteers know. The alert closes when someone puts out food."
+          }
         }
       }
     },
@@ -5652,6 +8730,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakındaki noktaları göstermek ve 'Mama koydum' dediğinde noktanın yanında olduğunu doğrulamak için. Konum geçmişini saklamayız."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To show nearby spots and to verify you're at the spot when you tap \"I fed them\". We don't store location history."
           }
         }
       }
@@ -5664,6 +8748,12 @@
             "state": "translated",
             "value": "Yakındaki noktaları göstermek, \"mama gerekli\" haberlerini iletmek."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To show nearby spots and deliver \"food needed\" alerts."
+          }
         }
       }
     },
@@ -5674,6 +8764,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakındaki noktayı otomatik seçeriz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We pick the nearby spot automatically"
           }
         }
       }
@@ -5686,6 +8782,12 @@
             "state": "translated",
             "value": "Yakındaki takip ettiklerini görmek için konum iznini açabilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can turn on location access to see nearby items you follow."
+          }
         }
       }
     },
@@ -5696,6 +8798,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakındaki veterinerler aranıyor…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for nearby vets…"
           }
         }
       }
@@ -5708,6 +8816,12 @@
             "state": "translated",
             "value": "Yakınlaştırır"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zooms in"
+          }
         }
       }
     },
@@ -5718,6 +8832,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınında açık ihtiyaç yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No open needs near you"
           }
         }
       }
@@ -5730,6 +8850,12 @@
             "state": "translated",
             "value": "Yakınında açık ihtiyaç yok. Harika!"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No open needs near you. Great!"
+          }
         }
       }
     },
@@ -5740,6 +8866,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınında henüz kayıtlı bir besleme noktası yok."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's no registered feeding spot near you yet."
           }
         }
       }
@@ -5752,6 +8884,12 @@
             "state": "translated",
             "value": "Yakınında kayıtlı kedi evi yok. İlkini sen ekleyebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's no registered cat house near you. You can add the first one."
+          }
         }
       }
     },
@@ -5762,6 +8900,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınında kayıtlı nokta bulamadık. Haritada noktayı açıp oradan da ihtiyaç bildirebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find a registered spot near you. You can open a spot on the map and report a need from there."
           }
         }
       }
@@ -5774,6 +8918,12 @@
             "state": "translated",
             "value": "Yakınında kayıtlı nokta bulamadık. Hayvanı noktasız da ekleyebilirsin."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't find a registered spot near you. You can add the animal without a spot."
+          }
         }
       }
     },
@@ -5784,6 +8934,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınında mama bekleyen bir nokta olduğunda veya takip ettiğin noktada bir şey değiştiğinde burada göreceksin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll see it here when a spot near you is waiting for food or something changes at a spot you follow."
           }
         }
       }
@@ -5796,6 +8952,12 @@
             "state": "translated",
             "value": "Yakınında mama bekleyen hayvanlardan haberdar ol"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay informed about animals waiting for food near you"
+          }
         }
       }
     },
@@ -5806,6 +8968,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınında mama gereken noktalar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spots near you that need food"
           }
         }
       }
@@ -5818,6 +8986,12 @@
             "state": "translated",
             "value": "Yakınında şu an mama bekleyen nokta yok. Harika!"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No spots near you are waiting for food right now. Great!"
+          }
         }
       }
     },
@@ -5828,6 +9002,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yakınındaki bir kap boşaldığında veya takip ettiğin noktada bir şey değiştiğinde haber verelim."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We'll let you know when a bowl near you runs empty or something changes at a spot you follow."
           }
         }
       }
@@ -5840,6 +9020,12 @@
             "state": "translated",
             "value": "Yakınındaki noktasını işaretleriz; konumun kaydedilmez."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We mark the spot near you; your location isn't stored."
+          }
         }
       }
     },
@@ -5850,6 +9036,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yalnızca uygulamayı kullanırken; arka planda konum istemeyiz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only while using the app; we don't ask for background location."
           }
         }
       }
@@ -5862,6 +9054,12 @@
             "state": "translated",
             "value": "Yalnızca yakındaki bildirimler açıksa: yaklaşık 110 m'ye yuvarlanmış tek bir değer, her güncellemede üzerine yazılır."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only if nearby notifications are on: a single value rounded to about 110 m, overwritten with every update."
+          }
         }
       }
     },
@@ -5872,6 +9070,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yanlış konum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong location"
           }
         }
       }
@@ -5884,6 +9088,12 @@
             "state": "translated",
             "value": "Yaralı veya hasta hayvan için"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For an injured or sick animal"
+          }
         }
       }
     },
@@ -5894,6 +9104,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yarıçapı ve bildirim türlerini Ayarlar'dan değiştirebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can change the radius and notification types in Settings."
           }
         }
       }
@@ -5906,6 +9122,12 @@
             "state": "translated",
             "value": "Yavru"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puppy/kitten"
+          }
         }
       }
     },
@@ -5916,6 +9138,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yaş bilinmiyor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Age unknown"
           }
         }
       }
@@ -5928,6 +9156,12 @@
             "state": "translated",
             "value": "Yaşlı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Senior"
+          }
         }
       }
     },
@@ -5938,6 +9172,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yemek artıkları, soğan, sarımsak, çikolata, kemik ve baharatlı yiyecekler hayvanlara zarar verir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Table scraps, onion, garlic, chocolate, bones and spicy foods are harmful to animals."
           }
         }
       }
@@ -5950,6 +9190,12 @@
             "state": "translated",
             "value": "Yeni besleme noktası"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New feeding spot"
+          }
         }
       }
     },
@@ -5960,6 +9206,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yeni bir besleme noktası işaretle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark a new feeding spot"
           }
         }
       }
@@ -5972,6 +9224,12 @@
             "state": "translated",
             "value": "Yeni nokta ekle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add new spot"
+          }
         }
       }
     },
@@ -5982,6 +9240,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yetişkin"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adult"
           }
         }
       }
@@ -5994,6 +9258,12 @@
             "state": "translated",
             "value": "Yol tarifi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Directions"
+          }
         }
       }
     },
@@ -6004,6 +9274,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Know the third parties it's transferred to, in Turkey or abroad"
           }
         }
       }
@@ -6016,6 +9292,12 @@
             "state": "translated",
             "value": "Yüklemeden önce küçültülür; içindeki EXIF ve GPS konum bilgisi silinir."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downsized before uploading; EXIF and GPS location data is removed."
+          }
         }
       }
     },
@@ -6026,6 +9308,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "acil ihtiyaç var"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "urgent need"
           }
         }
       }
@@ -6038,6 +9326,12 @@
             "state": "translated",
             "value": "bekliyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "waiting"
+          }
         }
       }
     },
@@ -6049,16 +9343,11 @@
             "state": "translated",
             "value": "günlük kurla"
           }
-        }
-      }
-    },
-    "mama.connectivity": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "mama.connectivity"
+            "value": "at the daily rate"
           }
         }
       }
@@ -6071,6 +9360,12 @@
             "state": "translated",
             "value": "tamamlandı"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "completed"
+          }
         }
       }
     },
@@ -6081,6 +9376,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "v1.1'de"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in v1.1"
           }
         }
       }
@@ -6093,6 +9394,12 @@
             "state": "translated",
             "value": "veya e-posta ile"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "or with email"
+          }
         }
       }
     },
@@ -6103,6 +9410,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "yakında"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "soon"
           }
         }
       }
@@ -6115,6 +9428,12 @@
             "state": "translated",
             "value": "Çar"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wed"
+          }
         }
       }
     },
@@ -6125,6 +9444,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çekingen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shy"
           }
         }
       }
@@ -6137,6 +9462,12 @@
             "state": "translated",
             "value": "Çevrende bir kap boşalınca"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When a bowl runs empty around you"
+          }
         }
       }
     },
@@ -6147,6 +9478,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çevrimdışı: ihtiyaçlar güncellenemedi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline: couldn't update needs"
           }
         }
       }
@@ -6159,6 +9496,12 @@
             "state": "translated",
             "value": "Çevrimdışı: son görülen noktalar gösteriliyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline: showing last seen spots"
+          }
         }
       }
     },
@@ -6169,6 +9512,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çocuklarla iyi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good with kids"
           }
         }
       }
@@ -6181,6 +9530,12 @@
             "state": "translated",
             "value": "Çok yakında kayıtlı bir nokta var. Aynı yerse mevcut noktayı kullanmak haritayı düzenli tutar."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's a registered spot very close by. If it's the same place, using the existing spot keeps the map tidy."
+          }
         }
       }
     },
@@ -6191,6 +9546,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çözüldü"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resolved"
           }
         }
       }
@@ -6203,6 +9564,12 @@
             "state": "translated",
             "value": "Çözüldü olarak işaretle"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark as resolved"
+          }
         }
       }
     },
@@ -6213,6 +9580,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çözüldü olarak işaretleyince ihtiyacı açan kişiye haber veririz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you mark it resolved, we'll let the person who opened the need know."
           }
         }
       }
@@ -6225,6 +9598,12 @@
             "state": "translated",
             "value": "Çözülenleri göster"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show resolved"
+          }
         }
       }
     },
@@ -6235,6 +9614,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çıkış yap"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign out"
           }
         }
       }
@@ -6247,6 +9632,12 @@
             "state": "translated",
             "value": "Çıkış yaptın. Görüşmek üzere!"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've signed out. See you soon!"
+          }
         }
       }
     },
@@ -6257,6 +9648,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Çıkış yapılsın mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign out?"
           }
         }
       }
@@ -6269,6 +9666,12 @@
             "state": "translated",
             "value": "Önce küçük bir hatırlatma"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A quick reminder first"
+          }
         }
       }
     },
@@ -6279,6 +9682,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ör. Arka bacağında yara var, topallıyor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E.g. Wound on the back leg, limping."
           }
         }
       }
@@ -6291,6 +9700,12 @@
             "state": "translated",
             "value": "Örn. Moda"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E.g. Moda"
+          }
         }
       }
     },
@@ -6301,6 +9716,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Özel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Private"
           }
         }
       }
@@ -6313,6 +9734,12 @@
             "state": "translated",
             "value": "Ürkek"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timid"
+          }
         }
       }
     },
@@ -6323,6 +9750,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ürkek bir dost. Yavaş hareket et, ani yaklaşma; mamayı bırakıp biraz uzaklaş."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A timid friend. Move slowly, don't approach suddenly; leave the food and step back a little."
           }
         }
       }
@@ -6335,6 +9768,12 @@
             "state": "translated",
             "value": "Üstlenildi"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taken on"
+          }
         }
       }
     },
@@ -6345,6 +9784,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "ör. Apartmanın arka bahçesi, çitin yanı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "e.g. Back garden of the building, by the fence"
           }
         }
       }
@@ -6357,6 +9802,12 @@
             "state": "translated",
             "value": "ör. Çınarın dibinde, mavi kap"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "e.g. By the plane tree, blue bowl"
+          }
         }
       }
     },
@@ -6367,6 +9818,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İhtiyacı paylaş"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share the need"
           }
         }
       }
@@ -6379,6 +9836,12 @@
             "state": "translated",
             "value": "İhtiyaç"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Need"
+          }
         }
       }
     },
@@ -6389,6 +9852,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İhtiyaç açıldı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Need opened"
           }
         }
       }
@@ -6401,6 +9870,12 @@
             "state": "translated",
             "value": "İhtiyaç bildir"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report a need"
+          }
         }
       }
     },
@@ -6411,6 +9886,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İhtiyaç tipi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Need type"
           }
         }
       }
@@ -6423,6 +9904,12 @@
             "state": "translated",
             "value": "İhtiyaç çözücü"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Need solver"
+          }
         }
       }
     },
@@ -6433,6 +9920,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İhtiyaçlar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs"
           }
         }
       }
@@ -6445,6 +9938,12 @@
             "state": "translated",
             "value": "İhtiyaçlar yükleniyor"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading needs"
+          }
         }
       }
     },
@@ -6455,6 +9954,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İlaç / pire-kene"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meds / flea-tick"
           }
         }
       }
@@ -6467,6 +9972,12 @@
             "state": "translated",
             "value": "İletişim"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contact"
+          }
         }
       }
     },
@@ -6477,6 +9988,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İlk mama"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First food"
           }
         }
       }
@@ -6489,6 +10006,12 @@
             "state": "translated",
             "value": "İnsan yemeği verme"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't feed human food"
+          }
         }
       }
     },
@@ -6499,6 +10022,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İsteğe bağlı. Bir noktaya bağlarsan nokta sayfasında da görünür."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional. If you link it to a spot, it also appears on the spot's page."
           }
         }
       }
@@ -6511,6 +10040,12 @@
             "state": "translated",
             "value": "İzin ver"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow"
+          }
         }
       }
     },
@@ -6521,6 +10056,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn the purpose of processing and whether it is used in line with that purpose"
           }
         }
       }
@@ -6533,6 +10074,12 @@
             "state": "translated",
             "value": "Şeffaf bağış"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transparent giving"
+          }
         }
       }
     },
@@ -6543,6 +10090,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şifre (en az 8 karakter)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password (at least 8 characters)"
           }
         }
       }
@@ -6555,6 +10108,12 @@
             "state": "translated",
             "value": "Şifremi unuttum"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forgot my password"
+          }
         }
       }
     },
@@ -6565,6 +10124,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şimdi değil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not now"
           }
         }
       }
@@ -6577,6 +10142,12 @@
             "state": "translated",
             "value": "Şimdilik dernek aylık toplamı paylaşıyor; sayaç bu toplamla güncellenir. Teslim fotoğrafları ve bildirimler v1.1'de geliyor."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For now the association shares a monthly total; the counter updates with that total. Delivery photos and notifications are coming in v1.1."
+          }
         }
       }
     },
@@ -6587,6 +10158,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şimdilik gez"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Just browse for now"
           }
         }
       }
@@ -6599,6 +10176,12 @@
             "state": "translated",
             "value": "Şu an arama yapamadık. Bağlantın gelince tekrar dener misin?"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We couldn't search right now. Could you try again when you're back online?"
+          }
         }
       }
     },
@@ -6609,6 +10192,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şu an açık bir ihtiyaç yok."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's no open need right now."
           }
         }
       }
@@ -6621,6 +10210,12 @@
             "state": "translated",
             "value": "Şu an açık ihtiyacı yok."
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It has no open needs right now."
+          }
         }
       }
     },
@@ -6631,6 +10226,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şu an bağlantı yok. Bağlantı gelince tekrar deneriz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No connection right now. We'll try again when you're back online."
           }
         }
       }
@@ -6643,6 +10244,12 @@
             "state": "translated",
             "value": "Şu an yakınında mama bekleyen nokta yok. Harika!"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No spots near you are waiting for food right now. Great!"
+          }
         }
       }
     },
@@ -6653,6 +10260,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Şüpheli durum / hayvana zarar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suspicious activity / harm to an animal"
           }
         }
       }

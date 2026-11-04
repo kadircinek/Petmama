@@ -16,6 +16,16 @@ jobs:
         # Swift 6.0 Linux: libswiftObservation.so'daki çözümsüz sembol için (bkz. scripts/linux-swift.sh)
         run: swift test --package-path ios/MamaKit -Xlinker --allow-shlib-undefined
 
+  localization:
+    name: String Catalog (TR/EN)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Missing English translations
+        # Yeni metin eklenince scripts/l10n/en.json güncellenmeli; uyarı olarak çalışır.
+        continue-on-error: true
+        run: python3 scripts/extract_strings.py --check
+
   supabase-sql:
     name: Supabase migrations + SQL tests
     runs-on: ubuntu-latest

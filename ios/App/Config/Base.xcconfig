@@ -1,0 +1,15 @@
+// Mama Haritası — ortak yapılandırma.
+// Gizli değerler `Secrets.xcconfig` dosyasında (git'e girmez). Örnek: Secrets.example.xcconfig
+// MAMA_SUPABASE_URL boşsa uygulama Kadıköy demo verisiyle bellek içi çalışır (docs/DECISIONS.md D7).
+
+MAMA_SUPABASE_URL =
+MAMA_SUPABASE_ANON_KEY =
+MAMA_PARTNER_NAME = Ortak dernek (belirlenecek)
+MAMA_DONATION_URL =
+MAMA_USD_TRY_RATE =
+MAMA_SUPPORT_EMAIL = destek@mamaharitasi.app
+MAMA_PRIVACY_URL =
+MAMA_TERMS_URL =
+MAMA_KVKK_URL =
+
+#include? "Secrets.xcconfig"

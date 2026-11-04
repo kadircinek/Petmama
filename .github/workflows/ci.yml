@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+jobs:
+  swift-linux:
+    name: MamaKit (Linux, swift test)
+    runs-on: ubuntu-latest
+    container: swift:6.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & test
+        run: swift test --package-path ios/MamaKit
+
+  supabase-sql:
+    name: Supabase migrations + SQL tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SQL tests
+        run: bash supabase/tests/run.sh
+
+  ios-build:
+    name: iOS app (Xcode, simulator build)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Build app
+        working-directory: ios
+        run: |
+          xcodebuild -project MamaHaritasi.xcodeproj -scheme MamaHaritasi \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | xcpretty || exit ${PIPESTATUS[0]}
+      - name: Package tests on iOS simulator
+        working-directory: ios/MamaKit
+        run: |
+          xcodebuild -scheme MamaKit-Package \
+            -destination 'platform=iOS Simulator,name=iPhone 16' test | xcpretty || exit ${PIPESTATUS[0]}

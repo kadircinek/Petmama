@@ -1,0 +1,21 @@
+# Xcode / Swift
+.DS_Store
+build/
+DerivedData/
+.build/
+.swiftpm/
+*.xcodeproj/
+!ios/*.xcodeproj/project.xcworkspace/xcshareddata/
+xcuserdata/
+*.xcuserstate
+Package.resolved.bak
+
+# Secrets
+ios/App/Config/Secrets.xcconfig
+supabase/.env
+supabase/.temp/
+.env
+*.p8
+
+# Node / Deno
+node_modules/

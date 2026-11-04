@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>tr</string>
+	<key>CFBundleDisplayName</key>
+	<string>Mama Haritası</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>tr</string>
+		<string>en</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Yakınındaki besleme noktalarını göstermek ve "Mama koydum" dediğinde noktanın yanında olduğunu doğrulamak için konumunu kullanırız. Konum geçmişini saklamayız.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Besleme noktasının, hayvanın veya ihtiyacın fotoğrafını çekmek için kamerayı kullanırız. Fotoğraflardaki konum bilgisi yüklemeden önce silinir.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>MAMA_SUPABASE_URL</key>
+	<string>$(MAMA_SUPABASE_URL)</string>
+	<key>MAMA_SUPABASE_ANON_KEY</key>
+	<string>$(MAMA_SUPABASE_ANON_KEY)</string>
+	<key>MAMA_PARTNER_NAME</key>
+	<string>$(MAMA_PARTNER_NAME)</string>
+	<key>MAMA_DONATION_URL</key>
+	<string>$(MAMA_DONATION_URL)</string>
+	<key>MAMA_USD_TRY_RATE</key>
+	<string>$(MAMA_USD_TRY_RATE)</string>
+	<key>MAMA_SUPPORT_EMAIL</key>
+	<string>$(MAMA_SUPPORT_EMAIL)</string>
+	<key>MAMA_PRIVACY_URL</key>
+	<string>$(MAMA_PRIVACY_URL)</string>
+	<key>MAMA_TERMS_URL</key>
+	<string>$(MAMA_TERMS_URL)</string>
+	<key>MAMA_KVKK_URL</key>
+	<string>$(MAMA_KVKK_URL)</string>
+</dict>
+</plist>

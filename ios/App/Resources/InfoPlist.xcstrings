@@ -1,0 +1,57 @@
+{
+  "sourceLanguage": "tr",
+  "version": "1.0",
+  "strings": {
+    "CFBundleDisplayName": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama Haritası"
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakınındaki besleme noktalarını göstermek ve \"Mama koydum\" dediğinde noktanın yanında olduğunu doğrulamak için konumunu kullanırız. Konum geçmişini saklamayız."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We use your location to show feeding spots near you and to confirm you are at the spot when you say \"I put food\". We never store your location history."
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besleme noktasının, hayvanın veya ihtiyacın fotoğrafını çekmek için kamerayı kullanırız. Fotoğraflardaki konum bilgisi yüklemeden önce silinir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We use the camera to take photos of feeding spots, animals or needs. Location metadata is removed from photos before upload."
+          }
+        }
+      }
+    }
+  }
+}

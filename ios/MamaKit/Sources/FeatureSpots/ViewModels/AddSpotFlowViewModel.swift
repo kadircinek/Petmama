@@ -93,12 +93,17 @@ public final class AddSpotFlowViewModel {
         return true
     }
 
-    /// Harita ortasındaki iğnenin yeni konumu.
+    /// Harita ortasındaki iğnenin yeni konumu. Haritanın ilk kamera bildirimi mevcut konumla aynıdır;
+    /// yalnızca gerçek bir kaydırma (birkaç metreden fazla) kullanıcı seçimi sayılır.
     public func moveCoordinate(to newValue: Coordinate) {
         guard newValue.isValid else { return }
-        hasExplicitLocation = true
+        if GeoMath.distance(newValue, coordinate) > Self.panThresholdMeters {
+            hasExplicitLocation = true
+        }
         coordinate = newValue
     }
+
+    static let panThresholdMeters: Double = 5
 
     public func next() {
         guard canGoNext, let following = Step(rawValue: step.rawValue + 1) else { return }

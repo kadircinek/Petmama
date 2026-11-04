@@ -43,9 +43,6 @@ struct MapHomePanel: View {
         )
         .offset(y: dragOffset)
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isExpanded)
-        .accessibilityAction(named: isExpanded ? Text("Paneli küçült") : Text("Ana sayfayı aç")) {
-            isExpanded.toggle()
-        }
     }
 
     private var handle: some View {

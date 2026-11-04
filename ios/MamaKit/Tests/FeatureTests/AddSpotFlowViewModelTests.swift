@@ -82,6 +82,18 @@ final class AddSpotFlowViewModelTests: XCTestCase {
         XCTAssertFalse(fromMenu.adoptUserLocation(.modaKadikoy), "Bir kez benimsenir")
     }
 
+    func testInitialCameraReportDoesNotBlockUserLocation() async {
+        let services = MapSpotsFixture.services().services
+        let model = AddSpotFlowViewModel(initialCoordinate: nil, services: services)
+        // Harita açılınca kamera mevcut merkezi (≈ aynı nokta) bildirir.
+        model.moveCoordinate(to: GeoMath.offset(.modaKadikoy, north: 1, east: 1))
+        XCTAssertTrue(model.adoptUserLocation(MapSpotsFixture.coordinate(ofSpot: 3)))
+
+        let panned = AddSpotFlowViewModel(initialCoordinate: nil, services: services)
+        panned.moveCoordinate(to: GeoMath.offset(.modaKadikoy, north: 40, east: 0))
+        XCTAssertFalse(panned.adoptUserLocation(MapSpotsFixture.coordinate(ofSpot: 3)), "Kullanıcı kaydırdıysa konumu ezilmez")
+    }
+
     func testProfanityIsRejectedBeforeServer() async {
         let model = AddSpotFlowViewModel(initialCoordinate: Coordinate(latitude: 40.97, longitude: 29.05), services: MapSpotsFixture.services().services)
         model.step = .details

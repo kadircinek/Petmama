@@ -216,7 +216,7 @@ create index notifications_dedupe_idx on public.notifications (user_id, kind, sp
 create table public.device_tokens (
   token      text primary key check (char_length(token) between 8 and 512),
   user_id    uuid not null references public.profiles (id) on delete cascade,
-  platform   text not null default 'ios' check (platform in ('ios')),
+  platform   text not null default 'ios' check (platform in ('ios', 'android')),
   updated_at timestamptz not null default now()
 );
 

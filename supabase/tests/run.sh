@@ -37,7 +37,7 @@ if [[ "$MODE" == "auto" ]]; then
 fi
 
 export PGHOST=127.0.0.1 PGPORT="$PORT" PGUSER=postgres PGPASSWORD=postgres PGDATABASE=postgres
-PSQL=(psql -X -q -v ON_ERROR_STOP=1 --no-psqlrc)
+PSQL=(psql -X -q -v ON_ERROR_STOP=1)
 
 cleanup() {
   if [[ "$KEEP" == "1" ]]; then

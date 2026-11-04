@@ -60,7 +60,9 @@ extension SupabaseBackend: SpotRepository {
     }
 
     public func guardians(spotId: UUID) async throws -> [Guardian] {
-        try await perform {
+        // Koruyucu adları girişe bağlı (migration 000011); girişsiz gezinmede boş liste.
+        guard signedInUserId != nil else { return [] }
+        return try await perform {
             let data = try await rpc("spot_guardians", ["p_spot_id": Param.uuid(spotId)])
             return try SupabaseDecoding.guardians(from: data).sorted { $0.displayName < $1.displayName }
         }

@@ -25,8 +25,6 @@ public final class DonationTraceViewModel {
         self.services = services
     }
 
-    public var partnerName: String { services.config.donation.partnerName }
-
     public var steps: [DonationTraceStep] {
         [
             DonationTraceStep(

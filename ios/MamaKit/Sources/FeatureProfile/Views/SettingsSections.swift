@@ -108,6 +108,12 @@ struct LegalLinkRow: View {
     @Environment(\.openURL) private var openURL
     @Environment(AppRouter.self) private var router
 
+    init(title: String, systemImage: String, url: URL?) {
+        self.title = title
+        self.systemImage = systemImage
+        self.url = url
+    }
+
     var body: some View {
         Button {
             if let url { openURL(url) } else { router.push(.privacy) }

@@ -112,6 +112,10 @@ struct LegalHighlightsSheet: View {
     let supportEmail: String
     @Environment(\.dismiss) private var dismiss
 
+    init(supportEmail: String) {
+        self.supportEmail = supportEmail
+    }
+
     private var points: [PermissionStepView.Point] {
         [
             .init(systemImage: "location.slash.fill", text: String(localized: "Konum geçmişini saklamayız. \"Mama koydum\" dediğinde yalnızca noktaya olan mesafe (metre) kaydedilir.")),

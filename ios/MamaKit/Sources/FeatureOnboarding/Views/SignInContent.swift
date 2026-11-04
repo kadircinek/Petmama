@@ -15,10 +15,17 @@ struct SignInContent: View {
     @Environment(SessionStore.self) private var session
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var focusedField: Field?
-    @State private var rawNonce: String?
+    @State private var rawNonce: String? = nil
     @State private var successCount = 0
 
     private enum Field: Hashable { case name, email, password }
+
+    init(model: SignInViewModel, config: AppConfig, onSignedIn: @escaping () -> Void, onOpenLegalFallback: @escaping () -> Void) {
+        _model = Bindable(wrappedValue: model)
+        self.config = config
+        self.onSignedIn = onSignedIn
+        self.onOpenLegalFallback = onOpenLegalFallback
+    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -114,7 +121,7 @@ struct SignInContent: View {
             }
             InputField(systemImage: "lock.fill") {
                 SecureField(String(localized: "Şifre (en az 8 karakter)"), text: $model.password)
-                    .textContentType(model.isSignUp ? .newPassword : .password)
+                    .textContentType(model.isSignUp ? UITextContentType.newPassword : UITextContentType.password)
                     .focused($focusedField, equals: .password)
                     .submitLabel(.go)
                     .onSubmit(submit)

@@ -6,7 +6,7 @@ import MamaDesign
 
 /// Profili düzenle (`AppSheet.editProfile`): görünen ad, mahalle, profil fotoğrafı.
 public struct EditProfileSheet: View {
-    @State private var model: EditProfileViewModel?
+    @State private var model: EditProfileViewModel? = nil
     @State private var savedCount = 0
     @Environment(SessionStore.self) private var session
     @Environment(AppRouter.self) private var router

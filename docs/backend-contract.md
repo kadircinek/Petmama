@@ -140,25 +140,25 @@ Hepsi `select * from rpc(...)` / PostgREST `POST /rpc/<ad>` ile çağrılır. "a
 |---|---|---|---|
 | `spots_in_bounds` | `min_lat, min_lng, max_lat, max_lng float8, max_rows int = 500` | `setof spot_row` | anon OK; pasif ve `rejected` gizli, `pending` yalnızca oluşturana |
 | `spots_near` | `lat, lng float8, radius_m int = 1000, max_rows int = 200` | `setof spot_row` (distance_m dolu, artan) | anon OK |
-| `spot_detail` | `p_spot_id uuid` | `setof spot_row` (0/1 satır) | |
-| `spot_feeding_timeline` | `p_spot_id uuid, days int = 7` | `table(day date, fed_count int, need_count int, last_fed_at timestamptz)` | gün `Europe/Istanbul`'a göre, boş günler de döner |
-| `spot_guardians` | `p_spot_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool, schedule smallint[])` | |
+| `spot_detail` | `p_spot_id uuid` | `setof spot_row` (0/1 satır) | anon OK |
+| `spot_feeding_timeline` | `p_spot_id uuid, days int = 7` | `table(day date, fed_count int, need_count int, last_fed_at timestamptz)` | anon OK; gün `Europe/Istanbul`'a göre, boş günler de döner |
+| `spot_guardians` | `p_spot_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool, schedule smallint[])` | auth (kişi adları girişe bağlı) |
 | `find_duplicate_spots` | `lat, lng float8, radius_m int = 15` | `table(id uuid, title text, distance_m float8)` | auth |
 | `create_spot` | `lat, lng float8, p_type spot_type, p_species spot_species, p_title text, p_note text, p_photo_url text, p_visibility spot_visibility, p_force bool = false` | `jsonb` | auth. Bkz. aşağı |
 | `check_in` | `p_spot_id uuid, p_kind checkin_kind, p_amount food_amount, p_photo_url text, user_lat float8, user_lng float8, p_client_id uuid = null` | `jsonb` | auth. Bkz. aşağı. `p_client_id` çevrimdışı kuyruktan tekrar gönderimde çift kaydı önler (idempotent) |
 | `report_spot_gone` | `p_spot_id uuid` | `jsonb {status:'ok', count int, deactivated bool}` | auth, kullanıcı başına 1 kez; 3 farklı kullanıcı → `is_active=false` (FR-N6) |
 | `needs_near` | `lat, lng float8, radius_m int = 5000, include_resolved bool = false` | `setof need_row` | anon OK. Sıra: urgent önce, sonra mesafe (FR-I5) |
-| `need_detail` | `p_need_id uuid` | `setof need_row` | |
+| `need_detail` | `p_need_id uuid` | `setof need_row` | anon OK |
 | `needs_for` | `p_spot_id uuid = null, p_animal_id uuid = null, include_resolved bool = false` | `setof need_row` | anon OK; noktaya veya hayvana bağlı ihtiyaçlar (hayvan profili, nokta detayı) |
 | `search_spots` | `q text, lat float8 = null, lng float8 = null, max_rows int = 30` | `setof spot_row` | anon OK; başlık/not `ilike` (Türkçe büyük/küçük harf duyarsız), konum verilirse yakından uzağa; gizlilik kuralları aynen geçerli |
 | `create_need` | `p_spot_id uuid, p_animal_id uuid, p_type need_type, p_urgency need_urgency, p_description text, p_photos text[]` | `uuid` | auth, küfür filtresi |
 | `claim_need` | `p_need_id uuid` | `jsonb {status:'ok'|'already_claimed'|'resolved'}` | auth (FR-I3) |
 | `resolve_need` | `p_need_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | auth; oluşturan, üstlenen veya doğrulanmış besleyici |
-| `animals_at_spot` | `p_spot_id uuid` | `setof animal_row` (bkz. aşağı), `seen_count` azalan | |
-| `animal_spots_of` | `p_animal_id uuid` | `setof spot_row` | hayvanın görüldüğü noktalar |
+| `animals_at_spot` | `p_spot_id uuid` | `setof animal_row` (bkz. aşağı), `seen_count` azalan | anon OK |
+| `animal_spots_of` | `p_animal_id uuid` | `setof spot_row` | anon OK; hayvanın görüldüğü noktalar |
 | `mark_animal_seen` | `p_animal_id uuid, p_spot_id uuid` | `void` | auth (FR-A3) |
 | `profile_stats` | `p_user_id uuid` | `table(fed_spot_count int, checkin_count int, resolved_need_count int, verified_checkins_30d int)` | |
-| `neighborhood_summary` | `lat, lng float8, radius_m int = 1500` | `table(fed_spots_today int, open_needs int, needs_food_spots int, active_spots_7d int)` | |
+| `neighborhood_summary` | `lat, lng float8, radius_m int = 1500` | `table(fed_spots_today int, open_needs int, needs_food_spots int, active_spots_7d int)` | anon OK |
 | `followed_spots` | — | `setof spot_row` | auth |
 | `register_device_token` | `p_token text` | `void` | auth |
 | `update_notify_center` | `lat, lng float8` | `void` | auth; 3 ondalığa yuvarlar |

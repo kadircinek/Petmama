@@ -55,11 +55,13 @@ begin
   perform tests.admin();
 
   perform tests.anon();
+  -- FR-P1: girişsiz gezinme — detay okumaları anon'a açık (20261104000011), gizlilik 55_anon_read.sql'de.
+  perform tests.eq((select count(*)::int from spot_detail(gen_random_uuid())), 0, 'anon can call spot_detail (unknown id → 0 rows)');
   begin
-    perform * from spot_detail(gen_random_uuid());
-    raise exception 'FAIL: anon spot_detail';
+    perform * from spot_guardians(gen_random_uuid());
+    raise exception 'FAIL: anon spot_guardians';
   exception when insufficient_privilege then
-    perform tests.check(true, 'anon cannot call spot_detail (contract: not "anon OK")');
+    perform tests.check(true, 'anon cannot call spot_guardians (names stay behind sign-in)');
   end;
   begin
     perform create_spot(40, 29, 'food', 'cat', 'x', null, null, 'public');

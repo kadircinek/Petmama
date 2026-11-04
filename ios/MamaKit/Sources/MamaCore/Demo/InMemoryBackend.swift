@@ -236,7 +236,9 @@ extension InMemoryBackend: SpotRepository {
     }
 
     public func guardians(spotId: UUID) async throws -> [Guardian] {
-        guardians
+        // Sunucuyla aynı: koruyucu adları girişe bağlı.
+        guard currentUser != nil else { return [] }
+        return guardians
             .filter { $0.key.b == spotId }
             .compactMap { key, schedule in
                 users[key.a].map {

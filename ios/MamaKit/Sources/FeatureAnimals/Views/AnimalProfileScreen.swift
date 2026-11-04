@@ -23,6 +23,10 @@ public struct AnimalProfileScreen: View {
             .toolbar { toolbarContent }
             .safeAreaInset(edge: .bottom) { bottomBar }
             .task { await model.load() }
+            .onChange(of: router.sheet) { old, new in
+                // "İhtiyaç bildir" sheet'i kapanınca açık ihtiyaçları tazele.
+                if old != nil, new == nil { Task { await model.load() } }
+            }
             .sensoryFeedback(.success, trigger: seenFeedback)
     }
 

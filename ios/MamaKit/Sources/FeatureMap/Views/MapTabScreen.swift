@@ -83,13 +83,13 @@ public struct MapTabScreen: View {
     // MARK: - Harita katmanı
 
     private var mapLayer: some View {
-        GeometryReader { proxy in
-            ZStack {
-                SpotMapView(model: model, position: $position) { coordinate in
-                    router.present(.addSpot(coordinate), session: session)
-                }
-                .ignoresSafeArea(edges: .top)
+        ZStack {
+            SpotMapView(model: model, position: $position) { coordinate in
+                router.present(.addSpot(coordinate), session: session)
+            }
+            .ignoresSafeArea(edges: .top)
 
+            GeometryReader { proxy in
                 VStack(spacing: 10) {
                     if model.isOffline {
                         BannerView(String(localized: "Çevrimdışı: son görülen noktalar gösteriliyor"), style: .warning, systemImage: "wifi.slash")
@@ -110,10 +110,12 @@ public struct MapTabScreen: View {
                 }
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
-
-                PawBurstView(trigger: model.feedSuccessCount)
+                .frame(width: proxy.size.width, height: proxy.size.height)
             }
+
+            PawBurstView(trigger: model.feedSuccessCount)
         }
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.selectedSpotId)
         .sensoryFeedback(.success, trigger: model.feedSuccessCount)
         .opacity(model.mode == .map ? 1 : 0)
         .allowsHitTesting(model.mode == .map)

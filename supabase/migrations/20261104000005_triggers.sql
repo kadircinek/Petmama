@@ -35,6 +35,9 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function private.handle_new_user();
 
+-- Not: istemci rolleriyle (authenticated) çalışan trigger'lar private.* yardımcılarını çağırıyorsa
+-- `security definer` olmalı — o rollerin private şemasında usage yetkisi yok.
+
 -- ---------------------------------------------------------------------------
 -- updated_at
 -- ---------------------------------------------------------------------------
@@ -64,6 +67,7 @@ create trigger donation_stats_updated_at before update on public.donation_stats
 create function private.round_notify_center()
 returns trigger
 language plpgsql
+security definer
 set search_path = public, extensions
 as $$
 begin
@@ -86,6 +90,7 @@ create trigger notification_prefs_round_center
 create function private.reject_profanity_profile()
 returns trigger
 language plpgsql
+security definer
 set search_path = public, extensions
 as $$
 begin
@@ -103,6 +108,7 @@ create trigger profiles_content_check
 create function private.reject_profanity_animal()
 returns trigger
 language plpgsql
+security definer
 set search_path = public, extensions
 as $$
 begin

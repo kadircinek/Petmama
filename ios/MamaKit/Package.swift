@@ -52,7 +52,10 @@ let package = Package(
         ),
 
         .testTarget(name: "MamaCoreTests", dependencies: ["MamaCore"]),
-        .testTarget(name: "MamaSupabaseTests", dependencies: ["MamaCore", "MamaSupabase"]),
+        .testTarget(
+            name: "MamaSupabaseTests",
+            dependencies: ["MamaCore", "MamaSupabase", .product(name: "Supabase", package: "supabase-swift")]
+        ),
         .testTarget(name: "AppFeatureTests", dependencies: ["MamaCore", "AppFeature"]),
         .testTarget(
             name: "FeatureTests",

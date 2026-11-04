@@ -56,9 +56,12 @@ create table public.checkins (
   user_distance_m int check (user_distance_m is null or user_distance_m >= 0),
   resolved_at     timestamptz,
   resolved_by     uuid references public.checkins (id) on delete set null,
+  -- FR-H8: çevrimdışı kuyruğun ürettiği id; aynı check-in'in tekrar gönderimi çift kayıt açmaz
+  client_id       uuid,
   created_at      timestamptz not null default now()
 );
 
+create unique index checkins_client_id_key on public.checkins (client_id) where client_id is not null;
 create index checkins_spot_created_idx on public.checkins (spot_id, created_at desc);
 create index checkins_user_created_idx on public.checkins (user_id, created_at desc);
 -- açık talepler (need_food / need_water / broken) — durum hesabının sıcak yolu

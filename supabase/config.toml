@@ -1,0 +1,110 @@
+# Mama Haritası — Supabase CLI yapılandırması (yerel geliştirme: `supabase start`).
+# Uzak projede auth sağlayıcıları ve sırlar Dashboard / `supabase secrets set` ile ayarlanır; bkz. README.md.
+
+project_id = "mama-haritasi"
+
+[api]
+enabled = true
+port = 54321
+# private ve tests şemaları bilerek dışarıda
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+# Supabase'deki yeni projeler 17; migration'lar 15 ve 17 imajlarında test edildi
+major_version = 17
+
+[db.pooler]
+enabled = false
+
+[db.migrations]
+enabled = true
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[realtime]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "10MiB"
+
+# İstemci yüklemeden önce EXIF/GPS siler, uzun kenarı 1600 px'e küçültür (PRD 7.1).
+# Bucket ve politikalar migration 20261104000010_storage.sql ile de oluşturulur.
+[storage.buckets.photos]
+public = true
+file_size_limit = "5MiB"
+allowed_mime_types = ["image/jpeg", "image/png", "image/heic", "image/webp"]
+
+[auth]
+enabled = true
+site_url = "mamaharitasi://auth-callback"
+additional_redirect_urls = ["mamaharitasi://auth-callback", "http://127.0.0.1:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_sign_ins = false
+enable_manual_linking = false
+minimum_password_length = 8
+
+[auth.rate_limit]
+email_sent = 4
+sign_in_sign_ups = 30
+token_refresh = 150
+token_verifications = 30
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+secure_password_change = false
+max_frequency = "1m0s"
+otp_length = 6
+otp_expiry = 3600
+
+[auth.sms]
+enable_signup = false
+
+# Sign in with Apple. Yerel geliştirmede `supabase/.env` içine:
+#   SUPABASE_AUTH_EXTERNAL_APPLE_CLIENT_ID=app.petmama.mamaharitasi   (yerel iOS girişi için bundle id;
+#                                                                       web akışı da varsa Services ID'yi virgülle ekle)
+#   SUPABASE_AUTH_EXTERNAL_APPLE_SECRET=<web akışı için üretilen client secret JWT; yalnız yerel iOS'ta boş kalabilir>
+[auth.external.apple]
+enabled = true
+client_id = "env(SUPABASE_AUTH_EXTERNAL_APPLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
+redirect_uri = ""
+url = ""
+skip_nonce_check = false
+
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+deno_version = 2
+
+# pg_cron → pg_net çağırır: JWT yok, `x-dispatch-secret` (PUSH_DISPATCH_SECRET) veya service-role bearer
+# fonksiyonun içinde doğrulanır.
+[functions.push-dispatch]
+verify_jwt = false
+
+# Kullanıcının kendi oturum JWT'si zorunlu (gateway + fonksiyon içinde auth.getUser).
+[functions.delete-account]
+verify_jwt = true
+
+[analytics]
+enabled = false

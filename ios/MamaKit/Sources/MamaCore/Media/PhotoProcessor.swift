@@ -13,20 +13,20 @@ public enum PhotoProcessor {
     }
 
     public static func sanitizedJPEG(from data: Data, maxPixelSize: Int = 1600, quality: Double = 0.8) throws -> Data {
-        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions),
+        let sourceOptions: [CFString: Any] = [kCGImageSourceShouldCache: false]
+        guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions as CFDictionary),
               CGImageSourceGetCount(source) > 0 else {
             throw Failure.unreadableImage
         }
 
         // Küçük görseller büyütülmez; `WithTransform` EXIF yönünü uygular (çıktıda yön etiketi gerekmez).
-        let thumbnailOptions = [
+        let thumbnailOptions: [CFString: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: max(1, maxPixelSize),
             kCGImageSourceShouldCacheImmediately: true,
-        ] as CFDictionary
-        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions) else {
+        ]
+        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary) else {
             throw Failure.unreadableImage
         }
 
@@ -35,10 +35,10 @@ public enum PhotoProcessor {
             throw Failure.encodingFailed
         }
         // Yalnızca sıkıştırma kalitesi; kaynak özellikleri (CGImageSourceCopyPropertiesAtIndex) bilerek kopyalanmaz.
-        let destinationOptions = [
+        let destinationOptions: [CFString: Any] = [
             kCGImageDestinationLossyCompressionQuality: min(1, max(0, quality)),
-        ] as CFDictionary
-        CGImageDestinationAddImage(destination, image, destinationOptions)
+        ]
+        CGImageDestinationAddImage(destination, image, destinationOptions as CFDictionary)
         guard CGImageDestinationFinalize(destination) else {
             throw Failure.encodingFailed
         }

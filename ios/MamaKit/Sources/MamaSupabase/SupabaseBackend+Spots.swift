@@ -129,6 +129,8 @@ extension SupabaseBackend: CheckInRepository {
                 "p_photo_url": Param.string(draft.photoURL?.absoluteString),
                 "user_lat": .double(draft.userCoordinate.latitude),
                 "user_lng": .double(draft.userCoordinate.longitude),
+                // Çevrimdışı kuyruktan tekrar gönderimde çift kaydı önler (idempotent).
+                "p_client_id": Param.uuid(draft.id),
             ])
             return try SupabaseDecoding.checkInOutcome(from: data, kind: draft.kind, fallbackId: draft.id)
         }

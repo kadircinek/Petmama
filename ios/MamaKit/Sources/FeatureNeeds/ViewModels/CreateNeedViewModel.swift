@@ -32,7 +32,8 @@ public final class CreateNeedViewModel {
 
     public var type: NeedType?
     public var urgency: NeedUrgency = .normal
-    public var description = ""
+    /// Açıklama metni (`description` adı `CustomStringConvertible` ile karışmasın diye).
+    public var descriptionText = ""
     public private(set) var photos: [NeedPhotoDraft] = []
     public var selectedSpotId: UUID?
 
@@ -65,14 +66,14 @@ public final class CreateNeedViewModel {
     public var shouldOpenVetHelp: Bool { type == .vet && urgency == .urgent }
 
     public var trimmedDescription: String {
-        description.trimmingCharacters(in: .whitespacesAndNewlines)
+        descriptionText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     public var validationIssue: ValidationIssue? {
         if type == nil { return .missingType }
         if selectedSpotId == nil && animalId == nil { return .missingTarget }
         if trimmedDescription.count < Self.minDescriptionLength { return .descriptionTooShort }
-        if ContentFilter.containsProfanity(description) { return .profanity }
+        if ContentFilter.containsProfanity(descriptionText) { return .profanity }
         return nil
     }
 

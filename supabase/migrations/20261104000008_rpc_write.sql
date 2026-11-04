@@ -110,7 +110,8 @@ create function public.check_in(
   p_amount    public.food_amount,
   p_photo_url text,
   user_lat    float8,
-  user_lng    float8
+  user_lng    float8,
+  p_client_id uuid default null
 )
 returns jsonb
 language plpgsql volatile security definer
@@ -131,6 +132,7 @@ declare
   v_notified  uuid[] := '{}';
   v_label     text;
   v_status    public.spot_status;
+  v_prev      public.checkins;
 begin
   if p_kind is null then
     raise exception 'invalid_kind' using errcode = '22023';
@@ -144,10 +146,7 @@ begin
   -- Satır kilidi: aynı noktadaki eşzamanlı check-in'ler (talep kapatma, hız limiti) sırayla işlenir
   select * into v_spot from public.spots s where s.id = p_spot_id for update;
   if not found or not private.spot_visible(v_spot, v_uid, v_mod) then
-    raise exception 'spot_not_found' using errcode = 'P0002';
-  end if;
-  if not v_spot.is_active then
-    return jsonb_build_object('status', 'spot_inactive');
+    raise exception 'not_found' using errcode = 'P0002', detail = 'spot';
   end if;
 
   -- PRD 9.5: kullanıcının konumu saklanmaz; yalnızca noktaya uzaklığı (m) tutulur.
@@ -158,6 +157,29 @@ begin
   v_shown := case when private.spot_exact(v_spot, v_uid, v_priv) then v_dist
                   else round(extensions.st_distance(private.fuzz_point(v_spot.id, v_spot.location), v_user_pt))::int
              end;
+
+  -- FR-H8: çevrimdışı kuyruktan tekrar gönderim → mevcut kaydı yan etkisiz döndür.
+  -- Hız limiti ve pasiflik kontrollerinden ÖNCE çalışır (ilk gönderim zaten kabul edilmişti).
+  -- Nokta satırı kilitli olduğundan aynı client_id ile eşzamanlı iki istek sıralanır.
+  if p_client_id is not null then
+    select * into v_prev from public.checkins c where c.client_id = p_client_id;
+    if found then
+      if v_prev.user_id is distinct from v_uid or v_prev.spot_id <> p_spot_id or v_prev.kind <> p_kind then
+        raise exception 'invalid_parameter' using errcode = '22023', hint = 'client_id';
+      end if;
+      return jsonb_build_object(
+        'status', 'ok',
+        'checkin_id', v_prev.id,
+        'distance_m', case when private.spot_exact(v_spot, v_uid, v_priv) then v_prev.user_distance_m else v_shown end,
+        'closed_need_count', 0,
+        'spot_status', public.compute_spot_status(v_spot.last_fed_at, private.spot_has_open_request(v_spot.id))
+      );
+    end if;
+  end if;
+
+  if not v_spot.is_active then
+    return jsonb_build_object('status', 'spot_inactive');
+  end if;
 
   -- FR-C2: fed/water 100 m; FR-C3: need_food/need_water/broken 300 m
   v_max := case when p_kind in ('fed', 'water') then 100 else 300 end;
@@ -173,8 +195,8 @@ begin
   end if;
 
   perform private.ensure_profile(v_uid);
-  insert into public.checkins (spot_id, user_id, kind, amount, photo_url, user_distance_m)
-  values (p_spot_id, v_uid, p_kind, p_amount, v_photo, v_dist)
+  insert into public.checkins (spot_id, user_id, kind, amount, photo_url, user_distance_m, client_id)
+  values (p_spot_id, v_uid, p_kind, p_amount, v_photo, v_dist, p_client_id)
   returning id into v_id;
 
   v_label := private.checkin_kind_label(p_kind);
@@ -291,7 +313,7 @@ begin
   select f.is_moderator into v_mod from private.viewer_flags(v_uid) f;
   select * into v_spot from public.spots s where s.id = p_spot_id for update;
   if not found or not private.spot_visible(v_spot, v_uid, v_mod) then
-    raise exception 'spot_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'spot';
   end if;
 
   perform private.ensure_profile(v_uid);
@@ -344,10 +366,10 @@ begin
   select f.is_moderator into v_mod from private.viewer_flags(v_uid) f;
   if p_spot_id is not null and not exists (
        select 1 from public.spots s where s.id = p_spot_id and private.spot_visible(s, v_uid, v_mod)) then
-    raise exception 'spot_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'spot';
   end if;
   if p_animal_id is not null and not exists (select 1 from public.animals a where a.id = p_animal_id) then
-    raise exception 'animal_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'animal';
   end if;
 
   if private.contains_profanity(v_desc) then
@@ -381,7 +403,7 @@ begin
   select f.is_moderator into v_mod from private.viewer_flags(v_uid) f;
   select * into v_need from public.needs n where n.id = p_need_id for update;
   if not found or not private.need_visible(v_need, v_uid, v_mod) then
-    raise exception 'need_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'need';
   end if;
 
   if v_need.status = 'resolved' then
@@ -420,7 +442,7 @@ begin
   select f.is_privileged, f.is_moderator into v_priv, v_mod from private.viewer_flags(v_uid) f;
   select * into v_need from public.needs n where n.id = p_need_id for update;
   if not found or not private.need_visible(v_need, v_uid, v_mod) then
-    raise exception 'need_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'need';
   end if;
 
   if not (v_need.created_by = v_uid or v_need.claimed_by = v_uid or v_priv) then
@@ -462,11 +484,11 @@ declare
 begin
   select f.is_moderator into v_mod from private.viewer_flags(v_uid) f;
   if not exists (select 1 from public.animals a where a.id = p_animal_id) then
-    raise exception 'animal_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'animal';
   end if;
   if not exists (select 1 from public.spots s
                  where s.id = p_spot_id and s.is_active and private.spot_visible(s, v_uid, v_mod)) then
-    raise exception 'spot_not_found' using errcode = 'P0002';
+    raise exception 'not_found' using errcode = 'P0002', detail = 'spot';
   end if;
 
   insert into public.animal_spots (animal_id, spot_id, seen_count, last_seen_at)
@@ -493,7 +515,7 @@ declare
   v_uid   uuid := private.require_uid();
   v_token text := btrim(coalesce(p_token, ''));
 begin
-  if v_token !~ '^[0-9A-Za-z_:.-]{8,512}$' then
+  if char_length(v_token) not between 8 and 512 or v_token !~ '^[0-9A-Za-z_:.-]+$' then
     raise exception 'invalid_token' using errcode = '22023';
   end if;
   perform private.ensure_profile(v_uid);
@@ -543,7 +565,7 @@ $$;
 -- Yetkiler
 -- ---------------------------------------------------------------------------
 revoke all on function public.create_spot(float8, float8, public.spot_type, public.spot_species, text, text, text, public.spot_visibility, boolean) from public, anon, authenticated;
-revoke all on function public.check_in(uuid, public.checkin_kind, public.food_amount, text, float8, float8) from public, anon, authenticated;
+revoke all on function public.check_in(uuid, public.checkin_kind, public.food_amount, text, float8, float8, uuid) from public, anon, authenticated;
 revoke all on function public.report_spot_gone(uuid)                     from public, anon, authenticated;
 revoke all on function public.create_need(uuid, uuid, public.need_type, public.need_urgency, text, text[]) from public, anon, authenticated;
 revoke all on function public.claim_need(uuid)                           from public, anon, authenticated;
@@ -554,7 +576,7 @@ revoke all on function public.update_notify_center(float8, float8)       from pu
 revoke all on function public.log_donation_click(text)                   from public, anon, authenticated;
 
 grant execute on function public.create_spot(float8, float8, public.spot_type, public.spot_species, text, text, text, public.spot_visibility, boolean) to authenticated;
-grant execute on function public.check_in(uuid, public.checkin_kind, public.food_amount, text, float8, float8) to authenticated;
+grant execute on function public.check_in(uuid, public.checkin_kind, public.food_amount, text, float8, float8, uuid) to authenticated;
 grant execute on function public.report_spot_gone(uuid)                  to authenticated;
 grant execute on function public.create_need(uuid, uuid, public.need_type, public.need_urgency, text, text[]) to authenticated;
 grant execute on function public.claim_need(uuid)                        to authenticated;

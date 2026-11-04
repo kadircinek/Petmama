@@ -31,7 +31,8 @@ public actor SwiftDataStore: ModelActor {
 
     /// Diskteki (veya `inMemory` ise bellekteki) varsayılan depo.
     public static func make(inMemory: Bool = false, capacity: Int = 2000) throws -> SwiftDataStore {
-        SwiftDataStore(modelContainer: try makeContainer(inMemory: inMemory), capacity: capacity)
+        let container = try makeContainer(inMemory: inMemory)
+        return SwiftDataStore(modelContainer: container, capacity: capacity)
     }
 
     /// Önbellek şeması. Disk deposu açılamazsa (ör. uyumsuz eski şema) dosyalar silinip yeniden oluşturulur:
@@ -61,7 +62,7 @@ public actor SwiftDataStore: ModelActor {
 
     private func metadataRecord(_ wantedKey: String) -> CacheMetadataRecord? {
         var descriptor = FetchDescriptor<CacheMetadataRecord>(
-            predicate: #Predicate<CacheMetadataRecord> { $0.key == wantedKey }
+            predicate: #Predicate<CacheMetadataRecord> { record in record.key == wantedKey }
         )
         descriptor.fetchLimit = 1
         return (try? modelContext.fetch(descriptor))?.first

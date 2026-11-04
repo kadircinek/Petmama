@@ -160,6 +160,58 @@ begin
 end
 $$;
 
+-- FR-H8: p_client_id ile idempotent tekrar gönderim (rate_limited'dan önce, yan etkisiz)
+do $$
+declare
+  u      uuid := tests.make_user('Çevrimdışı');
+  asker  uuid := tests.make_user('Talep eden');
+  other  uuid := tests.make_user('Başka cihaz');
+  s      uuid := tests.make_spot(tests.base_lat() + 0.06, tests.base_lng(), 'kuyruk noktası', 'public', null, null);
+  cid    uuid := gen_random_uuid();
+  p      record;
+  r1     jsonb;
+  r2     jsonb;
+  t0     int;
+  n0     int;
+begin
+  insert into checkins (spot_id, user_id, kind, user_distance_m) values (s, asker, 'need_food', 10);
+  p := tests.project(tests.base_lat() + 0.06, tests.base_lng(), 42, 90);
+
+  perform tests.login(u);
+  r1 := check_in(s, 'fed', 'full', 'https://example.test/p.jpg', p.lat, p.lng, cid);
+  perform tests.eq(r1->>'status', 'ok', 'client_id: first send ok');
+  perform tests.eq((r1->>'closed_need_count')::int, 1, 'client_id: first send closes request');
+  perform tests.admin();
+  t0 := (select trust_score from profiles where id = u);
+  n0 := (select count(*)::int from notifications);
+
+  perform tests.login(u);
+  r2 := check_in(s, 'fed', 'full', 'https://example.test/p.jpg', p.lat, p.lng, cid);
+  perform tests.eq(r2->>'status', 'ok', 'client_id replay → ok (not rate_limited)');
+  perform tests.eq(r2->>'checkin_id', r1->>'checkin_id', 'client_id replay returns existing checkin_id');
+  perform tests.eq((r2->>'distance_m')::int, 42, 'client_id replay returns stored distance');
+  perform tests.eq((r2->>'closed_need_count')::int, 0, 'client_id replay closed_need_count 0');
+  perform tests.eq(r2->>'spot_status', 'fed_recent', 'client_id replay returns current spot_status');
+  -- yeni client_id ile aynı tür 10 dk içinde → rate_limited (idempotency kontrolü önce çalıştı)
+  perform tests.eq(check_in(s, 'fed', 'full', null, p.lat, p.lng, gen_random_uuid())->>'status', 'rate_limited',
+                   'new client_id within 10 min → rate_limited');
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from checkins where spot_id = s and user_id = u), 1, 'client_id replay: no new row');
+  perform tests.eq((select trust_score from profiles where id = u), t0, 'client_id replay: trust unchanged');
+  perform tests.eq((select count(*)::int from notifications), n0, 'client_id replay: no new notifications');
+  perform tests.eq((select client_id from checkins where id = (r1->>'checkin_id')::uuid), cid, 'client_id stored');
+
+  perform tests.login(other);
+  begin
+    perform check_in(s, 'fed', 'full', null, p.lat, p.lng, cid);
+    raise exception 'FAIL: another user reused client_id';
+  exception when invalid_parameter_value then
+    perform tests.check(true, 'client_id of another user → exception');
+  end;
+  perform tests.admin();
+end
+$$;
+
 -- Yetki/doğrulama ihlalleri exception
 do $$
 declare

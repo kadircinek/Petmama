@@ -19,6 +19,11 @@ if [[ -f /root/.ccr/ca-bundle.crt ]]; then
   PROXY_ARGS+=(-v /root/.ccr/ca-bundle.crt:/etc/ssl/certs/proxy-ca.crt:ro -e GIT_SSL_CAINFO=/etc/ssl/certs/proxy-ca.crt -e SSL_CERT_FILE=/etc/ssl/certs/proxy-ca.crt)
 fi
 
+# Swift 6.0 Linux araç zincirinde libswiftObservation.so çözümsüz bir sembol (`swift::threading::fatal`)
+# içeriyor; @Observable kullanan test paketleri ancak bu bayrakla bağlanıyor.
+EXTRA=()
+if [[ "$CMD" == "test" ]]; then EXTRA+=(-Xlinker --allow-shlib-undefined); fi
+
 exec docker run --rm --network host "${PROXY_ARGS[@]}" \
   -v "$ROOT/ios/MamaKit:/pkg" -v "$SCRATCH:/build" -w /pkg \
-  swift:6.0-noble swift "$CMD" --scratch-path /build "$@"
+  swift:6.0-noble swift "$CMD" --scratch-path /build "${EXTRA[@]}" "$@"

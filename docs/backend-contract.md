@@ -145,7 +145,7 @@ Hepsi `select * from rpc(...)` / PostgREST `POST /rpc/<ad>` ile çağrılır. "a
 | `spot_guardians` | `p_spot_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool, schedule smallint[])` | |
 | `find_duplicate_spots` | `lat, lng float8, radius_m int = 15` | `table(id uuid, title text, distance_m float8)` | auth |
 | `create_spot` | `lat, lng float8, p_type spot_type, p_species spot_species, p_title text, p_note text, p_photo_url text, p_visibility spot_visibility, p_force bool = false` | `jsonb` | auth. Bkz. aşağı |
-| `check_in` | `p_spot_id uuid, p_kind checkin_kind, p_amount food_amount, p_photo_url text, user_lat float8, user_lng float8` | `jsonb` | auth. Bkz. aşağı |
+| `check_in` | `p_spot_id uuid, p_kind checkin_kind, p_amount food_amount, p_photo_url text, user_lat float8, user_lng float8, p_client_id uuid = null` | `jsonb` | auth. Bkz. aşağı. `p_client_id` çevrimdışı kuyruktan tekrar gönderimde çift kaydı önler (idempotent) |
 | `report_spot_gone` | `p_spot_id uuid` | `jsonb {status:'ok', count int, deactivated bool}` | auth, kullanıcı başına 1 kez; 3 farklı kullanıcı → `is_active=false` (FR-N6) |
 | `needs_near` | `lat, lng float8, radius_m int = 5000, include_resolved bool = false` | `setof need_row` | anon OK. Sıra: urgent önce, sonra mesafe (FR-I5) |
 | `need_detail` | `p_need_id uuid` | `setof need_row` | |

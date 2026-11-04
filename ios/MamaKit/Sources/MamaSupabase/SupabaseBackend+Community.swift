@@ -226,7 +226,7 @@ extension SupabaseBackend: NotificationRepository {
     public func markRead(ids: [UUID]) async throws {
         guard let userId = signedInUserId, !ids.isEmpty else { return }
         try await perform {
-            try await client.from("notifications")
+            _ = try await client.from("notifications")
                 .update(["read_at": Param.date(now())] as JSONObject, returning: .minimal)
                 .eq("user_id", value: userId.postgresString)
                 .in("id", values: ids.map { $0.postgresString as any PostgrestFilterValue })

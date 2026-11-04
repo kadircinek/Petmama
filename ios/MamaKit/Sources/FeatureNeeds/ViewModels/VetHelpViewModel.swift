@@ -90,6 +90,16 @@ public final class VetHelpViewModel {
             .map { $0 }
     }
 
+    /// Arama sonuç vermezse Haritalar'da "veteriner" araması.
+    public static func mapsSearchURL(near center: Coordinate) -> URL? {
+        var components = URLComponents(string: "https://maps.apple.com/")
+        components?.queryItems = [
+            URLQueryItem(name: "q", value: "veteriner"),
+            URLQueryItem(name: "sll", value: "\(center.latitude),\(center.longitude)"),
+        ]
+        return components?.url
+    }
+
     /// "+90 (216) 555 01 02" → `tel:+902165550102`. Geçersizse `nil`.
     public static func telURL(_ phone: String?) -> URL? {
         guard let phone else { return nil }

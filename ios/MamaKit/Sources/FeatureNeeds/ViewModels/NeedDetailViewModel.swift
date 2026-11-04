@@ -89,11 +89,14 @@ public final class NeedDetailViewModel {
 
     // MARK: - Zaman çizelgesi
 
-    public var timeline: [NeedTimelineStep] {
+    /// `viewerId` üstlenen kişiyse "Sen ilgileniyorsun" yazar.
+    public func timeline(viewerId: UUID?) -> [NeedTimelineStep] {
         guard let need else { return [] }
         let wasClaimed = need.claimedBy != nil || need.claimedAt != nil || need.status == .claimed
         let claimDetail: String
-        if let name = need.claimedByName {
+        if let viewerId, need.claimedBy == viewerId {
+            claimDetail = "Sen ilgileniyorsun"
+        } else if let name = need.claimedByName {
             claimDetail = "\(name) ilgileniyor"
         } else if wasClaimed {
             claimDetail = "Bir gönüllü ilgileniyor"

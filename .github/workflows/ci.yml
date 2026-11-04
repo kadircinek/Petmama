@@ -13,7 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build & test
-        run: swift test --package-path ios/MamaKit
+        # Swift 6.0 Linux: libswiftObservation.so'daki çözümsüz sembol için (bkz. scripts/linux-swift.sh)
+        run: swift test --package-path ios/MamaKit -Xlinker --allow-shlib-undefined
 
   supabase-sql:
     name: Supabase migrations + SQL tests

@@ -40,7 +40,10 @@ public final class SupabaseBackend: Sendable {
             options: SupabaseClientOptions(
                 auth: SupabaseClientOptions.AuthOptions(
                     storage: Self.defaultAuthStorage(),
-                    redirectToURL: authRedirectURL
+                    redirectToURL: authRedirectURL,
+                    // Oturum `currentSession` ile okunur; ilk oturum olayına güvenilmez. `true`, 2.x'te her
+                    // açılışta tetiklenen "initial session" reportIssue uyarısını da kapatır.
+                    emitLocalSessionAsInitialSession: true
                 )
             )
         )

@@ -26,6 +26,7 @@ WORK="${MAMA_TEST_WORKDIR:-${TMPDIR:-/tmp}/mama-haritasi-db-tests}"
 PG_BIN="${PG_BIN:-/usr/lib/postgresql/16/bin}"
 KEEP="${MAMA_TEST_KEEP:-0}"
 CONTAINER="mama-haritasi-test-$$"
+PGDATA_DIR=""
 LOG="$WORK/run.log"
 
 mkdir -p "$WORK"
@@ -46,8 +47,9 @@ cleanup() {
   if [[ "$MODE" == "docker" ]]; then
     docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
   else
-    if [[ -d "$WORK/pgdata" ]]; then
-      as_pg "$PG_BIN/pg_ctl" -D "$WORK/pgdata" -m immediate stop >/dev/null 2>&1 || true
+    if [[ -n "${PGDATA_DIR:-}" && -d "$PGDATA_DIR" ]]; then
+      as_pg "$PG_BIN/pg_ctl" -D "$PGDATA_DIR" -m immediate stop >/dev/null 2>&1 || true
+      [[ "$PGDATA_DIR" == /tmp/mama-haritasi-pg.* ]] && rm -rf "$PGDATA_DIR"
     fi
   fi
 }
@@ -81,13 +83,18 @@ start_docker() {
 }
 
 start_local() {
-  echo "→ yerel PostgreSQL: $PG_BIN (port $PORT, veri: $WORK/pgdata)"
-  rm -rf "$WORK/pgdata"
-  mkdir -p "$WORK/pgdata"
-  if [[ "$(id -u)" == "0" ]]; then chown -R postgres: "$WORK"; fi
-  as_pg "$PG_BIN/initdb" -D "$WORK/pgdata" -U postgres --auth=trust -E UTF8 --locale=C.UTF-8 >>"$LOG" 2>&1
-  as_pg "$PG_BIN/pg_ctl" -D "$WORK/pgdata" -l "$WORK/postgres.log" \
-    -o "-p $PORT -k $WORK -c listen_addresses=127.0.0.1" -w start >>"$LOG" 2>&1
+  PGDATA_DIR="$WORK/pgdata"
+  if [[ "$(id -u)" == "0" ]] && ! runuser -u postgres -- test -x "$WORK" 2>/dev/null; then
+    # root ile çalışırken postgres kullanıcısı WORK'e erişemiyorsa (ör. 700 izinli üst dizin)
+    PGDATA_DIR="$(mktemp -d /tmp/mama-haritasi-pg.XXXXXX)"
+  fi
+  echo "→ yerel PostgreSQL: $PG_BIN (port $PORT, veri: $PGDATA_DIR)"
+  rm -rf "$PGDATA_DIR"
+  mkdir -p "$PGDATA_DIR"
+  if [[ "$(id -u)" == "0" ]]; then chown -R postgres: "$PGDATA_DIR"; fi
+  as_pg "$PG_BIN/initdb" -D "$PGDATA_DIR" -U postgres --auth=trust -E UTF8 --locale=C.UTF-8 >>"$LOG" 2>&1
+  as_pg "$PG_BIN/pg_ctl" -D "$PGDATA_DIR" -l "$PGDATA_DIR/postgres.log" \
+    -o "-p $PORT -k $PGDATA_DIR -c listen_addresses=127.0.0.1" -w start >>"$LOG" 2>&1
   wait_ready
 }
 

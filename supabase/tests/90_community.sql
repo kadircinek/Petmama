@@ -373,8 +373,19 @@ declare
   pr     community_post_row;
   c      extensions.geography;
   fz     extensions.geography;
+  loc    extensions.geography;
 begin
   update spots set moderation_state = 'pending' where id = s_pend;
+
+  -- Bulanık noktayı, gerçek konumu ile GÖSTERİLEN (bulanık) konumu ızgaranın farklı hücrelerine düşecek
+  -- şekilde yerleştir: bulanıklık ofseti yalnızca nokta id'sine bağlıdır, bu yüzden ikisinin orta
+  -- noktası bir hücre köşesine (x.xx5, y.yy5) getirilir.
+  select s.location, private.fuzz_point(s.id, s.location) into loc, fz from spots s where s.id = s_fuz;
+  update spots
+     set location = private.make_point(
+           (b_lat + 0.025) - (extensions.st_y(fz::extensions.geometry) - extensions.st_y(loc::extensions.geometry)) / 2,
+           (b_lng + 0.005) - (extensions.st_x(fz::extensions.geometry) - extensions.st_x(loc::extensions.geometry)) / 2)
+   where id = s_fuz;
 
   perform tests.login(o);
   r := create_community_post('cover_request', 'Yerime bakar mısın?', null, null, null, b_lat, b_lng, today, today + 2);
@@ -434,10 +445,13 @@ begin
   pid := (r->>'post_id')::uuid;
   perform tests.admin();
   select cell into c from community_posts where id = pid;
-  select private.fuzz_point(s.id, s.location) into fz from spots s where s.id = s_fuz;
+  select s.location, private.fuzz_point(s.id, s.location) into loc, fz from spots s where s.id = s_fuz;
+  perform tests.check(round(extensions.st_y(loc::extensions.geometry)::numeric, 2) <> round(extensions.st_y(fz::extensions.geometry)::numeric, 2)
+                      or round(extensions.st_x(loc::extensions.geometry)::numeric, 2) <> round(extensions.st_x(fz::extensions.geometry)::numeric, 2),
+                      'setup: true and displayed location of the fuzzed spot fall into different cells');
   perform tests.check(extensions.st_y(c::extensions.geometry) = round(extensions.st_y(fz::extensions.geometry)::numeric, 2)::float8
                       and extensions.st_x(c::extensions.geometry) = round(extensions.st_x(fz::extensions.geometry)::numeric, 2)::float8,
-                      'fuzzed spot: cell derived from the displayed (fuzzed) point');
+                      'fuzzed spot: cell derived from the displayed (fuzzed) point, not the true location (PRD 9.1)');
 end
 $$;
 
@@ -1134,6 +1148,7 @@ declare
   d1_am  timestamptz := ((today - 1)::timestamp + time '10:00') at time zone 'Europe/Istanbul';
   d1_pm  timestamptz := ((today - 1)::timestamp + time '15:00') at time zone 'Europe/Istanbul';
   d2     timestamptz := ((today - 2)::timestamp + time '12:00') at time zone 'Europe/Istanbul';
+  d3     timestamptz := ((today - 3)::timestamp + time '12:00') at time zone 'Europe/Istanbul';
   sm     record;
   n      int;
 begin
@@ -1147,8 +1162,8 @@ begin
     (s1,     f1,   'fed',       10, d2),                           -- s1 · önceki gün
     (s2,     f1,   'fed',       10, d1_am),                        -- s2 · dün
     (s2,     null, 'fed',       10, d2),                           -- s2 · önceki gün (hesabı silinmiş besleyici)
-    (s2,     f3,   'water',     10, d1_pm),                        -- su: nokta-gün değil, ama aktif besleyici
-    (s1,     f4,   'need_food', 10, d1_pm),                        -- talep: sayılmaz
+    (s1,     f3,   'water',     10, d3),                           -- su: beslenmiş nokta-gün değil, ama aktif besleyici
+    (s1,     f4,   'need_food', 10, d3),                           -- talep: sayılmaz
     (s1,     f5,   'fed',       10, now() - interval '8 days'),    -- 7 günden eski
     (s_far,  f6,   'fed',       10, d1_am),                        -- yarıçap dışı
     (s_off,  f7,   'fed',       10, d1_am),                        -- pasif nokta
@@ -1190,21 +1205,58 @@ begin
 end
 $$;
 
+-- Özet konum kâhini olmamalı (PRD 9.1): bulanık nokta yarıçapa GÖSTERİLEN konumuyla girer.
+-- Merkezler, gerçek ve bulanık konum 3000 m çemberinin iki yanında kalacak şekilde seçilir.
+do $$
+declare
+  b_lat  float8 := tests.base_lat() + 8.2;
+  b_lng  float8 := tests.base_lng();
+  viewer uuid := tests.make_user('Kâhin deneyen');
+  feeder uuid := tests.make_user('Gizli nokta besleyicisi');
+  s      uuid := tests.make_spot(b_lat, b_lng, 'özet bulanık', 'fuzzed');
+  loc    extensions.geography;
+  fz     extensions.geography;
+  az     float8;
+  mid    extensions.geography;
+  c_in   extensions.geography;   -- bulanık konum içeride (≈2975 m), gerçek konum dışarıda (≈3025 m)
+  c_out  extensions.geography;   -- gerçek konum içeride, bulanık konum dışarıda
+begin
+  insert into checkins (spot_id, user_id, kind, user_distance_m, created_at) values (s, feeder, 'fed', 5, now() - interval '1 hour');
+  select sp.location, private.fuzz_point(sp.id, sp.location) into loc, fz from spots sp where sp.id = s;
+  az    := extensions.st_azimuth(loc, fz);
+  mid   := extensions.st_project(loc, extensions.st_distance(loc, fz) / 2, az);
+  c_in  := extensions.st_project(mid, 3000, az);
+  c_out := extensions.st_project(mid, 3000, az + pi());
+  perform tests.check(extensions.st_distance(c_in, fz) < 2990 and extensions.st_distance(c_in, loc) > 3010
+                      and extensions.st_distance(c_out, loc) < 2990 and extensions.st_distance(c_out, fz) > 3010,
+                      'setup: true and displayed location straddle the 3000 m radius');
+
+  perform tests.login(viewer);
+  perform tests.eq((select fed_spot_days_7d from community_summary(extensions.st_y(c_in::extensions.geometry),
+                                                                   extensions.st_x(c_in::extensions.geometry))), 1,
+                   'summary counts a fuzzed spot when its DISPLAYED location is inside the radius');
+  perform tests.eq((select active_feeders_7d from community_summary(extensions.st_y(c_out::extensions.geometry),
+                                                                    extensions.st_x(c_out::extensions.geometry))), 0,
+                   'summary ignores a fuzzed spot whose displayed location is outside (true location is not an oracle)');
+  perform tests.admin();
+end
+$$;
+
 -- ---------------------------------------------------------------------------
 -- Push kuyruğu: push_claim_batch post_id döndürür (service_role)
 -- ---------------------------------------------------------------------------
 do $$
 declare
-  b_lat float8 := tests.base_lat() + 7.9;
-  b_lng float8 := tests.base_lng();
-  a     uuid := tests.make_user('Push Yazar');
-  c     uuid := tests.make_user('Push Yorumcu');
-  s     uuid := tests.make_spot(b_lat, b_lng, 'Push noktası', 'public', a);
-  today date := private.istanbul_today();
-  p1    uuid;
-  p2    uuid;
-  rec   record;
-  n     int;
+  b_lat   float8 := tests.base_lat() + 7.9;
+  b_lng   float8 := tests.base_lng();
+  a       uuid := tests.make_user('Push Yazar');
+  c       uuid := tests.make_user('Push Yorumcu');
+  s       uuid := tests.make_spot(b_lat, b_lng, 'Push noktası', 'public', a);
+  today   date := private.istanbul_today();
+  p1      uuid;
+  p2      uuid;
+  claimed jsonb;
+  j       jsonb;
 begin
   update notifications set pushed_at = now(), push_status = 'sent' where pushed_at is null;   -- önceki blokların artıkları
   insert into device_tokens (token, user_id) values ('mahalle-push-token-1', a);
@@ -1218,20 +1270,22 @@ begin
   perform tests.admin();
   insert into notifications (user_id, kind, title, body, spot_id) values (a, 'thanks_fed', 'Teşekkürler!', 'b', s);
 
+  -- edge function'ın göreceği JSON (PostgREST satırı sütun adlarıyla nesneye çevirir)
   set local role service_role;
-  create temporary table claimed on commit drop as select * from push_claim_batch(50);
+  select jsonb_agg(to_jsonb(x)) into claimed from push_claim_batch(50) x;
   reset role;
 
-  select count(*)::int into n from claimed;
-  perform tests.eq(n, 3, 'push_claim_batch claims the community notifications');
-  select * into rec from claimed where kind = 'community_comment';
-  perform tests.check(rec.post_id = p1 and rec.spot_id is null and rec.need_id is null, 'claim: community_comment row has post_id');
-  perform tests.check(rec.user_id = a and rec.tokens = array['mahalle-push-token-1'] and rec.quiet_start = 22 and rec.quiet_end = 7,
-                      'claim: recipient, tokens and quiet hours for a community notification');
-  select * into rec from claimed where kind = 'cover_volunteered';
-  perform tests.check(rec.post_id = p2 and rec.spot_id = s, 'claim: cover_volunteered row has post_id and spot_id');
-  select * into rec from claimed where kind = 'thanks_fed';
-  perform tests.check(rec.post_id is null and rec.spot_id = s, 'claim: other kinds have null post_id');
+  perform tests.eq(jsonb_array_length(claimed), 3, 'push_claim_batch claims the community notifications');
+  select e into j from jsonb_array_elements(claimed) e where e->>'kind' = 'community_comment';
+  perform tests.check(j ? 'post_id' and (j->>'post_id')::uuid = p1 and j->>'spot_id' is null and j->>'need_id' is null,
+                      'claim: community_comment row has post_id');
+  perform tests.check((j->>'user_id')::uuid = a and j->'tokens' = '["mahalle-push-token-1"]'::jsonb
+                      and (j->>'quiet_start')::int = 22 and (j->>'quiet_end')::int = 7 and (j->>'need_food_pushed_today')::int = 0,
+                      'claim: recipient, tokens, quiet hours and daily counter for a community notification');
+  select e into j from jsonb_array_elements(claimed) e where e->>'kind' = 'cover_volunteered';
+  perform tests.check((j->>'post_id')::uuid = p2 and (j->>'spot_id')::uuid = s, 'claim: cover_volunteered row has post_id and spot_id');
+  select e into j from jsonb_array_elements(claimed) e where e->>'kind' = 'thanks_fed';
+  perform tests.check(j ? 'post_id' and j->>'post_id' is null and (j->>'spot_id')::uuid = s, 'claim: other kinds have null post_id');
   perform tests.check((select bool_and(push_status = 'processing') from notifications where user_id = a),
                       'claimed community notifications are marked processing');
   perform tests.check(not has_function_privilege('authenticated', 'public.push_claim_batch(int)', 'execute')

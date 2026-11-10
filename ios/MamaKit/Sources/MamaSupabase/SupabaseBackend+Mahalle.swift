@@ -60,11 +60,7 @@ extension SupabaseBackend: CommunityRepository {
     public func createPost(_ draft: CommunityPostDraft) async throws -> CreatePostOutcome {
         try await perform {
             _ = try requireUserId()
-            if draft.spotId == nil, draft.coordinate == nil {
-                // Nokta bağlı değilken konumsuz çağrıda sunucu exception fırlatır (sözleşme). InMemoryBackend
-                // gibi doğrulama sonucu olarak dönülür; bu dalda ön kontrol hiçbir zaman `nil` vermez.
-                return .invalid(CommunityPolicy.validate(draft, now: now()) ?? .locationMissing)
-            }
+            if let outcome = Self.localCreatePostOutcome(draft, now: now()) { return outcome }
             let data = try await rpc("create_community_post", Self.createPostParams(draft))
             return try SupabaseDecoding.createPostOutcome(from: data)
         }
@@ -123,6 +119,15 @@ extension SupabaseBackend: CommunityRepository {
             ])
             return try SupabaseDecoding.communitySummary(from: data)
         }
+    }
+
+    /// Sunucuya gitmeden verilen tek sonuç: nokta bağlı değil ve konum da yok. Sözleşmeye göre sunucu bu
+    /// çağrıda `status` dönmez, exception fırlatır; InMemoryBackend gibi doğrulama sonucu olarak dönülür
+    /// (boş/uzun metin ve noktasız "Yerime bakar mısın?" aynı sırayla önce gelir). Diğer her durumda `nil`.
+    static func localCreatePostOutcome(_ draft: CommunityPostDraft, now: Date) -> CreatePostOutcome? {
+        guard draft.spotId == nil, draft.coordinate == nil else { return nil }
+        // Bu dalda ön kontrol hiçbir zaman `nil` vermez (en son `.locationMissing`).
+        return .invalid(CommunityPolicy.validate(draft, now: now) ?? .locationMissing)
     }
 
     // MARK: Parametreler

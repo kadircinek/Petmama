@@ -109,12 +109,33 @@ enum PostgresDate {
         return era * 146_097 + dayOfEra - 719_468
     }
 
-    /// `timestamptz` sütununa yazmak için ISO-8601 (UTC, milisaniyeli).
+    /// `timestamptz` sütununa / parametresine yazmak için ISO-8601 (UTC, milisaniyeli).
+    ///
+    /// En yakın milisaniyeye yuvarlar: `parse` ile okunan milisaniyeli bir damga aynı metne döner. Mahalle
+    /// akışının `p_before` imleci buna dayanır (bir milisaniye kayarsa sayfa sınırında satır atlanır ya da
+    /// tekrar gelir). Kesrin kırpılıp kırpılmayacağı platform biçimleyicisine bırakılmaz: biçimleyici
+    /// yalnızca tam saniyeyi yazar, milisaniye tamsayı olarak eklenir.
     static func format(_ date: Date) -> String {
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return formatter.string(from: date)
+        let rounded = (date.timeIntervalSince1970 * 1000).rounded()
+        // Tamsayıya sığmayan (anlamsız) tarihlerde biçimleyicinin kendi çıktısı.
+        guard rounded.isFinite, abs(rounded) < 1e15 else {
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            return formatter.string(from: date)
+        }
+        let totalMillis = Int64(rounded)
+        var seconds = totalMillis / 1000
+        var millis = totalMillis % 1000
+        if millis < 0 { // 1970 öncesi: aşağı yuvarlayan bölme
+            millis += 1000
+            seconds -= 1
+        }
+        formatter.formatOptions = [.withInternetDateTime]
+        // "2026-11-04T08:15:00Z" → "2026-11-04T08:15:00.123Z"
+        let wholeSecond = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(seconds))).dropLast()
+        let fraction = String(millis)
+        return "\(wholeSecond).\(String(repeating: "0", count: 3 - fraction.count))\(fraction)Z"
     }
 
     /// `date` sütununa / parametresine yazmak için "YYYY-MM-DD": anın `dayTimeZone` (Europe/Istanbul)

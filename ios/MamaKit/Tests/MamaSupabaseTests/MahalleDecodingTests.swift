@@ -388,13 +388,33 @@ final class MahalleDecodingTests: XCTestCase {
             XCTAssertTrue(try SupabaseDecoding.communityDeleteAllowed(from: data(#"{"status": "ok"}"#), rpc: rpc), rpc)
             XCTAssertFalse(try SupabaseDecoding.communityDeleteAllowed(from: data(#"{"status": "not_allowed"}"#), rpc: rpc), rpc)
             assertServerError(try SupabaseDecoding.communityDeleteAllowed(from: data(#"{"status": "mystery"}"#), rpc: rpc))
-            // Sözleşme dışı ama olası: kayıt yoksa InMemoryBackend gibi `.notFound`.
+            // Sözleşmedeki iki değerin dışında: kayıt yoksa InMemoryBackend gibi `.notFound`.
             for status in ["post_not_found", "comment_not_found", "not_found"] {
                 XCTAssertThrowsError(try SupabaseDecoding.communityDeleteAllowed(from: data(#"{"status": "\#(status)"}"#), rpc: rpc)) { error in
                     XCTAssertEqual(error as? MamaError, .notFound, status)
                 }
             }
         }
+    }
+
+    /// Mahalle RPC'lerinin iş kuralı dışı durumları exception'dır (migration 0014); `perform` bunları
+    /// `SupabaseErrorMapper` ile çevirir.
+    func testCommunityRpcExceptionsMapToMamaErrors() {
+        func mapped(_ error: PostgrestError) -> MamaError? { SupabaseErrorMapper.map(error) as? MamaError }
+        // delete_community_post / delete_community_comment: kayıt yok (InMemoryBackend de `.notFound` fırlatır).
+        XCTAssertEqual(mapped(PostgrestError(detail: "post", code: "P0002", message: "not_found")), .notFound)
+        XCTAssertEqual(mapped(PostgrestError(detail: "comment", code: "P0002", message: "not_found")), .notFound)
+        // create_community_post: bağlanan hayvan yok.
+        XCTAssertEqual(mapped(PostgrestError(detail: "animal", code: "P0002", message: "not_found")), .notFound)
+        // Oturum sunucuda geçersiz (private.require_uid).
+        XCTAssertEqual(mapped(PostgrestError(code: "42501", message: "not_authenticated")), .notSignedIn)
+        // Geçersiz konum / parametre.
+        XCTAssertEqual(mapped(PostgrestError(code: "22023", message: "invalid_coordinates")),
+                       .invalidInput(SupabaseErrorMapper.invalidLocationMessage))
+        XCTAssertEqual(mapped(PostgrestError(code: "22023", message: "invalid_kind")),
+                       .invalidInput(SupabaseErrorMapper.invalidValueMessage))
+        XCTAssertEqual(mapped(PostgrestError(code: "22P02", message: #"invalid input value for enum community_post_kind: "poll""#)),
+                       .invalidInput(SupabaseErrorMapper.invalidValueMessage))
     }
 
     // MARK: - notifications.post_id + yeni türler
@@ -625,6 +645,31 @@ final class MahalleParamTests: XCTestCase {
         XCTAssertEqual(clampedLow["radius_m"] as? Int, 0)
         XCTAssertEqual(clampedLow["max_rows"] as? Int, 1)
         XCTAssertEqual(clampedLow["p_kind"] as? String, "alert")
+    }
+
+    /// Nokta ve konum birlikte yoksa sunucu `status` yerine exception fırlatır: sonuç yerelde verilir.
+    func testCreatePostWithoutSpotOrLocationIsAnsweredLocally() {
+        let now = utc(2026, 11, 10, 9)
+        XCTAssertEqual(SupabaseBackend.localCreatePostOutcome(CommunityPostDraft(kind: .note, body: "Merhaba"), now: now),
+                       .invalid(.locationMissing))
+        XCTAssertEqual(SupabaseBackend.localCreatePostOutcome(CommunityPostDraft(kind: .alert, body: "  \n"), now: now),
+                       .invalid(.bodyEmpty))
+        XCTAssertEqual(SupabaseBackend.localCreatePostOutcome(
+            CommunityPostDraft(kind: .question, body: String(repeating: "a", count: CommunityPolicy.maxBodyLength + 1)), now: now
+        ), .invalid(.bodyTooLong))
+        XCTAssertEqual(SupabaseBackend.localCreatePostOutcome(
+            CommunityPostDraft(kind: .coverRequest, body: "Yerime bakar mısın?", coverFrom: now, coverTo: now), now: now
+        ), .invalid(.coverNeedsSpot))
+
+        // Nokta ya da konum varsa karar sunucunun (boş metin, geçmiş tarih dahil).
+        XCTAssertNil(SupabaseBackend.localCreatePostOutcome(CommunityPostDraft(kind: .note, body: "", coordinate: .modaKadikoy), now: now))
+        XCTAssertNil(SupabaseBackend.localCreatePostOutcome(CommunityPostDraft(kind: .note, body: "Merhaba", spotId: UUID()), now: now))
+        XCTAssertNil(SupabaseBackend.localCreatePostOutcome(
+            CommunityPostDraft(kind: .coverRequest, body: "x", spotId: UUID(), coverFrom: utc(2020, 1, 1), coverTo: utc(2020, 1, 2)), now: now
+        ))
+        XCTAssertNil(SupabaseBackend.localCreatePostOutcome(
+            CommunityPostDraft(kind: .coverRequest, body: "x", coordinate: .modaKadikoy), now: now
+        ))
     }
 
     func testEveryPostKindIsSentAsContractEnumValue() {

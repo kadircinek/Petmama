@@ -17,11 +17,15 @@ migrations/
   …0009_cron_push.sql       refresh_spot_statuses, push kuyruğu, pg_cron işleri
   …0010_storage.sql         photos bucket + politikalar
   …0011_anon_read_grants.sql girişsiz gezinme için okuma RPC'leri (FR-P1, D15)
+  …0012_community_enums.sql Mahalle (D17): community_post_kind + report_target / notification_kind ekleri (kendi dosyasında)
+  …0013_community_tables.sql community_posts / _comments / _paws, cover_volunteers, notifications.post_id, RLS (doğrudan erişim yok)
+  …0014_community_rpc.sql   community_post_row / community_comment_row, 11 Mahalle RPC'si, 3 raporda otomatik gizleme trigger'ı
+  …0015_community_push.sql  push_claim_batch artık post_id de döndürür
 functions/
   push-dispatch/            APNs gönderici (pg_cron → pg_net, her dakika)
   delete-account/           hesap silme (PRD 9.5)
   _shared/                  saf mantık + Deno testleri (sessiz saat, günlük limit, ES256 JWT, storage listeleme)
-seed.sql                    Kadıköy/Moda pilot demo verisi (25 nokta, 10 hayvan, 5 ihtiyaç, 4 demo kullanıcı)
+seed.sql                    Kadıköy/Moda pilot demo verisi (25 nokta, 10 hayvan, 5 ihtiyaç, 6 Mahalle paylaşımı, 4 demo kullanıcı)
 tests/                      SQL testleri + run.sh
 ```
 
@@ -86,8 +90,18 @@ tests/                      SQL testleri + run.sh
   İstanbul günü), `no_token`, `failed`, `expired` (30 dk'dan eski). Sessiz saatte/limitte push **ertelenmez**,
   bildirim yalnızca uygulama içinde kalır.
 - **Hata eşlemesi**: iş kuralları jsonb `status` döner. Exception mesajları: `not_authenticated` (42501),
-  `invalid_coordinates` / `invalid_parameter` / `invalid_title` (22023), `not_found` (P0002, detail = spot/need/animal),
+  `invalid_coordinates` / `invalid_parameter` / `invalid_title` / `invalid_kind` (22023),
+  `not_found` (P0002, detail = spot/need/animal/post/comment),
   `rejected_content` (P0001, hint = profanity; `create_need`, profil adı, hayvan metinleri).
+- **Mahalle** (D17): dört tablo da yalnızca RPC ile okunur/yazılır ve RPC'lerin hiçbiri anon'a açık değildir.
+  Paylaşımın yalnızca kaba konumu (`cell`, 2 ondalık ≈ 1,1 km) saklanır; bulanık/özel noktaya bağlı paylaşımda
+  `cell` gösterilen (bulanık) konumdan türetilir. `pending` içerik (güven puanı < 5 ya da 3 farklı kullanıcının
+  **açık** raporu) yalnızca yazarına ve moderatöre görünür. Moderatör incelemesi (SQL Editor):
+  ```sql
+  update public.reports set status = 'dismissed', resolved_at = now() where target_type = 'post' and target_id = '<uuid>';
+  update public.community_posts set moderation_state = 'approved' where id = '<uuid>';   -- ya da 'rejected'
+  ```
+  Raporlar kapatılmadan yeniden onaylanan içerik bir sonraki raporda tekrar gizlenir.
 - **PostgREST**: `reports` tablosuna `Prefer: return=minimal` ile eklenmeli (yalnızca moderatör okuyabilir).
 
 ## Testler

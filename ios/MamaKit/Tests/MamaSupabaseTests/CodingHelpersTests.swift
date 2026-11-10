@@ -75,6 +75,12 @@ final class PostgresDateTests: XCTestCase {
         let fromServer = try XCTUnwrap(PostgresDate.parse("2026-11-10T08:15:59.123+00:00"))
         XCTAssertEqual(PostgresDate.format(fromServer), "2026-11-10T08:15:59.123Z")
         XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: 0)), "1970-01-01T00:00:00.000Z")
+        // Mikrosaniyeli değerler en yakın milisaniyeye yuvarlanır; saniye ve gün sınırı taşar.
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: utc(2026, 11, 10, 8, 15, 59.123456))), "2026-11-10T08:15:59.123Z")
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: utc(2026, 11, 10, 8, 15, 59.1236))), "2026-11-10T08:15:59.124Z")
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: utc(2026, 12, 31, 23, 59, 59.9996))), "2027-01-01T00:00:00.000Z")
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: -0.001)), "1969-12-31T23:59:59.999Z")
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: -1.5)), "1969-12-31T23:59:58.500Z")
     }
 
     func testFormatDayIsIstanbulCalendarDay() throws {

@@ -858,7 +858,8 @@ struct CommunityResultDTO: Decodable {
         case "not_allowed":
             return false
         case "post_not_found", "comment_not_found":
-            // Sözleşmede yok; sunucu "kayıt yok"u ayrı bildirirse InMemoryBackend gibi `.notFound`.
+            // Kayıt yoksa sunucu `not_found` exception'ı fırlatır (SupabaseErrorMapper → `.notFound`,
+            // InMemoryBackend ile aynı). Aynı durum `status` olarak gelirse de aynı hataya çevrilir.
             throw MamaError.notFound
         default:
             throw StatusError.unexpected(rpc: rpc, status: status)

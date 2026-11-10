@@ -643,8 +643,11 @@ $$;
 --   active_feeders_7d   : o noktalarda `fed`/`water` check-in'i yapan farklı kullanıcı
 --   open_cover_requests : yarıçaptaki onaylı, bitişi geçmemiş (cover_to ≥ bugün) "Yerime bakar mısın?"
 --   posts_7d            : yarıçaptaki onaylı paylaşımlar
--- Paylaşım sayıları akışla tutarlı olsun diye engelli yazarlar sayılmaz. Yarıçap 300–10 000 m
--- (çok küçük yarıçap nokta sayımlarını konum kâhinine çevirirdi, bkz. neighborhood_summary).
+-- Paylaşım sayıları akışla tutarlı olsun diye engelli yazarlar sayılmaz. Yarıçap, akıştaki gibi
+-- 1000–10 000 m'ye sıkıştırılır.
+-- Noktalar yarıçapa GÖSTERİLEN konumlarıyla girer (public → gerçek, fuzzed/private → bulanık): aksi halde
+-- merkez kaydırılıp sayının değiştiği sınır izlenerek gizli bir noktanın gerçek konumu bulunabilirdi
+-- (PRD 9.1). Gerçek konum yalnızca indeks ön-filtresinde (bulanıklık payıyla) kullanılır.
 -- ---------------------------------------------------------------------------
 create function public.community_summary(lat float8, lng float8, radius_m int default 3000)
 returns table (fed_spot_days_7d int, active_feeders_7d int, open_cover_requests int, posts_7d int)
@@ -655,7 +658,7 @@ as $$
 declare
   v_uid    uuid := private.require_uid();
   v_ref    extensions.geography;
-  v_radius int := greatest(300, least(coalesce(community_summary.radius_m, 3000), 10000));
+  v_radius int := greatest(1000, least(coalesce(community_summary.radius_m, 3000), 10000));
   v_since  timestamptz := now() - interval '7 days';
   v_today  date := private.istanbul_today();
 begin
@@ -666,9 +669,13 @@ begin
   with area as (
     select s.id
     from public.spots s
-    where extensions.st_dwithin(s.location, v_ref, v_radius)
+    where extensions.st_dwithin(s.location, v_ref, v_radius + 110)
       and s.is_active
       and s.moderation_state = 'approved'
+      and extensions.st_dwithin(
+            case when s.visibility = 'public' then s.location
+                 else private.fuzz_point(s.id, s.location) end,
+            v_ref, v_radius)
   ),
   feedings as (
     select c.spot_id, c.user_id, c.kind, (c.created_at at time zone 'Europe/Istanbul')::date as day

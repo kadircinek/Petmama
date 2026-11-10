@@ -3,7 +3,8 @@
 // Kurallar (docs/backend-contract.md "Edge Functions"):
 //  * Sessiz saat: kullanıcının quiet_start–quiet_end aralığı, Europe/Istanbul saatine göre.
 //    quiet_start == quiet_end → sessiz saat kapalı. Aralık gece yarısını aşabilir (22–7).
-//  * need_food_nearby için İstanbul günü başına en fazla 3 push.
+//  * need_food_nearby için İstanbul günü başına en fazla 3 push. Limit YALNIZCA bu tür içindir;
+//    Mahalle bildirimleri (community_comment, cover_volunteered) sessiz saate uyar ama limite takılmaz.
 //  * Uygulanmayan (sessiz saat / limit / token yok) bildirimler ERTELENMEZ; uygulama içinde kalır,
 //    push_status ile işaretlenir.
 
@@ -18,7 +19,9 @@ export type NotificationKind =
   | "guardian_spot_unfed"
   | "need_resolved"
   | "thanks_fed"
-  | "donation_delivered";
+  | "donation_delivered"
+  | "community_comment"
+  | "cover_volunteered";
 
 /** `push_claim_batch` RPC'sinin döndürdüğü satır. */
 export interface PushRow {
@@ -29,6 +32,8 @@ export interface PushRow {
   body: string;
   spot_id: string | null;
   need_id: string | null;
+  /** Mahalle bildirimlerinde (community_comment, cover_volunteered) dolu; uygulama paylaşımı açar. */
+  post_id: string | null;
   created_at: string;
   quiet_start: number;
   quiet_end: number;
@@ -150,12 +155,14 @@ export function buildApnsPayload(row: PushRow): Record<string, unknown> {
     aps: {
       alert: { title: row.title, body: row.body },
       sound: "default",
-      "thread-id": row.spot_id ?? row.kind,
+      // Bildirim Merkezi'nde gruplama: paylaşım > nokta > tür
+      "thread-id": row.post_id ?? row.spot_id ?? row.kind,
     },
     kind: row.kind,
     notification_id: row.id,
     spot_id: row.spot_id,
     need_id: row.need_id,
+    post_id: row.post_id ?? null,
   };
 }
 
@@ -174,8 +181,9 @@ export function buildApnsHeaders(
     "apns-expiration": String(nowSeconds + 3600),
     "content-type": "application/json",
   };
-  // aynı nokta için art arda gelen bildirimler kilit ekranında tek bildirimde birleşir (≤ 64 bayt)
-  if (row.spot_id) headers["apns-collapse-id"] = `${row.kind}:${row.spot_id}`;
+  // aynı paylaşım / nokta için art arda gelen bildirimler kilit ekranında tek bildirimde birleşir (≤ 64 bayt)
+  const subject = row.post_id ?? row.spot_id;
+  if (subject) headers["apns-collapse-id"] = `${row.kind}:${subject}`;
   return headers;
 }
 

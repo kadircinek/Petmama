@@ -7,7 +7,8 @@
 // Akış: push_claim_batch (FOR UPDATE SKIP LOCKED, pushed_at doldurulur) → kurallar (_shared/push_logic.ts)
 //       → APNs HTTP/2 → push_complete (push_status) → push_drop_tokens (410 / BadDeviceToken).
 // Sessiz saat ve günlük limit: push GÖNDERİLMEZ, ertelenmez; bildirim uygulama içinde kalır
-// (push_status = quiet_hours | daily_cap).
+// (push_status = quiet_hours | daily_cap). Günlük limit yalnızca need_food_nearby içindir.
+// Payload: kind, notification_id, spot_id, need_id, post_id (Mahalle bildirimleri → paylaşım açılır).
 //
 // Gerekli sırlar: APNS_KEY_ID, APNS_TEAM_ID, APNS_PRIVATE_KEY (.p8 PEM), APNS_BUNDLE_ID,
 //                 APNS_ENV (sandbox | production), PUSH_DISPATCH_SECRET.

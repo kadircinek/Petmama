@@ -39,6 +39,7 @@ function row(over: Partial<PushRow> = {}): PushRow {
     body: 'Mama gerekli: "Moda İskelesi önü"',
     spot_id: "s1",
     need_id: null,
+    post_id: null,
     created_at: `2026-11-04T10:00:${String(seq % 60).padStart(2, "0")}.000Z`,
     quiet_start: 22,
     quiet_end: 7,
@@ -113,6 +114,90 @@ Deno.test("decidePushes: no token, and quiet hours do not consume the daily cap"
   const e = row({ quiet_start: 0, quiet_end: 0, need_food_pushed_today: 2 });
   const d2 = decidePushes([c, e], night);
   assertEquals([d2.get(c.id), d2.get(e.id)], ["send", "daily_cap"]);
+});
+
+Deno.test("decidePushes: community kinds obey quiet hours but never the need_food daily cap", () => {
+  const community = (over: Partial<PushRow> = {}) =>
+    row({ kind: "community_comment", spot_id: null, post_id: "p1", need_food_pushed_today: 3, ...over });
+
+  // 12:00 İstanbul: need_food_nearby limiti dolu (3) olsa bile Mahalle bildirimleri gönderilir
+  const noon = at("2026-11-04T09:00:00Z");
+  const rows = [
+    community(),
+    community({ kind: "cover_volunteered", spot_id: "s1", post_id: "p2" }),
+    community(),
+    community(),
+    community(),
+    row({ need_food_pushed_today: 3 }),
+  ];
+  const d = decidePushes(rows, noon);
+  assertEquals(rows.map((r) => d.get(r.id)), ["send", "send", "send", "send", "send", "daily_cap"]);
+
+  // Mahalle push'ları need_food_nearby sayacını tüketmez
+  const mixed = [
+    community({ need_food_pushed_today: 2 }),
+    community({ kind: "cover_volunteered", need_food_pushed_today: 2 }),
+    row({ need_food_pushed_today: 2 }),
+    row({ need_food_pushed_today: 2 }),
+  ];
+  const d2 = decidePushes(mixed, noon);
+  assertEquals(mixed.map((r) => d2.get(r.id)), ["send", "send", "send", "daily_cap"]);
+
+  // 23:00 İstanbul: sessiz saat Mahalle bildirimleri için de geçerli (ertelenmez, uygulama içinde kalır)
+  const night = at("2026-11-04T20:00:00Z");
+  const a = community();
+  const b = community({ kind: "cover_volunteered" });
+  const c = community({ quiet_start: 0, quiet_end: 0 });
+  const e = community({ tokens: [] });
+  const d3 = decidePushes([a, b, c, e], night);
+  assertEquals([d3.get(a.id), d3.get(b.id), d3.get(c.id), d3.get(e.id)], ["quiet_hours", "quiet_hours", "send", "no_token"]);
+});
+
+Deno.test("buildApnsPayload / headers: post_id for community notifications", () => {
+  const postId = "0b8f4c62-7a0e-4f0e-9f57-3d2a1c9e8b11";
+  const spotId = "7f1c2f0e-9a51-4d7e-8a53-5a4f8c1d2e90";
+
+  const comment = row({ id: "n-comment", kind: "community_comment", spot_id: null, post_id: postId });
+  const payload = buildApnsPayload(comment) as {
+    aps: { alert: { title: string; body: string }; "thread-id": string };
+    kind: string;
+    post_id: string | null;
+    spot_id: string | null;
+    need_id: string | null;
+  };
+  assertEquals(payload.post_id, postId, "payload post_id");
+  assertEquals(payload.kind, "community_comment");
+  assertEquals(payload.spot_id, null);
+  assertEquals(payload.need_id, null);
+  assertEquals(payload.aps["thread-id"], postId, "community notifications are threaded by post");
+  const headers = buildApnsHeaders("jwt", "app.mamaharitasi", comment, 100);
+  assertEquals(headers["apns-collapse-id"], `community_comment:${postId}`);
+
+  const cover = row({ id: "n-cover", kind: "cover_volunteered", spot_id: spotId, post_id: postId });
+  const coverPayload = buildApnsPayload(cover) as { post_id: string; spot_id: string; aps: { "thread-id": string } };
+  assertEquals([coverPayload.post_id, coverPayload.spot_id], [postId, spotId], "cover_volunteered carries both ids");
+  assertEquals(coverPayload.aps["thread-id"], postId);
+  const coverHeaders = buildApnsHeaders("jwt", "app.mamaharitasi", cover, 100);
+  assertEquals(coverHeaders["apns-collapse-id"], `cover_volunteered:${postId}`);
+  for (const h of [headers, coverHeaders]) {
+    assert(new TextEncoder().encode(h["apns-collapse-id"]).length <= 64, "collapse id ≤ 64 bytes");
+  }
+
+  // diğer türler: post_id her zaman anahtar olarak var ama null; davranış değişmedi
+  const spotRow = row({ id: "n-spot", spot_id: "sid" });
+  const spotPayload = buildApnsPayload(spotRow) as Record<string, unknown> & { aps: { "thread-id": string } };
+  assert("post_id" in spotPayload, "post_id key always present");
+  assertEquals(spotPayload.post_id, null);
+  assertEquals(spotPayload.aps["thread-id"], "sid");
+  assertEquals(buildApnsHeaders("jwt", "b", spotRow, 0)["apns-collapse-id"], "need_food_nearby:sid");
+  const bare = row({ id: "n-bare", kind: "donation_delivered", spot_id: null });
+  assertEquals((buildApnsPayload(bare) as { aps: { "thread-id": string } }).aps["thread-id"], "donation_delivered");
+  assert(!("apns-collapse-id" in buildApnsHeaders("jwt", "b", bare, 0)), "no collapse id without post or spot");
+
+  // push_claim_batch'in eski sürümünden gelen (post_id alanı olmayan) satır da güvenle işlenir
+  const legacy = { ...row({ id: "n-legacy", spot_id: "sid" }) } as Partial<PushRow>;
+  delete legacy.post_id;
+  assertEquals((buildApnsPayload(legacy as PushRow) as { post_id: unknown }).post_id, null);
 });
 
 Deno.test("buildApnsJwt: ES256 JWT verifiable with the public key", async () => {

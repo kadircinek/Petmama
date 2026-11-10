@@ -5,6 +5,10 @@ sokak sokak bir haritada işaretleyip birlikte koordine olduğu iOS uygulaması.
 
 > **Ürünün kalbi üç eylem:** "Mama koydum" (nokta yeşile döner) · "Mama gerekli" (nokta turuncuya döner,
 > yakındaki gönüllülere bildirim gider) · "İhtiyaç var" (veteriner, kısırlaştırma, kış barınağı…).
+>
+> Besleyiciler **Mahalle** sekmesinde buluşur: paylaşım, soru, "Yerime bakar mısın?", yorum ve pati.
+
+![Maskot ikonlar](docs/mascots.png)
 
 Bu repo PRD'deki (Mama Haritası — iOS Uygulama PRD, 4 Kasım 2026) **MVP kapsamını** uygular.
 
@@ -61,9 +65,9 @@ scripts/linux-swift.sh test
 ```bash
 bash supabase/tests/run.sh
 ```
-Son durum: Linux'ta **271 Swift testi** (MamaCore, Supabase DTO'ları, tüm ViewModel'ler, AppFeature) ve
-**315 SQL assertion'ı** (`supabase/postgres` Docker imajı) geçiyor. SwiftUI görünümleri Linux'ta derlenemediği için
-kod incelemesinden geçti; ilk gerçek derleme Xcode 16+ ile (veya CI'daki `ios-build` işiyle) yapılmalı.
+Son durum: Linux'ta **414 Swift testi** (MamaCore, Supabase DTO'ları, tüm ViewModel'ler, AppFeature) ve
+**592 SQL assertion'ı** (`supabase/postgres` Docker imajı) geçiyor. SwiftUI görünümleri Linux'ta derlenemez;
+onları CI'daki `ios-build` işi Xcode ile derler ve aynı testleri iPhone simülatöründe çalıştırır.
 
 CI (`.github/workflows/ci.yml`): Linux `swift test`, String Catalog kontrolü, SQL testleri ve macOS'ta Xcode
 simülatör derlemesi.

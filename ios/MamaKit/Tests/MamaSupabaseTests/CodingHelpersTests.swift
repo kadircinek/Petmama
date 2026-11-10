@@ -61,6 +61,33 @@ final class PostgresDateTests: XCTestCase {
         XCTAssertEqual(text, "2026-11-04T08:15:00.250Z")
         XCTAssertEqual(try XCTUnwrap(PostgresDate.parse(text)).timeIntervalSince1970, date.timeIntervalSince1970, accuracy: 0.001)
     }
+
+    /// Mahalle akışı `p_before` ile sayfalanır (keyset): sunucudan okunan `created_at` aynı milisaniyeyle
+    /// geri gönderilmezse sayfa sınırındaki satır tekrar gelir ya da atlanır.
+    func testFormatIsMillisecondExactForParsedTimestamps() throws {
+        for millis in 0..<1000 {
+            let fraction = String(repeating: "0", count: 3 - String(millis).count) + String(millis)
+            let text = "2026-11-10T08:15:59.\(fraction)Z"
+            let parsed = try XCTUnwrap(PostgresDate.parse(text), text)
+            XCTAssertEqual(PostgresDate.format(parsed), text)
+        }
+        // Postgres çıktısı (+00:00) da aynı metne döner.
+        let fromServer = try XCTUnwrap(PostgresDate.parse("2026-11-10T08:15:59.123+00:00"))
+        XCTAssertEqual(PostgresDate.format(fromServer), "2026-11-10T08:15:59.123Z")
+        XCTAssertEqual(PostgresDate.format(Date(timeIntervalSince1970: 0)), "1970-01-01T00:00:00.000Z")
+    }
+
+    func testFormatDayIsIstanbulCalendarDay() throws {
+        // 21:30 UTC = İstanbul'da ertesi gün 00:30.
+        XCTAssertEqual(PostgresDate.formatDay(Date(timeIntervalSince1970: utc(2026, 11, 14, 21, 30))), "2026-11-15")
+        XCTAssertEqual(PostgresDate.formatDay(Date(timeIntervalSince1970: utc(2026, 11, 14, 20, 59, 59))), "2026-11-14")
+        XCTAssertEqual(PostgresDate.formatDay(Date(timeIntervalSince1970: utc(2027, 1, 1, 12))), "2027-01-01")
+        XCTAssertEqual(PostgresDate.formatDay(Date(timeIntervalSince1970: utc(2026, 12, 31, 21))), "2027-01-01")
+        // `date` metni → İstanbul gece yarısı → aynı metin.
+        for text in ["2026-11-15", "2026-03-01", "2028-02-29"] {
+            XCTAssertEqual(PostgresDate.formatDay(try XCTUnwrap(PostgresDate.parse(text))), text)
+        }
+    }
 }
 
 final class ParamEncodingTests: XCTestCase {
@@ -78,6 +105,24 @@ final class ParamEncodingTests: XCTestCase {
         XCTAssertTrue(json["p_animal_id"] is NSNull)
         XCTAssertEqual(json["p_spot_id"] as? String, "6f1c2a6e-1b7d-4c39-9c39-0d5d1f4b8a10")
         XCTAssertEqual(json["p_title"] as? String, "Moda")
+    }
+
+    func testOptionalParamsEncodeValueOrNull() throws {
+        let params: JSONObject = [
+            "lat": Param.double(40.98621),
+            "lng": Param.double(nil),
+            "p_before": Param.date(Date(timeIntervalSince1970: 1_794_298_559.123)),
+            "p_none": Param.date(nil as Date?),
+            "p_cover_from": Param.day(Date(timeIntervalSince1970: 1_794_691_800)), // 2026-11-14T21:30:00Z
+            "p_cover_to": Param.day(nil),
+        ]
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(params)) as? [String: Any])
+        XCTAssertEqual(json["lat"] as? Double, 40.98621)
+        XCTAssertTrue(json["lng"] is NSNull)
+        XCTAssertEqual(json["p_before"] as? String, "2026-11-10T08:15:59.123Z")
+        XCTAssertTrue(json["p_none"] is NSNull)
+        XCTAssertEqual(json["p_cover_from"] as? String, "2026-11-15")
+        XCTAssertTrue(json["p_cover_to"] is NSNull)
     }
 
     func testStoragePathUsesLowercasedAuthUid() {

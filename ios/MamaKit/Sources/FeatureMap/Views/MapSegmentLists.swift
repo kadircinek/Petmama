@@ -43,7 +43,7 @@ struct SpotListContent: View {
             ProgressView().padding(.top, 48)
         } else if model.listSpots.isEmpty {
             EmptyStateView(
-                systemImage: "pawprint",
+                mascot: .duo,
                 title: String(localized: "Bu sokağın ilk besleyicisi sen ol"),
                 message: String(localized: "Seçtiğin mesafede kayıtlı nokta yok."),
                 actionTitle: String(localized: "Nokta ekle")
@@ -82,7 +82,8 @@ struct NeedsListContent: View {
                         ProgressView().padding(.top, 48)
                     } else {
                         EmptyStateView(
-                            systemImage: "heart.circle",
+                            mascot: .duo,
+                            mood: .happy,
                             title: String(localized: "Yakınında açık ihtiyaç yok"),
                             message: String(localized: "Bir hayvanın veterinere, kısırlaştırmaya veya barınağa ihtiyacı varsa bildirebilirsin."),
                             actionTitle: String(localized: "İhtiyaç bildir")

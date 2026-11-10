@@ -288,4 +288,84 @@ values
   ((date_trunc('month', private.istanbul_today()) - interval '1 month')::date, 1180, 212)
 on conflict (month) do nothing;
 
+-- ---------------------------------------------------------------------------
+-- Mahalle (topluluk) — demo paylaşımlar (D17): paylaşım, soru + 2 yorum, açık "Yerime bakar mısın?"
+-- + 1 gönüllü, mama paylaşımı, uyarı ve düşük güven puanlı kullanıcının inceleme bekleyen paylaşımı.
+-- Noktaya bağlı olanlarda kaba konum noktadan gelir; trigger 2 ondalığa yuvarlar (≈1,1 km).
+-- ---------------------------------------------------------------------------
+insert into public.community_posts (id, author_id, kind, body, spot_id, animal_id, cell,
+                                    cover_from, cover_to, moderation_state, created_at)
+select v.id, pr.id, v.kind::public.community_post_kind, v.body, sp.id, an.id,
+       coalesce(sp.location, private.make_point(v.lat, v.lng)),
+       case when v.kind = 'cover_request' then private.istanbul_today() + v.from_d end,
+       case when v.kind = 'cover_request' then private.istanbul_today() + v.to_d end,
+       v.state::public.moderation_state,
+       now() - make_interval(hours => v.age_h)
+from (values
+  ('f0000000-0000-4000-8000-000000000001'::uuid, '11111111-1111-4111-8111-111111111111'::uuid, 'note',
+   'Moda Sahili''ndeki kulübelere kış için yeni battaniye koyduk. Pamuk hemen sahiplendi, keyfi yerinde.',
+   'a0000000-0000-4000-8000-000000000001'::uuid, 'd0000000-0000-4000-8000-000000000001'::uuid,
+   40.9813, 29.0252, null::int, null::int, 'approved', 3),
+  ('f0000000-0000-4000-8000-000000000002'::uuid, '22222222-2222-4222-8222-222222222222'::uuid, 'question',
+   'Duman artık kuru mamayı zor yiyor. Yaşlı kediler için önerebileceğiniz yumuşak bir mama var mı?',
+   null::uuid, 'd0000000-0000-4000-8000-000000000004'::uuid,
+   40.9874, 29.0277, null, null, 'approved', 8),
+  ('f0000000-0000-4000-8000-000000000003'::uuid, '44444444-4444-4444-8444-444444444444'::uuid, 'cover_request',
+   'Hafta sonu şehir dışındayım. Altıyol''daki köpeklere iki gün bakabilecek biri var mı? Mama torbası köşedeki bakkalda duruyor.',
+   'a0000000-0000-4000-8000-000000000006'::uuid, null::uuid,
+   40.9888, 29.0262, 2, 4, 'approved', 5),
+  ('f0000000-0000-4000-8000-000000000004'::uuid, '11111111-1111-4111-8111-111111111111'::uuid, 'supply',
+   'Elimde açılmamış 2 kg yavru kedi maması var. İhtiyacı olan Moda Parkı girişinden alabilir.',
+   'a0000000-0000-4000-8000-000000000002'::uuid, null::uuid,
+   40.9846, 29.0268, null, null, 'approved', 20),
+  ('f0000000-0000-4000-8000-000000000005'::uuid, '22222222-2222-4222-8222-222222222222'::uuid, 'alert',
+   'Bahariye arka sokakta akşamları motorlar çok hızlı geçiyor. Mama kaplarını kaldırımın iç tarafına koyalım.',
+   'a0000000-0000-4000-8000-000000000004'::uuid, null::uuid,
+   40.9862, 29.0301, null, null, 'approved', 30),
+  ('f0000000-0000-4000-8000-000000000006'::uuid, '33333333-3333-4333-8333-333333333333'::uuid, 'note',
+   'Mahalleye yeni taşındım. Rasimpaşa tarafında besleme yapan var mı? Ben de katılmak isterim.',
+   null::uuid, null::uuid,
+   40.9905, 29.0300, null, null, 'pending', 1)
+) as v(id, author, kind, body, spot, animal, lat, lng, from_d, to_d, state, age_h)
+join public.profiles pr on pr.id = v.author
+left join public.spots sp on sp.id = v.spot
+left join public.animals an on an.id = v.animal
+on conflict (id) do nothing;
+
+insert into public.community_comments (id, post_id, author_id, body, created_at)
+select v.id, po.id, pr.id, v.body, now() - make_interval(hours => v.age_h)
+from (values
+  ('f1000000-0000-4000-8000-000000000001'::uuid, 'f0000000-0000-4000-8000-000000000002'::uuid,
+   '11111111-1111-4111-8111-111111111111'::uuid,
+   'Veterinerimiz yaşlı kediler için pate mama önermişti. Ilık suyla biraz yumuşatınca daha rahat yiyorlar.', 6),
+  ('f1000000-0000-4000-8000-000000000002'::uuid, 'f0000000-0000-4000-8000-000000000002'::uuid,
+   '44444444-4444-4444-8444-444444444444'::uuid,
+   'Bende iki kutu yaş mama var, yarın sabah kilise bahçesine bırakırım.', 5)
+) as v(id, post, author, body, age_h)
+join public.community_posts po on po.id = v.post
+join public.profiles pr on pr.id = v.author
+on conflict (id) do nothing;
+
+insert into public.community_paws (post_id, user_id)
+select po.id, pr.id
+from (values
+  ('f0000000-0000-4000-8000-000000000001'::uuid, '22222222-2222-4222-8222-222222222222'::uuid),
+  ('f0000000-0000-4000-8000-000000000001'::uuid, '44444444-4444-4444-8444-444444444444'::uuid),
+  ('f0000000-0000-4000-8000-000000000002'::uuid, '11111111-1111-4111-8111-111111111111'::uuid),
+  ('f0000000-0000-4000-8000-000000000004'::uuid, '44444444-4444-4444-8444-444444444444'::uuid)
+) as v(post, usr)
+join public.community_posts po on po.id = v.post
+join public.profiles pr on pr.id = v.usr
+on conflict do nothing;
+
+-- "Ben bakarım": Mehmet, Deniz'in Altıyol isteğine gönüllü
+insert into public.cover_volunteers (post_id, user_id)
+select po.id, pr.id
+from (values
+  ('f0000000-0000-4000-8000-000000000003'::uuid, '22222222-2222-4222-8222-222222222222'::uuid)
+) as v(post, usr)
+join public.community_posts po on po.id = v.post
+join public.profiles pr on pr.id = v.usr
+on conflict do nothing;
+
 drop table if exists pg_temp.seed_spots;

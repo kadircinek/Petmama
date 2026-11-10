@@ -65,7 +65,7 @@ public struct QuickFeedSheet: View {
         let status = spot.currentStatus(now: model.now)
         return VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 14) {
-                AsyncPhoto(url: spot.photoURL, placeholderSystemImage: spot.type.systemImage, placeholderTint: status.color)
+                SpotThumbnail(spot: spot, now: model.now)
                     .frame(width: 64, height: 64)
                     .clipShape(RoundedRectangle(cornerRadius: MamaMetrics.smallCornerRadius, style: .continuous))
                     .accessibilityHidden(true)

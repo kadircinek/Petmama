@@ -2,6 +2,7 @@
 import SwiftUI
 import MamaCore
 import MamaDesign
+import FeatureCommunity
 import FeatureDonate
 import FeatureMap
 import FeatureNeeds
@@ -82,8 +83,11 @@ struct MainTabView: View {
             TabStack(tab: .map, services: services) { MapTabScreen(services: services) }
                 .tag(AppTab.map)
                 .toolbar(.hidden, for: .tabBar)
-            TabStack(tab: .needs, services: services) { NeedsTabScreen(services: services) }
-                .tag(AppTab.needs)
+            TabStack(tab: .community, services: services) {
+                // Mahalle: besleyicilerin akışı + İhtiyaçlar bölümü (D17).
+                CommunityTabScreen(services: services) { NeedsTabScreen(services: services) }
+            }
+                .tag(AppTab.community)
                 .toolbar(.hidden, for: .tabBar)
             TabStack(tab: .donate, services: services) { DonateTabScreen(services: services) }
                 .tag(AppTab.donate)

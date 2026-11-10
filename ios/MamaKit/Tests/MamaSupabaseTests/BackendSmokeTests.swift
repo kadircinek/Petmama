@@ -76,6 +76,46 @@ final class BackendSmokeTests: XCTestCase {
         await assertNotSignedIn { try await services.auth.deleteAccount() }
     }
 
+    /// Mahalle RPC'lerinin hiçbiri `anon` rolüne açık değil: okumalar dahil hepsi yerelde `notSignedIn` ile
+    /// kesilir (boş liste dönmez, ağa çıkmaz).
+    func testSignedOutCommunityCallsThrowNotSignedIn() async {
+        let services = makeServices()
+        XCTAssertTrue(services.community is SupabaseBackend)
+        let community = services.community
+        let postId = UUID()
+
+        await assertNotSignedIn {
+            _ = try await community.feed(near: .modaKadikoy, radiusMeters: CommunityPolicy.feedRadiusMeters,
+                                         kind: nil, before: nil, limit: CommunityPolicy.pageSize)
+        }
+        await assertNotSignedIn {
+            _ = try await community.feed(near: .modaKadikoy, radiusMeters: 500, kind: .coverRequest, before: Date(), limit: 10)
+        }
+        await assertNotSignedIn { _ = try await community.post(id: postId, near: nil) }
+        await assertNotSignedIn { _ = try await community.post(id: postId, near: .modaKadikoy) }
+        await assertNotSignedIn { _ = try await community.comments(postId: postId) }
+        await assertNotSignedIn { _ = try await community.volunteers(postId: postId) }
+        await assertNotSignedIn {
+            _ = try await community.createPost(CommunityPostDraft(kind: .note, body: "Merhaba mahalle", coordinate: .modaKadikoy))
+        }
+        // Konumsuz taslak da önce oturuma takılır; `.invalid(.locationMissing)` yalnızca girişliyken döner.
+        await assertNotSignedIn { _ = try await community.createPost(CommunityPostDraft(kind: .note, body: "Merhaba")) }
+        await assertNotSignedIn { _ = try await community.createPost(CommunityPostDraft(kind: .coverRequest, body: "")) }
+        await assertNotSignedIn { _ = try await community.addComment(postId: postId, body: "Ben bakarım") }
+        await assertNotSignedIn { _ = try await community.addComment(postId: postId, body: "   ") }
+        await assertNotSignedIn { _ = try await community.togglePaw(postId: postId) }
+        await assertNotSignedIn { _ = try await community.toggleVolunteer(postId: postId) }
+        await assertNotSignedIn { _ = try await community.deletePost(id: postId) }
+        await assertNotSignedIn { _ = try await community.deleteComment(id: UUID()) }
+        await assertNotSignedIn { _ = try await community.summary(near: .modaKadikoy, radiusMeters: CommunityPolicy.feedRadiusMeters) }
+        await assertNotSignedIn {
+            try await services.moderation.report(ReportDraft(target: .post, targetId: postId, reason: .harassment))
+        }
+        await assertNotSignedIn {
+            try await services.moderation.report(ReportDraft(target: .comment, targetId: UUID(), reason: .spam))
+        }
+    }
+
     func testSignUpValidatesLocallyLikeInMemoryBackend() async {
         let services = makeServices()
         do {

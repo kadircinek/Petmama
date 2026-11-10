@@ -2,11 +2,14 @@ import Foundation
 import MamaCore
 
 /// Push bildirimine dokunulunca açılacak hedef. `push-dispatch` edge function'ı
-/// APNs payload'una `spot_id` / `need_id` / `kind` ekler.
+/// APNs payload'una `spot_id` / `need_id` / `post_id` / `kind` ekler.
 public enum PushPayload {
     public static func route(from userInfo: [AnyHashable: Any]) -> (route: AppRoute, tab: AppTab)? {
+        if let raw = userInfo["post_id"] as? String, let id = UUID(uuidString: raw) {
+            return (.post(id), .community)
+        }
         if let raw = userInfo["need_id"] as? String, let id = UUID(uuidString: raw) {
-            return (.need(id), .needs)
+            return (.need(id), .community)
         }
         if let raw = userInfo["spot_id"] as? String, let id = UUID(uuidString: raw) {
             return (.spot(id), .map)

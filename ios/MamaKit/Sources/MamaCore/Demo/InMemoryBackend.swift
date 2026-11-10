@@ -6,32 +6,41 @@ import Foundation
 /// (mesafe doğrulama, mükerrer kontrol, günlük limit, durum eskitme, konum bulanıklaştırma, "teşekkürler"
 /// bildirimi), böylece istemci akışları backend olmadan uçtan uca denenebilir.
 public actor InMemoryBackend {
-    private var users: [UUID: UserProfile]
-    private var passwords: [String: (password: String, userId: UUID)] = [:]
-    private var currentUser: UUID?
-    private let demoUserId: UUID
+    var users: [UUID: UserProfile]
+    var passwords: [String: (password: String, userId: UUID)] = [:]
+    var currentUser: UUID?
+    let demoUserId: UUID
 
-    private var spots: [UUID: Spot]
-    private var checkIns: [CheckIn]
-    private var animals: [UUID: Animal]
-    private var animalSpots: [AnimalSpotKey: (seenCount: Int, lastSeenAt: Date)] = [:]
-    private var needs: [UUID: Need]
-    private var guardians: [AnimalSpotKey: Set<Weekday>] = [:] // (userId, spotId)
-    private var follows: Set<FollowKey> = []
-    private var goneReports: [UUID: Set<UUID>] = [:]
-    private var notificationsByUser: [UUID: [AppNotification]] = [:]
-    private var preferencesByUser: [UUID: NotificationPreferences] = [:]
-    private var blocks: [UUID: Set<UUID>] = [:]
+    var spots: [UUID: Spot]
+    var checkIns: [CheckIn]
+    var animals: [UUID: Animal]
+    var animalSpots: [AnimalSpotKey: (seenCount: Int, lastSeenAt: Date)] = [:]
+    var needs: [UUID: Need]
+    var guardians: [AnimalSpotKey: Set<Weekday>] = [:] // (userId, spotId)
+    var follows: Set<FollowKey> = []
+    var goneReports: [UUID: Set<UUID>] = [:]
+    var notificationsByUser: [UUID: [AppNotification]] = [:]
+    var preferencesByUser: [UUID: NotificationPreferences] = [:]
+    var blocks: [UUID: Set<UUID>] = [:]
     private(set) var reports: [ReportDraft] = []
     private(set) var donationClicks: [String] = []
     private(set) var deviceTokens: [UUID: String] = [:]
-    private var donationOverview: DonationOverview
-    private var mediaDirectory: URL
+    var donationOverview: DonationOverview
 
-    private let now: @Sendable () -> Date
+    // Mahalle (D17). Sayaç alanları okuma anında hesaplanır.
+    var posts: [UUID: CommunityPost] = [:]
+    var postCells: [UUID: Coordinate] = [:]
+    var commentsByPost: [UUID: [CommunityComment]] = [:]
+    var hiddenCommentIds: Set<UUID> = []
+    var paws: [UUID: Set<UUID>] = [:]
+    var coverVolunteers: [UUID: [UUID]] = [:]
+    var reportersByTarget: [String: Set<UUID>] = [:]
+    var mediaDirectory: URL
 
-    private struct AnimalSpotKey: Hashable { let a: UUID; let b: UUID }
-    private struct FollowKey: Hashable { let user: UUID; let target: FollowTarget; let id: UUID }
+    let now: @Sendable () -> Date
+
+    struct AnimalSpotKey: Hashable { let a: UUID; let b: UUID }
+    struct FollowKey: Hashable { let user: UUID; let target: FollowTarget; let id: UUID }
 
     public init(seed: DemoSeed, signedIn: Bool = false, now: @escaping @Sendable () -> Date = { Date() }) {
         self.now = now
@@ -52,6 +61,15 @@ public actor InMemoryBackend {
             guardians[AnimalSpotKey(a: guardian.userId, b: guardian.spotId)] = guardian.schedule
         }
         passwords["demo@mamaharitasi.app"] = ("demo1234", seed.demoUserId)
+        for entry in seed.posts {
+            posts[entry.post.id] = entry.post
+            postCells[entry.post.id] = CommunityPolicy.cell(for: entry.coordinate)
+        }
+        for comment in seed.comments {
+            commentsByPost[comment.postId, default: []].append(comment)
+        }
+        for entry in seed.paws { paws[entry.postId] = Set(entry.userIds) }
+        for entry in seed.volunteers { coverVolunteers[entry.postId] = entry.userIds }
     }
 
     // MARK: - Test yardımcıları
@@ -68,24 +86,24 @@ public actor InMemoryBackend {
 
     // MARK: - Kurallar
 
-    private func requireUser() throws -> UUID {
+    func requireUser() throws -> UUID {
         guard let currentUser else { throw MamaError.notSignedIn }
         return currentUser
     }
 
-    private func isPrivileged(_ userId: UUID?, for spot: Spot) -> Bool {
+    func isPrivileged(_ userId: UUID?, for spot: Spot) -> Bool {
         guard let userId else { return false }
         if spot.createdBy == userId { return true }
         if users[userId]?.isVerifiedFeeder == true { return true }
         return guardians[AnimalSpotKey(a: userId, b: spot.id)] != nil
     }
 
-    private func hasOpenRequest(_ spotId: UUID) -> Bool {
+    func hasOpenRequest(_ spotId: UUID) -> Bool {
         checkIns.contains { $0.spotId == spotId && $0.kind.isRequest && $0.resolvedAt == nil }
     }
 
     /// Okuma anında durum + gizlilik kuralları (docs/backend-contract.md → Konum hassasiyeti).
-    private func present(_ spot: Spot, origin: Coordinate? = nil) -> Spot? {
+    func present(_ spot: Spot, origin: Coordinate? = nil) -> Spot? {
         let viewer = currentUser
         guard spot.isActive else { return nil }
         if spot.visibility == .private, viewer == nil { return nil }
@@ -112,21 +130,21 @@ public actor InMemoryBackend {
         return result
     }
 
-    private func animalIsAt(_ animalId: UUID, _ spotId: UUID) -> Bool {
+    func animalIsAt(_ animalId: UUID, _ spotId: UUID) -> Bool {
         animalSpots[AnimalSpotKey(a: animalId, b: spotId)] != nil
     }
 
-    private func istanbulCalendar() -> Calendar {
+    func istanbulCalendar() -> Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = NotificationPolicy.timeZone
         return calendar
     }
 
-    private func notify(_ userId: UUID, _ notification: AppNotification) {
+    func notify(_ userId: UUID, _ notification: AppNotification) {
         notificationsByUser[userId, default: []].insert(notification, at: 0)
     }
 
-    private func isBlocked(_ a: UUID, _ b: UUID) -> Bool {
+    func isBlocked(_ a: UUID, _ b: UUID) -> Bool {
         (blocks[a]?.contains(b) ?? false) || (blocks[b]?.contains(a) ?? false)
     }
 }
@@ -180,6 +198,7 @@ extension InMemoryBackend: AuthRepository {
         notificationsByUser[userId] = nil
         preferencesByUser[userId] = nil
         blocks[userId] = nil
+        removeCommunityContent(of: userId)
         currentUser = nil
     }
 }
@@ -465,7 +484,7 @@ extension InMemoryBackend: AnimalRepository {
 // MARK: - NeedRepository
 
 extension InMemoryBackend: NeedRepository {
-    private func presentNeed(_ need: Need, origin: Coordinate?) -> Need? {
+    func presentNeed(_ need: Need, origin: Coordinate?) -> Need? {
         var result = need
         let spotId = need.spotId ?? need.animalId.flatMap { animals[$0]?.lastSeenSpotId }
         if let spotId, let raw = spots[spotId] {
@@ -661,8 +680,14 @@ extension InMemoryBackend: NotificationRepository {
 
 extension InMemoryBackend: ModerationRepository {
     public func report(_ draft: ReportDraft) async throws {
-        _ = try requireUser()
+        let reporter = try requireUser()
         reports.append(draft)
+        guard draft.target == .post || draft.target == .comment else { return }
+        let key = "\(draft.target.rawValue)-\(draft.targetId)"
+        reportersByTarget[key, default: []].insert(reporter)
+        if (reportersByTarget[key]?.count ?? 0) >= CommunityPolicy.reportsToAutoHide {
+            hideReportedCommunityContent(target: draft.target, id: draft.targetId)
+        }
     }
 
     public func block(userId: UUID) async throws {

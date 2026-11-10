@@ -56,10 +56,12 @@ extension MamaAppDelegate: UNUserNotificationCenterDelegate {
         // userInfo Sendable değil; yalnızca gereken kimlikleri ana aktöre taşı.
         let spotId = userInfo["spot_id"] as? String
         let needId = userInfo["need_id"] as? String
+        let postId = userInfo["post_id"] as? String
         await MainActor.run {
             var payload: [AnyHashable: Any] = [:]
             if let spotId { payload["spot_id"] = spotId }
             if let needId { payload["need_id"] = needId }
+            if let postId { payload["post_id"] = postId }
             self.model.openFromPush(payload)
         }
     }

@@ -25,6 +25,7 @@ ios/
       FeatureAnimals/      Hayvan profili, hayvan ekleme
       FeatureNeeds/        İhtiyaçlar, ihtiyaç detayı/oluşturma, acil veteriner bilgisi
       FeatureDonate/       Bağış (harici Safari linki), "Bağışım nereye gitti?"
+      FeatureCommunity/    Mahalle: besleyicilerin akışı, yorumlar, pati, "Yerime bakar mısın?" (D17)
       FeatureProfile/      Profil, takip edilenler, bildirimler, ayarlar, hesap silme, raporla
       FeatureOnboarding/   Açılış, 3 adımlı tanıtım, konum/bildirim izni, giriş (Apple + e-posta)
       AppFeature/          Kompozisyon kökü: tab bar, rota çözümleme, konum, push, servis kurulumu
@@ -34,6 +35,7 @@ docs/
   DECISIONS.md             PRD'deki açık sorular için alınan varsayımlar
   ios-conventions.md       Kodlama kuralları
 scripts/linux-swift.sh     MamaKit'i Docker'da (Swift 6, Linux) derler/test eder
+scripts/generate_mascots.py  Maskot ikonlarını (SVG) üretir; önizleme: docs/mascots.png
 ```
 
 ## Çalıştırma (macOS)
@@ -83,6 +85,8 @@ python3 scripts/extract_strings.py
 | FR-I1…I5 ihtiyaçlar, üstlenme, acil veteriner | `FeatureNeeds` |
 | FR-P1…P4 giriş, profil, hesap silme, doğrulanmış besleyici | `FeatureOnboarding`, `FeatureProfile`, `TrustPolicy` |
 | 8.2 bağış (Seçenek B, harici Safari + utm) | `FeatureDonate`, `DonationConfig` |
+| Mahalle (D17): akış, yorum, pati, "Ben bakarım" | `FeatureCommunity`, `CommunityPolicy`, `supabase` `community_*` RPC'leri |
+| Maskot ikonlar (D18) | `scripts/generate_mascots.py`, `MamaDesign/Components/Mascots.swift` |
 | 9.1 konum bulanıklaştırma, 9.2 raporla/engelle/filtre, 9.3 güven puanı, 9.5 KVKK | `supabase` RPC'leri, `LocationFuzzer`, `ContentFilter`, `ReportSheet`, `PrivacyInfo.xcprivacy` |
 
 ## Lansmandan önce yapılacaklar (PRD 11.2, 11.4)

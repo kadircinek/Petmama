@@ -5,7 +5,7 @@ import MamaDesign
 
 // Fotoğraf kullanılmadan (D14) SF Symbols ve basit `Path`'lerle kurulan illüstrasyonlar.
 
-/// Logo: mint daire içinde pati, el çizimi hissi veren kesikli halka, yanlarda kedi ve köpek.
+/// Logo: mint daire içinde kedi ve köpek maskotu, el çizimi hissi veren kesikli halka (D18).
 struct MamaLogo: View {
     var size: CGFloat = 132
 
@@ -18,19 +18,8 @@ struct MamaLogo: View {
             Circle()
                 .fill(MamaColor.mint)
                 .frame(width: size, height: size)
-            Image(systemName: "pawprint.fill")
-                .font(.system(size: size * 0.42, weight: .bold))
-                .foregroundStyle(MamaColor.ink)
-            Image(systemName: "cat.fill")
-                .font(.system(size: size * 0.2, weight: .semibold))
-                .foregroundStyle(MamaColor.ink)
-                .rotationEffect(.degrees(-10))
-                .offset(x: -size * 0.58, y: size * 0.42)
-            Image(systemName: "dog.fill")
-                .font(.system(size: size * 0.2, weight: .semibold))
-                .foregroundStyle(MamaColor.ink)
-                .rotationEffect(.degrees(10))
-                .offset(x: size * 0.58, y: size * 0.42)
+            MascotView(.duo, mood: .happy, size: size * 1.12)
+                .offset(y: size * 0.02)
         }
         .frame(width: size * 1.5, height: size * 1.3)
         .accessibilityHidden(true)

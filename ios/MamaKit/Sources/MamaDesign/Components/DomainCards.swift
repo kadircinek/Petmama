@@ -15,7 +15,7 @@ public struct SpotCardView: View {
     public var body: some View {
         let status = spot.currentStatus(now: now)
         HStack(spacing: 14) {
-            AsyncPhoto(url: spot.photoURL, placeholderSystemImage: spot.type.systemImage, placeholderTint: status.color)
+            SpotThumbnail(spot: spot, now: now)
                 .frame(width: 64, height: 64)
                 .clipShape(RoundedRectangle(cornerRadius: MamaMetrics.smallCornerRadius, style: .continuous))
                 .overlay(alignment: .topTrailing) {
@@ -151,7 +151,7 @@ public struct AnimalChipCard: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncPhoto(url: animal.photoURLs.first, placeholderSystemImage: animal.species.systemImage, placeholderTint: MamaColor.mint)
+            AnimalAvatar(animal: animal)
                 .frame(width: 120, height: 100)
                 .clipShape(RoundedRectangle(cornerRadius: MamaMetrics.smallCornerRadius, style: .continuous))
                 .overlay(alignment: .topLeading) {

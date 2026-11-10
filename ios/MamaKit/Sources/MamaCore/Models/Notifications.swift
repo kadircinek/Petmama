@@ -7,6 +7,10 @@ public enum NotificationKind: String, Codable, CaseIterable, Sendable, Hashable 
     case needResolved = "need_resolved"
     case thanksFed = "thanks_fed"
     case donationDelivered = "donation_delivered"
+    /// Paylaşımına yorum geldi (Mahalle).
+    case communityComment = "community_comment"
+    /// "Yerime bakar mısın?" isteğine biri "Ben bakarım" dedi.
+    case coverVolunteered = "cover_volunteered"
 }
 
 public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
@@ -16,6 +20,7 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
     public var body: String
     public var spotId: UUID?
     public var needId: UUID?
+    public var postId: UUID?
     public var readAt: Date?
     public var createdAt: Date
 
@@ -26,6 +31,7 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
         body: String,
         spotId: UUID? = nil,
         needId: UUID? = nil,
+        postId: UUID? = nil,
         readAt: Date? = nil,
         createdAt: Date = Date()
     ) {
@@ -35,6 +41,7 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
         self.body = body
         self.spotId = spotId
         self.needId = needId
+        self.postId = postId
         self.readAt = readAt
         self.createdAt = createdAt
     }
@@ -51,6 +58,8 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
     public var needFoodNearby: Bool
     public var followedUpdates: Bool
     public var guardianAlerts: Bool
+    /// Mahalle: paylaşımına yorum, "Ben bakarım" bildirimleri.
+    public var communityUpdates: Bool
 
     public init(
         radiusMeters: Int = 1000,
@@ -58,7 +67,8 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
         quietEndHour: Int = NotificationPolicy.defaultQuietEndHour,
         needFoodNearby: Bool = true,
         followedUpdates: Bool = true,
-        guardianAlerts: Bool = true
+        guardianAlerts: Bool = true,
+        communityUpdates: Bool = true
     ) {
         self.radiusMeters = radiusMeters
         self.quietStartHour = quietStartHour
@@ -66,6 +76,7 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
         self.needFoodNearby = needFoodNearby
         self.followedUpdates = followedUpdates
         self.guardianAlerts = guardianAlerts
+        self.communityUpdates = communityUpdates
     }
 
     public static let `default` = NotificationPreferences()

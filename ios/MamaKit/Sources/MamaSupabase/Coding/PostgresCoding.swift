@@ -116,6 +116,19 @@ enum PostgresDate {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter.string(from: date)
     }
+
+    /// `date` sütununa / parametresine yazmak için "YYYY-MM-DD": anın `dayTimeZone` (Europe/Istanbul)
+    /// takvimindeki günü. `parse` ile tersinir (gün metni → o günün İstanbul gece yarısı).
+    static func formatDay(_ date: Date) -> String {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = dayTimeZone
+        let parts = calendar.dateComponents([.year, .month, .day], from: date)
+        func padded(_ value: Int?, _ width: Int) -> String {
+            let text = String(max(value ?? 0, 0))
+            return String(repeating: "0", count: max(0, width - text.count)) + text
+        }
+        return "\(padded(parts.year, 4))-\(padded(parts.month, 2))-\(padded(parts.day, 2))"
+    }
 }
 
 /// Satırlardan biri çözülemezse (ör. bozuk uuid) yalnızca o satırı atlayan dizi.
@@ -219,7 +232,11 @@ enum Param {
     static func bool(_ value: Bool?) -> AnyJSON { value.map(AnyJSON.bool) ?? .null }
     static func strings(_ values: [String]) -> AnyJSON { .array(values.map(AnyJSON.string)) }
     static func ints(_ values: [Int]) -> AnyJSON { .array(values.map(AnyJSON.integer)) }
+    static func double(_ value: Double?) -> AnyJSON { value.map(AnyJSON.double) ?? .null }
     static func date(_ value: Date) -> AnyJSON { .string(PostgresDate.format(value)) }
+    static func date(_ value: Date?) -> AnyJSON { value.map { .string(PostgresDate.format($0)) } ?? .null }
+    /// Postgres `date` ("YYYY-MM-DD", Europe/Istanbul günü).
+    static func day(_ value: Date?) -> AnyJSON { value.map { .string(PostgresDate.formatDay($0)) } ?? .null }
 
     /// Boşsa `null`; kırpılmış metin.
     static func text(_ value: String?) -> AnyJSON {

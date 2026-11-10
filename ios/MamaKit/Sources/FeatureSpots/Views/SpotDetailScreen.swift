@@ -81,9 +81,12 @@ public struct SpotDetailScreen: View {
                     SpotAnimalsSection(spotId: spot.id, animals: model.animals)
                     FeedingTimelineSection(bars: model.timelineBars, maxCount: model.maxTimelineCount, weeklyCount: model.weeklyFedCount)
                     SpotNeedsSection(spotId: spot.id, needs: model.needs, now: model.now)
-                    SpotGuardiansSection(guardians: model.guardians, isGuardian: model.isGuardian) {
-                        requireSignIn { showsGuardianEditor = true }
-                    }
+                    SpotGuardiansSection(
+                        guardians: model.guardians,
+                        isGuardian: model.isGuardian,
+                        onEdit: { requireSignIn { showsGuardianEditor = true } },
+                        onAskCover: { router.present(.createPost(kind: .coverRequest, spotId: spot.id), session: session) }
+                    )
                     FeedingGuideLink()
                 }
                 .padding(.horizontal, 20)

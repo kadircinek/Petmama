@@ -3,7 +3,7 @@ import SwiftUI
 import MamaCore
 import MamaDesign
 
-/// Profil üst fotoğrafı: birden fazla fotoğrafta sayfalı, yoksa tür ikonlu yer tutucu.
+/// Profil üst fotoğrafı: birden fazla fotoğrafta sayfalı, yoksa hayvanın maskotu.
 struct AnimalPhotoHeader: View {
     let animal: Animal
 
@@ -19,11 +19,8 @@ struct AnimalPhotoHeader: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
             } else {
-                AsyncPhoto(
-                    url: animal.photoURLs.first,
-                    placeholderSystemImage: animal.species.systemImage,
-                    placeholderTint: MamaColor.mint
-                )
+                // Fotoğraf yoksa hayvanın rengine uyan maskot (D18).
+                AnimalAvatar(animal: animal)
                 .accessibilityLabel(String(localized: "\(animal.displayName) fotoğrafı"))
             }
         }

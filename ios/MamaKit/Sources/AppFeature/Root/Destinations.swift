@@ -3,6 +3,7 @@ import SwiftUI
 import MamaCore
 import MamaDesign
 import FeatureAnimals
+import FeatureCommunity
 import FeatureDonate
 import FeatureMap
 import FeatureNeeds
@@ -23,6 +24,8 @@ struct RouteDestination: View {
             AnimalProfileScreen(animalId: id, services: services)
         case .need(let id):
             NeedDetailScreen(needId: id, services: services)
+        case .post(let id):
+            PostDetailScreen(postId: id, services: services)
         case .following:
             FollowingScreen(services: services)
         case .notifications:
@@ -71,6 +74,8 @@ struct SheetDestination: View {
             }
         case .editProfile:
             EditProfileSheet(services: services)
+        case .createPost(let kind, let spotId):
+            CreatePostSheet(kind: kind, spotId: spotId, services: services)
         }
     }
 }

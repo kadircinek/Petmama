@@ -38,6 +38,20 @@ enum SupabaseDecoding {
         try SupabaseJSON.rows(NotificationDTO.self, from: data).compactMap { $0.toDomain() }
     }
 
+    /// `community_feed` / `community_post_detail`: sunucu sırası korunur (`created_at` azalan).
+    static func communityPosts(from data: Data) throws -> [CommunityPost] {
+        try SupabaseJSON.rows(CommunityPostRowDTO.self, from: data).compactMap { $0.toDomain() }
+    }
+
+    /// `community_comments_of`: sunucu sırası korunur (`created_at` artan).
+    static func communityComments(from data: Data) throws -> [CommunityComment] {
+        try SupabaseJSON.rows(CommunityCommentRowDTO.self, from: data).compactMap { $0.toDomain() }
+    }
+
+    static func communityVolunteers(from data: Data) throws -> [CommunityVolunteer] {
+        try SupabaseJSON.rows(CommunityVolunteerDTO.self, from: data).map { $0.toDomain() }
+    }
+
     // MARK: Tek satır dönen `table(...)` RPC'leri
 
     static func profileStats(from data: Data) throws -> ProfileStats {
@@ -54,6 +68,10 @@ enum SupabaseDecoding {
 
     static func donationOverview(from data: Data) throws -> DonationOverview? {
         try SupabaseJSON.rows(DonationOverviewDTO.self, from: data).first?.toDomain()
+    }
+
+    static func communitySummary(from data: Data) throws -> CommunitySummary {
+        try SupabaseJSON.rows(CommunitySummaryDTO.self, from: data).first?.toDomain() ?? .empty
     }
 
     // MARK: jsonb `status` sonuçları
@@ -76,6 +94,29 @@ enum SupabaseDecoding {
 
     static func goneReportOutcome(from data: Data) throws -> GoneReportOutcome {
         try SupabaseJSON.object(StatusResultDTO.self, from: data).goneReportOutcome()
+    }
+
+    // MARK: Mahalle jsonb sonuçları
+
+    static func createPostOutcome(from data: Data) throws -> CreatePostOutcome {
+        try SupabaseJSON.object(CommunityResultDTO.self, from: data).createPostOutcome()
+    }
+
+    static func commentOutcome(from data: Data) throws -> CommentOutcome {
+        try SupabaseJSON.object(CommunityResultDTO.self, from: data).commentOutcome()
+    }
+
+    /// `nil` = `post_not_found`.
+    static func pawToggleResult(from data: Data) throws -> PawToggleResult? {
+        try SupabaseJSON.object(CommunityResultDTO.self, from: data).pawToggleResult()
+    }
+
+    static func coverVolunteerOutcome(from data: Data) throws -> CoverVolunteerOutcome {
+        try SupabaseJSON.object(CommunityResultDTO.self, from: data).coverVolunteerOutcome()
+    }
+
+    static func communityDeleteAllowed(from data: Data, rpc: String) throws -> Bool {
+        try SupabaseJSON.object(CommunityResultDTO.self, from: data).deleteAllowed(rpc: rpc)
     }
 
     /// `create_need` → `uuid`.

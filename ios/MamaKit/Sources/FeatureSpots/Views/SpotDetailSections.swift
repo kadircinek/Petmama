@@ -3,13 +3,13 @@ import SwiftUI
 import MamaCore
 import MamaDesign
 
-/// Büyük fotoğraf başlığı; fotoğraf yoksa durum renginde pati.
+/// Büyük fotoğraf başlığı; fotoğraf yoksa duruma göre ifadesi değişen maskot (D18).
 struct SpotHeroHeader: View {
     let spot: Spot
     let status: SpotStatus
 
     var body: some View {
-        AsyncPhoto(url: spot.photoURL, placeholderSystemImage: "pawprint.fill", placeholderTint: status.color)
+        SpotThumbnail(spot: spot)
             .frame(maxWidth: .infinity)
             .frame(height: 230)
             .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
@@ -139,10 +139,12 @@ struct SpotNeedsSection: View {
 }
 
 /// Koruyucular (avatar + haftalık gün çizelgesi) ve "Koruyucu ol / Günleri düzenle".
+/// Koruyucu, yokken noktasını mahalleye emanet edebilir: "Yerime bakar mısın?" (D17).
 struct SpotGuardiansSection: View {
     let guardians: [Guardian]
     let isGuardian: Bool
     let onEdit: () -> Void
+    let onAskCover: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -176,6 +178,36 @@ struct SpotGuardiansSection: View {
             }
             Button(isGuardian ? String(localized: "Koruyuculuk günlerini düzenle") : String(localized: "Koruyucu ol"), action: onEdit)
                 .buttonStyle(.mamaSecondary(systemImage: "shield.lefthalf.filled"))
+            if isGuardian {
+                Button(action: onAskCover) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "calendar.badge.clock")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(MamaColor.textPrimary)
+                            .frame(width: 40, height: 40)
+                            .background(Circle().fill(MamaColor.card.opacity(0.7)))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Bir süre yok musun?")
+                                .font(MamaFont.headline)
+                                .foregroundStyle(MamaColor.textPrimary)
+                            Text("Mahalleden yerine bakacak birini bul.")
+                                .font(MamaFont.caption)
+                                .foregroundStyle(MamaColor.textSecondary)
+                        }
+                        Spacer(minLength: 0)
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.bold))
+                            .foregroundStyle(MamaColor.textSecondary)
+                            .accessibilityHidden(true)
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, minHeight: MamaMetrics.minTapSize)
+                    .background(RoundedRectangle(cornerRadius: MamaMetrics.cornerRadius, style: .continuous).fill(MamaColor.tileLavender))
+                    .contentShape(RoundedRectangle(cornerRadius: MamaMetrics.cornerRadius, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+            }
         }
     }
 }

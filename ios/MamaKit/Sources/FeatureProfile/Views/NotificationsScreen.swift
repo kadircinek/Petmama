@@ -59,7 +59,7 @@ public struct NotificationsScreen: View {
     private var emptyState: some View {
         if model.hasLoaded && model.isEmpty {
             EmptyStateView(
-                systemImage: "bell",
+                mascot: .dog,
                 title: String(localized: "Henüz bildirimin yok"),
                 message: session.isSignedIn
                     ? String(localized: "Yakınında mama bekleyen bir nokta olduğunda veya takip ettiğin noktada bir şey değiştiğinde burada göreceksin.")

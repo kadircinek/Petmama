@@ -43,6 +43,7 @@ extension AppServices {
             notifications: backend,
             moderation: backend,
             donations: backend,
+            community: backend,
             media: backend,
             spotCache: spotCache,
             checkInQueue: queue,

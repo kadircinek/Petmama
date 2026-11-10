@@ -25,6 +25,9 @@ struct NotificationPreferencesSection: View {
             Toggle(isOn: $model.preferences.guardianAlerts) {
                 rowLabel(String(localized: "Koruyucu uyarıları"), detail: String(localized: "Koruyucusu olduğun nokta uzun süre beslenmezse"), icon: "shield.lefthalf.filled")
             }
+            Toggle(isOn: $model.preferences.communityUpdates) {
+                rowLabel(String(localized: "Mahalle"), detail: String(localized: "Paylaşımına yorum gelince veya biri \"Ben bakarım\" deyince"), icon: "person.2.fill")
+            }
         } header: {
             Text("Bildirimler")
         } footer: {

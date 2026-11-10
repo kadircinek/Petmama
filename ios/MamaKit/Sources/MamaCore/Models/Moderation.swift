@@ -2,6 +2,8 @@ import Foundation
 
 public enum ReportTarget: String, Codable, CaseIterable, Sendable, Hashable {
     case spot, animal, need, checkin, photo, user
+    /// Mahalle paylaşımı ve yorumu.
+    case post, comment
 }
 
 public enum ReportReason: String, Codable, CaseIterable, Sendable, Hashable {

@@ -5,6 +5,8 @@ import MamaCore
 /// Boş durum: "Bu sokağın ilk besleyicisi sen ol" (PRD 6.4).
 public struct EmptyStateView: View {
     let systemImage: String
+    let mascot: MascotSpecies?
+    let mood: MascotMood
     let title: String
     let message: String?
     let actionTitle: String?
@@ -12,6 +14,19 @@ public struct EmptyStateView: View {
 
     public init(systemImage: String, title: String, message: String? = nil, actionTitle: String? = nil, action: (() -> Void)? = nil) {
         self.systemImage = systemImage
+        self.mascot = nil
+        self.mood = .neutral
+        self.title = title
+        self.message = message
+        self.actionTitle = actionTitle
+        self.action = action
+    }
+
+    /// Maskotlu boş durum: `EmptyStateView(mascot: .duo, mood: .happy, title: …)`
+    public init(mascot: MascotSpecies, mood: MascotMood = .neutral, title: String, message: String? = nil, actionTitle: String? = nil, action: (() -> Void)? = nil) {
+        self.systemImage = "pawprint.fill"
+        self.mascot = mascot
+        self.mood = mood
         self.title = title
         self.message = message
         self.actionTitle = actionTitle
@@ -20,12 +35,16 @@ public struct EmptyStateView: View {
 
     public var body: some View {
         VStack(spacing: 14) {
-            Image(systemName: systemImage)
-                .font(.system(size: 40, weight: .semibold))
-                .foregroundStyle(MamaColor.textPrimary)
-                .frame(width: 84, height: 84)
-                .background(Circle().fill(MamaColor.tileMint))
-                .accessibilityHidden(true)
+            if let mascot {
+                MascotView(mascot, mood: mood, size: 104)
+            } else {
+                Image(systemName: systemImage)
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundStyle(MamaColor.textPrimary)
+                    .frame(width: 84, height: 84)
+                    .background(Circle().fill(MamaColor.tileMint))
+                    .accessibilityHidden(true)
+            }
             Text(LocalizedStringKey(title))
                 .font(MamaFont.title3)
                 .foregroundStyle(MamaColor.textPrimary)

@@ -89,6 +89,24 @@ public protocol DonationRepository: Sendable {
     func logDonationClick(refCode: String) async throws
 }
 
+/// Mahalle akışı: paylaşım, yorum, pati tepkisi ve "Ben bakarım" gönüllülüğü (D17). Tümü giriş gerektirir.
+public protocol CommunityRepository: Sendable {
+    /// Yakındaki paylaşımlar, yeniden eskiye. `before` ile sayfalanır.
+    func feed(near center: Coordinate, radiusMeters: Int, kind: CommunityPostKind?, before: Date?, limit: Int) async throws -> [CommunityPost]
+    func post(id: UUID, near center: Coordinate?) async throws -> CommunityPost?
+    func comments(postId: UUID) async throws -> [CommunityComment]
+    func volunteers(postId: UUID) async throws -> [CommunityVolunteer]
+    func createPost(_ draft: CommunityPostDraft) async throws -> CreatePostOutcome
+    func addComment(postId: UUID, body: String) async throws -> CommentOutcome
+    /// `nil` = paylaşım artık yok veya görünmüyor.
+    func togglePaw(postId: UUID) async throws -> PawToggleResult?
+    func toggleVolunteer(postId: UUID) async throws -> CoverVolunteerOutcome
+    /// `false` = silme yetkisi yok.
+    func deletePost(id: UUID) async throws -> Bool
+    func deleteComment(id: UUID) async throws -> Bool
+    func summary(near center: Coordinate, radiusMeters: Int) async throws -> CommunitySummary
+}
+
 public protocol MediaUploader: Sendable {
     /// EXIF temizlenmiş ve küçültülmüş JPEG yükler, herkese açık URL döner.
     func uploadJPEG(_ data: Data) async throws -> URL

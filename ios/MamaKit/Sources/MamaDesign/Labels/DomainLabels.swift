@@ -308,6 +308,8 @@ extension NotificationKind {
         case .needResolved: return "checkmark.circle.fill"
         case .thanksFed: return "heart.fill"
         case .donationDelivered: return "gift.fill"
+        case .communityComment: return "text.bubble.fill"
+        case .coverVolunteered: return "hand.raised.fill"
         }
     }
 
@@ -315,7 +317,60 @@ extension NotificationKind {
         switch self {
         case .needFoodNearby, .guardianSpotUnfed: return MamaColor.statusNeeds
         case .followedSpotChanged: return MamaColor.textSecondary
-        case .needResolved, .thanksFed, .donationDelivered: return MamaColor.statusFed
+        case .needResolved, .thanksFed, .donationDelivered, .coverVolunteered: return MamaColor.statusFed
+        case .communityComment: return MamaColor.textSecondary
+        }
+    }
+}
+
+extension CommunityPostKind {
+    public var label: String {
+        switch self {
+        case .note: return String(localized: "Paylaşım")
+        case .question: return String(localized: "Soru")
+        case .coverRequest: return String(localized: "Yerime bakar mısın?")
+        case .supply: return String(localized: "Mama ve malzeme")
+        case .alert: return String(localized: "Uyarı")
+        }
+    }
+
+    /// Paylaşım oluştururken tür kartının altındaki açıklama.
+    public var explanation: String {
+        switch self {
+        case .note: return String(localized: "Mahalleden bir an, bir haber, bir teşekkür")
+        case .question: return String(localized: "Tavsiye iste, deneyim sor")
+        case .coverRequest: return String(localized: "Yokken noktana bakacak birini bul")
+        case .supply: return String(localized: "Fazla mamanı, kabını, kulübeni paylaş")
+        case .alert: return String(localized: "Mahalleyi bir tehlikeye karşı uyar")
+        }
+    }
+
+    public var systemImage: String {
+        switch self {
+        case .note: return "text.bubble.fill"
+        case .question: return "questionmark.bubble.fill"
+        case .coverRequest: return "calendar.badge.clock"
+        case .supply: return "shippingbox.fill"
+        case .alert: return "exclamationmark.triangle.fill"
+        }
+    }
+
+    public var tileColor: Color {
+        switch self {
+        case .note: return MamaColor.tileMint
+        case .question: return MamaColor.tileBlue
+        case .coverRequest: return MamaColor.tileLavender
+        case .supply: return MamaColor.tilePeach
+        case .alert: return MamaColor.statusUrgent.opacity(0.16)
+        }
+    }
+
+    public var chipStyle: TagChip.Style {
+        switch self {
+        case .note: return .neutral
+        case .question, .coverRequest: return .info
+        case .supply: return .positive
+        case .alert: return .danger
         }
     }
 }

@@ -92,8 +92,10 @@ public final class NotificationsViewModel {
         return sections.filter { !$0.items.isEmpty }
     }
 
-    /// İhtiyaç bildirimi ihtiyaca, nokta bildirimi noktaya, teslim bildirimi "Bağışım nereye gitti?" ekranına.
+    /// Mahalle bildirimi paylaşıma, ihtiyaç bildirimi ihtiyaca, nokta bildirimi noktaya, teslim bildirimi
+    /// "Bağışım nereye gitti?" ekranına.
     public static func route(for notification: AppNotification) -> AppRoute? {
+        if let postId = notification.postId { return .post(postId) }
         if let needId = notification.needId { return .need(needId) }
         if let spotId = notification.spotId { return .spot(spotId) }
         if notification.kind == .donationDelivered { return .donationTrace }

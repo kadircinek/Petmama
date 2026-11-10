@@ -26,7 +26,7 @@ struct HomePanelContent: View {
                 }
                 QuickActionTile(String(localized: "İhtiyaçlar"), subtitle: String(localized: "Veteriner, kısırlaştırma…"),
                                 systemImage: "cross.case.fill", tint: MamaColor.tileLavender) {
-                    router.select(.needs)
+                    router.showCommunity(.needs)
                 }
                 QuickActionTile(String(localized: "Bağış"), subtitle: String(localized: "Mama paketine destek ol"),
                                 systemImage: "heart.fill", tint: MamaColor.tilePeach) {
@@ -35,7 +35,7 @@ struct HomePanelContent: View {
             }
             if model.isNeighborhoodEmpty {
                 EmptyStateView(
-                    systemImage: "pawprint",
+                    mascot: .duo,
                     title: String(localized: "Bu sokağın ilk besleyicisi sen ol"),
                     message: String(localized: "Yakınında henüz kayıtlı bir besleme noktası yok."),
                     actionTitle: String(localized: "Nokta ekle")
@@ -127,7 +127,7 @@ private struct NeedsFoodSpotChip: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncPhoto(url: spot.photoURL, placeholderSystemImage: "pawprint.fill", placeholderTint: MamaColor.statusNeeds)
+            SpotThumbnail(spot: spot)
                 .frame(width: 140, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: MamaMetrics.smallCornerRadius, style: .continuous))
             Text(spot.title)

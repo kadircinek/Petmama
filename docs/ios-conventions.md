@@ -97,7 +97,8 @@ public struct SpotDetailScreen: View {
 `SpotPinView`, `ClusterPinView`, `StatusLegend`, `AsyncPhoto`, `SensitivePhoto`, `AvatarView`,
 `PhotoInputButton`, `PhotoThumbnail`, `SectionHeader`, `QuickActionTile`, `StatsStrip`, `ProgressSegments`,
 `PillSegmentedControl`, `ChoiceCard`, `InfoRow`, `EmptyStateView`, `BannerView`, `LoadingView`, `PawBurstView`,
-`SpotCardView`, `NeedCardView`, `AnimalChipCard`, `PreviewEnvironment`. Enum etiketleri: `.label`,
+`SpotCardView`, `NeedCardView`, `AnimalChipCard`, `PreviewEnvironment`. Maskotlar (D18): `MascotView(.cat/.dog/.duo, mood:, size:)`,
+`MascotView(animal:)`, `SpotTypeIcon`, `AnimalAvatar`, `SpotThumbnail`, `EmptyStateView(mascot:mood:title:…)`. Enum etiketleri: `.label`,
 `.systemImage`, `.color`, `.explanation`, `.tileColor` (Labels/DomainLabels.swift).
 
 ## Metin ve ton

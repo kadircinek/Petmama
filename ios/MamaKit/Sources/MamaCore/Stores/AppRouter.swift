@@ -6,6 +6,8 @@ public enum AppRoute: Hashable, Sendable {
     case spot(UUID)
     case animal(UUID)
     case need(UUID)
+    /// Mahalle paylaşımı ve yorumları.
+    case post(UUID)
     case following
     case notifications
     case settings
@@ -30,6 +32,9 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
     case report(ReportTarget, UUID)
     case signIn
     case editProfile
+    /// Mahalleye yaz. `kind` verilirse o türle, `spotId` verilirse o noktaya bağlı açılır
+    /// (ör. nokta detayından "Yerime bakar mısın?").
+    case createPost(kind: CommunityPostKind?, spotId: UUID?)
 
     public var id: String {
         switch self {
@@ -42,6 +47,7 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
         case .report(let t, let id): return "report-\(t.rawValue)-\(id)"
         case .signIn: return "signIn"
         case .editProfile: return "editProfile"
+        case .createPost(let kind, let spotId): return "createPost-\(kind?.rawValue ?? "")-\(spotId?.uuidString ?? "")"
         }
     }
 
@@ -49,20 +55,30 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
     public var requiresSignIn: Bool {
         switch self {
         case .addMenu, .signIn: return false
-        case .addSpot, .checkIn, .quickFeed, .createNeed, .createAnimal, .report, .editProfile: return true
+        case .addSpot, .checkIn, .quickFeed, .createNeed, .createAnimal, .report, .editProfile, .createPost: return true
         }
     }
 }
 
-/// Tab bar: Harita · İhtiyaçlar · + Ekle · Bağış · Profil (PRD 6.2).
+/// Tab bar: Harita · Mahalle · + Ekle · Bağış · Profil.
+/// PRD 6.2'deki "İhtiyaçlar" sekmesi Mahalle'nin içinde bir bölüm oldu (D17); haritadaki İhtiyaçlar segmenti duruyor.
 public enum AppTab: String, Hashable, CaseIterable, Sendable {
-    case map, needs, add, donate, profile
+    case map, community, add, donate, profile
+}
+
+/// Mahalle sekmesinin bölümleri.
+public enum CommunitySection: String, Hashable, CaseIterable, Sendable {
+    /// Besleyicilerin paylaşımları.
+    case feed
+    /// Açık ihtiyaçlar (veteriner, kısırlaştırma…).
+    case needs
 }
 
 @MainActor
 @Observable
 public final class AppRouter {
     public var selectedTab: AppTab = .map
+    public var communitySection: CommunitySection = .feed
     public var paths: [AppTab: [AppRoute]] = [:]
     public var sheet: AppSheet?
     /// Giriş sonrası açılacak modal.
@@ -120,6 +136,13 @@ public final class AppRouter {
         } else {
             self.sheet = sheet
         }
+    }
+
+    /// Mahalle sekmesini istenen bölümle açar (ör. ana sayfadaki "İhtiyaçlar" karosu).
+    public func showCommunity(_ section: CommunitySection) {
+        sheet = nil
+        communitySection = section
+        selectedTab = .community
     }
 
     public func dismissSheet() {

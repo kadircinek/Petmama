@@ -108,7 +108,7 @@ public struct CreateNeedFlow: View {
         if model.shouldOpenVetHelp {
             // Acil veteriner: sheet kapanır, İhtiyaçlar sekmesinde veteriner bilgisi açılır (FR-I4).
             dismiss()
-            router.open(.vetHelp(needId: id), in: .needs)
+            router.open(.vetHelp(needId: id), in: .community)
         } else {
             dismiss()
         }

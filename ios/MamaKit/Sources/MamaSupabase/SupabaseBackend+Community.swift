@@ -214,7 +214,7 @@ extension SupabaseBackend: NotificationRepository {
         guard let userId = signedInUserId else { return [] }
         return try await perform {
             let response: PostgrestResponse<Void> = try await client.from("notifications")
-                .select("id,kind,title,body,spot_id,need_id,read_at,created_at")
+                .select(NotificationDTO.columns)
                 .eq("user_id", value: userId.postgresString)
                 .order("created_at", ascending: false)
                 .limit(100)
@@ -252,14 +252,7 @@ extension SupabaseBackend: NotificationRepository {
     public func updatePreferences(_ preferences: NotificationPreferences) async throws {
         try await perform {
             let userId = try requireUserId()
-            let fields: JSONObject = [
-                "radius_m": .integer(preferences.radiusMeters),
-                "quiet_start": .integer(preferences.quietStartHour),
-                "quiet_end": .integer(preferences.quietEndHour),
-                "need_food_nearby": .bool(preferences.needFoodNearby),
-                "followed_updates": .bool(preferences.followedUpdates),
-                "guardian_alerts": .bool(preferences.guardianAlerts),
-            ]
+            let fields = Self.notificationPrefsFields(preferences)
             let updated: PostgrestResponse<Void> = try await client.from("notification_prefs")
                 .update(fields, returning: .representation)
                 .eq("user_id", value: userId.postgresString)
@@ -270,6 +263,20 @@ extension SupabaseBackend: NotificationRepository {
             row["user_id"] = Param.uuid(userId)
             try await insertIgnoringDuplicate(into: "notification_prefs", row)
         }
+    }
+
+    /// `notification_prefs` satırına yazılan alanlar: güncelleme ve ekleme için ortak (`user_id` hariç).
+    /// Yetkiler sütun bazlı olduğundan her alanın insert + update yetkisi migration'da verilmiş olmalı.
+    static func notificationPrefsFields(_ preferences: NotificationPreferences) -> JSONObject {
+        [
+            "radius_m": .integer(preferences.radiusMeters),
+            "quiet_start": .integer(preferences.quietStartHour),
+            "quiet_end": .integer(preferences.quietEndHour),
+            "need_food_nearby": .bool(preferences.needFoodNearby),
+            "followed_updates": .bool(preferences.followedUpdates),
+            "guardian_alerts": .bool(preferences.guardianAlerts),
+            "community_updates": .bool(preferences.communityUpdates),
+        ]
     }
 
     public func registerDeviceToken(_ token: String) async throws {

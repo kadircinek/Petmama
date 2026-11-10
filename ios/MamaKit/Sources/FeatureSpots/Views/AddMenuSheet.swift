@@ -39,6 +39,14 @@ public struct AddMenuSheet: View {
                     router.present(.createNeed(spotId: nil, animalId: nil), session: session)
                 }
                 AddMenuRow(
+                    title: String(localized: "Mahalleye yaz"),
+                    subtitle: String(localized: "Paylaş, sor ya da yerine bakacak birini bul"),
+                    systemImage: "text.bubble.fill",
+                    tint: MamaColor.tileMint
+                ) {
+                    router.present(.createPost(kind: nil, spotId: nil), session: session)
+                }
+                AddMenuRow(
                     title: String(localized: "Mama koydum"),
                     subtitle: String(localized: "Yakındaki noktayı otomatik seçeriz"),
                     systemImage: "pawprint.fill",
@@ -59,7 +67,7 @@ public struct AddMenuSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.fraction(0.66), .large])
         .presentationDragIndicator(.visible)
     }
 }

@@ -3,7 +3,8 @@ import SwiftUI
 import MamaCore
 import MamaDesign
 
-/// Tab bar: Harita · İhtiyaçlar · + Ekle (ortada, belirgin) · Bağış · Profil (PRD 6.2).
+/// Tab bar: Harita · Mahalle · + Ekle (ortada, belirgin) · Bağış · Profil.
+/// PRD 6.2'deki "İhtiyaçlar" sekmesi Mahalle'nin içinde bir bölüm oldu (D17).
 /// Seçili sekme mint daire içinde (PRD 6.1).
 struct MamaTabBar: View {
     let selected: AppTab
@@ -12,7 +13,7 @@ struct MamaTabBar: View {
     var body: some View {
         HStack(alignment: .bottom, spacing: 0) {
             item(.map, title: String(localized: "Harita"), systemImage: "map.fill")
-            item(.needs, title: String(localized: "İhtiyaçlar"), systemImage: "cross.case.fill")
+            item(.community, title: String(localized: "Mahalle"), systemImage: "person.2.fill")
             addButton
             item(.donate, title: String(localized: "Bağış"), systemImage: "gift.fill")
             item(.profile, title: String(localized: "Profil"), systemImage: "person.fill")
@@ -74,7 +75,7 @@ struct MamaTabBar: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(String(localized: "Ekle: nokta, hayvan, ihtiyaç veya mama koydum"))
+        .accessibilityLabel(String(localized: "Ekle: nokta, hayvan, ihtiyaç, paylaşım veya mama koydum"))
     }
 }
 #endif

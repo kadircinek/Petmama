@@ -2,20 +2,31 @@
 import SwiftUI
 import MamaCore
 
-/// Harita pini: hayvan/nokta fotoğraflı yuvarlak pin; fotoğraf yoksa durum renginde pati ikonu.
+/// Harita pini: nokta fotoğraflı yuvarlak pin; fotoğraf yoksa maskot (kedi, köpek veya ikisi).
+/// Maskotun ifadesi durumu da anlatır: mama kondu → gülen, mama bekliyor → bekleyen gözler (D18).
 /// Kenarlık durum rengi; acil ihtiyaçta dışta kırmızı halka (FR-H3, PRD 6.1 "Avatar pinleri").
 public struct SpotPinView: View {
     let status: SpotStatus
     let hasUrgentNeed: Bool
     let type: SpotType
+    let species: SpotSpecies
     let photoURL: URL?
     let isSelected: Bool
     let isApproximate: Bool
 
-    public init(status: SpotStatus, hasUrgentNeed: Bool, type: SpotType, photoURL: URL?, isSelected: Bool = false, isApproximate: Bool = false) {
+    public init(
+        status: SpotStatus,
+        hasUrgentNeed: Bool,
+        type: SpotType,
+        species: SpotSpecies = .both,
+        photoURL: URL?,
+        isSelected: Bool = false,
+        isApproximate: Bool = false
+    ) {
         self.status = status
         self.hasUrgentNeed = hasUrgentNeed
         self.type = type
+        self.species = species
         self.photoURL = photoURL
         self.isSelected = isSelected
         self.isApproximate = isApproximate
@@ -26,6 +37,7 @@ public struct SpotPinView: View {
             status: spot.currentStatus(now: now),
             hasUrgentNeed: spot.hasUrgentNeed,
             type: spot.type,
+            species: spot.species,
             photoURL: spot.photoURL,
             isSelected: isSelected,
             isApproximate: !spot.isLocationExact
@@ -65,6 +77,14 @@ public struct SpotPinView: View {
             .overlay(Circle().strokeBorder(status.color, lineWidth: 3))
             .background(Circle().fill(MamaColor.card))
             .shadow(color: .black.opacity(0.18), radius: 4, y: 2)
+            .overlay(alignment: .bottomTrailing) {
+                // Su kabı, kulübe ve karışık noktalar küçük bir rozetle ayırt edilir.
+                if type != .food {
+                    SpotTypeIcon(type, size: size * 0.44)
+                        .background(Circle().fill(MamaColor.card).padding(-1.5))
+                        .offset(x: size * 0.14, y: size * 0.14)
+                }
+            }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
         .accessibilityElement(children: .ignore)
@@ -72,17 +92,15 @@ public struct SpotPinView: View {
     }
 
     private var accessibilityText: String {
-        var parts = [type.label, status.label]
+        var parts = [type.label, species.label, status.label]
         if hasUrgentNeed { parts.append(String(localized: "acil ihtiyaç var")) }
         return parts.joined(separator: ", ")
     }
 
     private var iconContent: some View {
         ZStack {
-            Circle().fill(status.color.opacity(0.18))
-            Image(systemName: type == .food || type == .mixed ? "pawprint.fill" : type.systemImage)
-                .font(.system(size: size * 0.42, weight: .bold))
-                .foregroundStyle(status.color)
+            Circle().fill(status.color.opacity(0.16))
+            MascotView(MascotSpecies(species), mood: MascotMood(status: status), size: size * 0.86)
         }
     }
 }

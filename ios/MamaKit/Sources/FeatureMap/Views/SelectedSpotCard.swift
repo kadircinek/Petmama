@@ -15,7 +15,7 @@ struct SelectedSpotCard: View {
         let status = spot.currentStatus(now: now)
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top, spacing: 12) {
-                AsyncPhoto(url: spot.photoURL, placeholderSystemImage: spot.type.systemImage, placeholderTint: status.color)
+                SpotThumbnail(spot: spot, now: now)
                     .frame(width: 56, height: 56)
                     .clipShape(RoundedRectangle(cornerRadius: MamaMetrics.smallCornerRadius, style: .continuous))
                     .accessibilityHidden(true)

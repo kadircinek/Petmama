@@ -37,6 +37,10 @@ jobs:
   ios-build:
     name: iOS app (Xcode, simulator build)
     runs-on: macos-15
+    # `shell: bash` pipefail'i açar: xcodebuild başarısız olursa xcpretty'ye rağmen adım kırmızı olur.
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -49,9 +53,9 @@ jobs:
         run: |
           xcodebuild -project MamaHaritasi.xcodeproj -scheme MamaHaritasi \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build | xcpretty || exit ${PIPESTATUS[0]}
+            CODE_SIGNING_ALLOWED=NO build | xcpretty
       - name: Package tests on iOS simulator
         working-directory: ios/MamaKit
         run: |
           xcodebuild -scheme MamaKit-Package \
-            -destination 'platform=iOS Simulator,name=iPhone 16' test | xcpretty || exit ${PIPESTATUS[0]}
+            -destination 'platform=iOS Simulator,name=iPhone 16' test | xcpretty

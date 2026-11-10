@@ -496,13 +496,19 @@ struct NotificationDTO: Decodable {
     var body: String?
     var spotId: UUID?
     var needId: UUID?
+    /// Mahalle bildirimleri (`community_comment`, `cover_volunteered`).
+    var postId: UUID?
     var readAt: String?
     var createdAt: String?
+
+    /// `notifications` tablosundan seçilen sütunlar.
+    static let columns = "id,kind,title,body,spot_id,need_id,post_id,read_at,created_at"
 
     enum CodingKeys: String, CodingKey {
         case id, kind, title, body
         case spotId = "spot_id"
         case needId = "need_id"
+        case postId = "post_id"
         case readAt = "read_at"
         case createdAt = "created_at"
     }
@@ -517,6 +523,7 @@ struct NotificationDTO: Decodable {
             body: body ?? "",
             spotId: spotId,
             needId: needId,
+            postId: postId,
             readAt: date(readAt),
             createdAt: date(createdAt) ?? unknownDate
         )
@@ -530,8 +537,9 @@ struct NotificationPrefsDTO: Decodable {
     var needFoodNearby: Bool?
     var followedUpdates: Bool?
     var guardianAlerts: Bool?
+    var communityUpdates: Bool?
 
-    static let columns = "radius_m,quiet_start,quiet_end,need_food_nearby,followed_updates,guardian_alerts"
+    static let columns = "radius_m,quiet_start,quiet_end,need_food_nearby,followed_updates,guardian_alerts,community_updates"
 
     enum CodingKeys: String, CodingKey {
         case radiusM = "radius_m"
@@ -540,6 +548,7 @@ struct NotificationPrefsDTO: Decodable {
         case needFoodNearby = "need_food_nearby"
         case followedUpdates = "followed_updates"
         case guardianAlerts = "guardian_alerts"
+        case communityUpdates = "community_updates"
     }
 
     func toDomain() -> NotificationPreferences {
@@ -550,7 +559,8 @@ struct NotificationPrefsDTO: Decodable {
             quietEndHour: quietEnd ?? defaults.quietEndHour,
             needFoodNearby: needFoodNearby ?? defaults.needFoodNearby,
             followedUpdates: followedUpdates ?? defaults.followedUpdates,
-            guardianAlerts: guardianAlerts ?? defaults.guardianAlerts
+            guardianAlerts: guardianAlerts ?? defaults.guardianAlerts,
+            communityUpdates: communityUpdates ?? defaults.communityUpdates
         )
     }
 }
@@ -571,5 +581,295 @@ struct DonationOverviewDTO: Decodable {
     func toDomain() -> DonationOverview? {
         guard let parsedMonth = month.flatMap(PostgresDate.parse) else { return nil }
         return DonationOverview(month: parsedMonth, kgDistributed: kgDistributed?.value ?? 0, donorCount: donorCount ?? 0)
+    }
+}
+
+// MARK: - Mahalle: community_post_row / community_comment_row
+
+struct CommunityPostRowDTO: Decodable {
+    var id: UUID
+    var kind: String?
+    var body: String?
+    var photoUrl: String?
+    var authorId: UUID?
+    var authorName: String?
+    var authorAvatarUrl: String?
+    var authorIsVerified: Bool?
+    var spotId: UUID?
+    var spotTitle: String?
+    var animalId: UUID?
+    var animalName: String?
+    /// Postgres `date` ("2026-11-14").
+    var coverFrom: String?
+    var coverTo: String?
+    var volunteerCount: Int?
+    var viewerVolunteered: Bool?
+    var pawCount: Int?
+    var viewerPawed: Bool?
+    var commentCount: Int?
+    var distanceM: Double?
+    var moderationState: String?
+    var createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, kind, body
+        case photoUrl = "photo_url"
+        case authorId = "author_id"
+        case authorName = "author_name"
+        case authorAvatarUrl = "author_avatar_url"
+        case authorIsVerified = "author_is_verified"
+        case spotId = "spot_id"
+        case spotTitle = "spot_title"
+        case animalId = "animal_id"
+        case animalName = "animal_name"
+        case coverFrom = "cover_from"
+        case coverTo = "cover_to"
+        case volunteerCount = "volunteer_count"
+        case viewerVolunteered = "viewer_volunteered"
+        case pawCount = "paw_count"
+        case viewerPawed = "viewer_pawed"
+        case commentCount = "comment_count"
+        case distanceM = "distance_m"
+        case moderationState = "moderation_state"
+        case createdAt = "created_at"
+    }
+
+    /// Yazarı olmayan satır atlanır (engelleme ve silme yetkisi yazara bağlı).
+    ///
+    /// Bilinmeyen `kind` (daha yeni sunucu) `spot_row.type → .mixed` gibi nötr türe, `.note`'a düşer: metin
+    /// yazarın yazdığı haliyle okunur kalır. Satır atlansaydı `p_before` ile sayfalanan akışta sayfa
+    /// eksik gelir, bildirimden açılan paylaşım da "artık yok" görünürdü.
+    func toDomain() -> CommunityPost? {
+        guard let authorId else { return nil }
+        return CommunityPost(
+            id: id,
+            kind: kind.flatMap(CommunityPostKind.init(rawValue:)) ?? .note,
+            body: body ?? "",
+            photoURL: photoUrl?.nonEmptyURL,
+            authorId: authorId,
+            authorName: authorName ?? SupabaseBackend.placeholderDisplayName,
+            authorAvatarURL: authorAvatarUrl?.nonEmptyURL,
+            authorIsVerified: authorIsVerified ?? false,
+            spotId: spotId,
+            spotTitle: spotTitle,
+            animalId: animalId,
+            animalName: animalName,
+            coverFrom: date(coverFrom),
+            coverTo: date(coverTo),
+            volunteerCount: volunteerCount ?? 0,
+            viewerVolunteered: viewerVolunteered ?? false,
+            pawCount: pawCount ?? 0,
+            viewerPawed: viewerPawed ?? false,
+            commentCount: commentCount ?? 0,
+            distanceMeters: distanceM,
+            isPendingModeration: moderationState == ModerationState.pending.rawValue,
+            createdAt: date(createdAt) ?? unknownDate
+        )
+    }
+}
+
+struct CommunityCommentRowDTO: Decodable {
+    var id: UUID
+    var postId: UUID?
+    var body: String?
+    var authorId: UUID?
+    var authorName: String?
+    var authorAvatarUrl: String?
+    var authorIsVerified: Bool?
+    var createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, body
+        case postId = "post_id"
+        case authorId = "author_id"
+        case authorName = "author_name"
+        case authorAvatarUrl = "author_avatar_url"
+        case authorIsVerified = "author_is_verified"
+        case createdAt = "created_at"
+    }
+
+    /// Paylaşımı veya yazarı olmayan satır atlanır.
+    func toDomain() -> CommunityComment? {
+        guard let postId, let authorId else { return nil }
+        return CommunityComment(
+            id: id,
+            postId: postId,
+            body: body ?? "",
+            authorId: authorId,
+            authorName: authorName ?? SupabaseBackend.placeholderDisplayName,
+            authorAvatarURL: authorAvatarUrl?.nonEmptyURL,
+            authorIsVerified: authorIsVerified ?? false,
+            createdAt: date(createdAt) ?? unknownDate
+        )
+    }
+}
+
+/// `cover_volunteers_of` satırı.
+struct CommunityVolunteerDTO: Decodable {
+    var userId: UUID
+    var displayName: String?
+    var avatarUrl: String?
+    var isVerifiedFeeder: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case displayName = "display_name"
+        case avatarUrl = "avatar_url"
+        case isVerifiedFeeder = "is_verified_feeder"
+    }
+
+    func toDomain() -> CommunityVolunteer {
+        CommunityVolunteer(
+            userId: userId,
+            displayName: displayName ?? SupabaseBackend.placeholderDisplayName,
+            avatarURL: avatarUrl?.nonEmptyURL,
+            isVerifiedFeeder: isVerifiedFeeder ?? false
+        )
+    }
+}
+
+/// `community_summary` satırı.
+struct CommunitySummaryDTO: Decodable {
+    var fedSpotDays7d: Int?
+    var activeFeeders7d: Int?
+    var openCoverRequests: Int?
+    var posts7d: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case fedSpotDays7d = "fed_spot_days_7d"
+        case activeFeeders7d = "active_feeders_7d"
+        case openCoverRequests = "open_cover_requests"
+        case posts7d = "posts_7d"
+    }
+
+    func toDomain() -> CommunitySummary {
+        CommunitySummary(
+            fedSpotDays7d: fedSpotDays7d ?? 0,
+            activeFeeders7d: activeFeeders7d ?? 0,
+            openCoverRequests: openCoverRequests ?? 0,
+            posts7d: posts7d ?? 0
+        )
+    }
+}
+
+// MARK: - Mahalle: jsonb `status` sonuçları
+
+/// `create_community_post`, `add_community_comment`, `toggle_post_paw`, `toggle_cover_volunteer`,
+/// `delete_community_post` ve `delete_community_comment` sonuçlarının ortak şekli.
+struct CommunityResultDTO: Decodable {
+    var status: String
+    var postId: UUID?
+    var commentId: UUID?
+    var moderationState: String?
+    var limit: Int?
+    /// `status == "invalid"`: `CommunityValidationError` ham değeri.
+    var reason: String?
+    var pawed: Bool?
+    var pawCount: Int?
+    var volunteered: Bool?
+    var volunteerCount: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case status
+        case postId = "post_id"
+        case commentId = "comment_id"
+        case moderationState = "moderation_state"
+        case limit, reason, pawed
+        case pawCount = "paw_count"
+        case volunteered
+        case volunteerCount = "volunteer_count"
+    }
+
+    func createPostOutcome() throws -> CreatePostOutcome {
+        let rpc = "create_community_post"
+        switch status {
+        case "created":
+            guard let postId else { throw MamaError.server("\(rpc): post_id eksik") }
+            return .created(id: postId, pendingModeration: moderationState == ModerationState.pending.rawValue)
+        case "rejected_content":
+            return .rejectedContent
+        case "limit_reached":
+            return .limitReached(limit: limit ?? CommunityPolicy.dailyPostLimit)
+        case "invalid":
+            return .invalid(try validationError(rpc: rpc))
+        default:
+            throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    func commentOutcome() throws -> CommentOutcome {
+        let rpc = "add_community_comment"
+        switch status {
+        case "created":
+            guard let commentId else { throw MamaError.server("\(rpc): comment_id eksik") }
+            return .created(id: commentId)
+        case "rejected_content":
+            return .rejectedContent
+        case "limit_reached":
+            return .limitReached(limit: limit ?? CommunityPolicy.dailyCommentLimit)
+        case "invalid":
+            return .invalid(try validationError(rpc: rpc))
+        case "post_not_found":
+            return .postNotFound
+        default:
+            throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    /// `nil` = paylaşım artık yok veya görünmüyor (`post_not_found`).
+    func pawToggleResult() throws -> PawToggleResult? {
+        let rpc = "toggle_post_paw"
+        switch status {
+        case "ok":
+            // Tepkinin yeni durumu bilinmeden arayüz güncellenemez; sayaç eksikse durumdan türetilir.
+            guard let pawed else { throw MamaError.server("\(rpc): pawed eksik") }
+            return PawToggleResult(pawed: pawed, pawCount: max(pawCount ?? (pawed ? 1 : 0), 0))
+        case "post_not_found":
+            return nil
+        default:
+            throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    func coverVolunteerOutcome() throws -> CoverVolunteerOutcome {
+        let rpc = "toggle_cover_volunteer"
+        switch status {
+        case "ok":
+            guard let volunteered else { throw MamaError.server("\(rpc): volunteered eksik") }
+            return .ok(volunteered: volunteered, volunteerCount: max(volunteerCount ?? (volunteered ? 1 : 0), 0))
+        case "not_cover_request":
+            return .notCoverRequest
+        case "own_post":
+            return .ownPost
+        case "closed":
+            return .closed
+        case "post_not_found":
+            return .postNotFound
+        default:
+            throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    /// `delete_community_post` / `delete_community_comment`: `false` = silme yetkisi yok.
+    func deleteAllowed(rpc: String) throws -> Bool {
+        switch status {
+        case "ok":
+            return true
+        case "not_allowed":
+            return false
+        case "post_not_found", "comment_not_found":
+            // Sözleşmede yok; sunucu "kayıt yok"u ayrı bildirirse InMemoryBackend gibi `.notFound`.
+            throw MamaError.notFound
+        default:
+            throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    /// Bilinmeyen `reason` (daha yeni sunucu) yanlış uyarı göstermek yerine sunucu hatası sayılır.
+    private func validationError(rpc: String) throws -> CommunityValidationError {
+        guard let error = reason.flatMap(CommunityValidationError.init(rawValue:)) else {
+            throw MamaError.server("\(rpc): beklenmeyen reason '\(reason ?? "null")'")
+        }
+        return error
     }
 }

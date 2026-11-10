@@ -209,3 +209,130 @@ Yan etkiler:
 
 - Bucket `photos` (public read). Yol: `{auth.uid()}/{uuid}.jpg`. Yalnızca kendi klasörüne yükleme.
 - İstemci yüklemeden önce EXIF/GPS siler ve uzun kenarı 1600 px'e küçültür (PRD 7.1).
+
+---
+
+# Mahalle (topluluk) — v0.2
+
+Besleyicilerin birbiriyle etkileşime girdiği sayfa (D17). İlkeler:
+
+- **Özel mesajlaşma yok.** Tüm etkileşim mahalleye açık, raporlanabilir ve engellenebilir (PRD 4: mesajlaşmanın
+  moderasyon yükü). Etkileşim biçimleri: paylaşım, yorum, "pati" tepkisi ve "Ben bakarım" gönüllülüğü.
+- **Tümü giriş gerektirir.** Bu bölümdeki hiçbir RPC `anon` rolüne açık değildir: besleyicilerin konuşmaları ve
+  adları girişsiz taranamasın (PRD 9.1).
+- **Konum:** paylaşımın yalnızca kaba konumu saklanır (`cell`: enlem/boylam **2 ondalığa** yuvarlanır, ≈1,1 km).
+  Paylaşım bir noktaya bağlıysa `cell` noktanın konumundan, değilse istemcinin gönderdiği konumdan türetilir.
+- Engellenen (iki yönde) kullanıcıların paylaşım ve yorumları görünmez.
+
+## Enum'lar
+
+| Tip | Değerler |
+|---|---|
+| `community_post_kind` | `note` (paylaşım), `question` (soru/tavsiye), `cover_request` ("Yerime bakar mısın?"), `supply` (mama/malzeme paylaşımı), `alert` (uyarı) |
+| `report_target` (ek) | `post`, `comment` |
+| `notification_kind` (ek) | `community_comment`, `cover_volunteered` |
+
+`alter type … add value` kendi migration dosyasında durur (aynı transaction'da kullanılamaz).
+
+## Tablolar
+
+- `community_posts(id, author_id → profiles on delete cascade, kind, body text, photo_url, spot_id → spots on delete set null, animal_id → animals on delete set null, cell geography(Point,4326), cover_from date, cover_to date, moderation_state default 'approved', created_at, updated_at)` + GIST(cell), btree(created_at desc), btree(author_id)
+- `community_comments(id, post_id → community_posts on delete cascade, author_id → profiles on delete cascade, body text, moderation_state default 'approved', created_at)`
+- `community_paws(post_id, user_id, created_at, pk(post_id, user_id))` — "pati bırak" tepkisi
+- `cover_volunteers(post_id, user_id, created_at, pk(post_id, user_id))` — "Ben bakarım"
+- `notifications.post_id uuid null → community_posts on delete cascade` (yeni sütun)
+- `notification_prefs.community_updates bool not null default true` (yeni sütun)
+
+Dördü de RLS açık ve **doğrudan erişim yok**; yalnızca RPC. Hesap silinince kullanıcının paylaşım, yorum, pati ve
+gönüllülük kayıtları silinir (kişisel içerik, PRD 9.5).
+
+## Kurallar
+
+| Kural | Değer |
+|---|---|
+| Paylaşım metni | 1–600 karakter (trim sonrası) |
+| Yorum metni | 1–300 karakter |
+| Günlük limit (İstanbul günü) | 10 paylaşım, 60 yorum → `limit_reached` |
+| Küfür filtresi | `rejected_content` |
+| `cover_request` | görünür bir `spot_id` zorunlu; `cover_from ≥ bugün`, `cover_to ≥ cover_from`, süre ≤ 30 gün |
+| Düşük güven puanı (`trust_score < 5`) | paylaşım `moderation_state = 'pending'` ile oluşur, yalnızca yazarına görünür |
+| Otomatik gizleme | bir paylaşım veya yorum **3 farklı kullanıcı** tarafından raporlanırsa `pending` olur (reports insert trigger'ı) |
+| Akış yarıçapı | varsayılan 3000 m, en fazla 10 000 m |
+
+## `community_post_row`
+
+```
+id uuid, kind community_post_kind, body text, photo_url text,
+author_id uuid, author_name text, author_avatar_url text, author_is_verified bool,
+spot_id uuid, spot_title text,          /* nokta izleyene görünür değilse ikisi de null */
+animal_id uuid, animal_name text,
+cover_from date, cover_to date, volunteer_count int, viewer_volunteered bool,
+paw_count int, viewer_pawed bool, comment_count int,
+distance_m float8,                      /* izleyicinin konumundan cell'e; konum verilmediyse null */
+moderation_state moderation_state, created_at timestamptz
+```
+`comment_count` yalnızca izleyiciye görünür (onaylı, engelsiz) yorumları sayar.
+
+## `community_comment_row`
+
+```
+id uuid, post_id uuid, body text,
+author_id uuid, author_name text, author_avatar_url text, author_is_verified bool,
+created_at timestamptz
+```
+
+## RPC'ler (hepsi auth)
+
+| RPC | Parametreler | Dönüş | Not |
+|---|---|---|---|
+| `community_feed` | `lat, lng float8, radius_m int = 3000, p_kind community_post_kind = null, p_before timestamptz = null, max_rows int = 30` | `setof community_post_row` | `created_at` azalan; sayfalama `p_before` ile (keyset); `max_rows` en fazla 50 |
+| `community_post_detail` | `p_post_id uuid, lat float8 = null, lng float8 = null` | `setof community_post_row` (0/1) | gizli/engelli/yok → 0 satır |
+| `community_comments_of` | `p_post_id uuid` | `setof community_comment_row` | `created_at` artan, en fazla 200 |
+| `cover_volunteers_of` | `p_post_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool)` | |
+| `create_community_post` | `p_kind community_post_kind, p_body text, p_photo_url text, p_spot_id uuid, p_animal_id uuid, lat float8, lng float8, p_cover_from date, p_cover_to date` | `jsonb` | bkz. aşağı |
+| `add_community_comment` | `p_post_id uuid, p_body text` | `jsonb` | bkz. aşağı |
+| `toggle_post_paw` | `p_post_id uuid` | `jsonb` | `{status:'ok', pawed bool, paw_count int}` \| `{status:'post_not_found'}` |
+| `toggle_cover_volunteer` | `p_post_id uuid` | `jsonb` | bkz. aşağı |
+| `delete_community_post` | `p_post_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | yazar veya moderatör |
+| `delete_community_comment` | `p_comment_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | yorumun yazarı, paylaşımın yazarı veya moderatör |
+| `community_summary` | `lat, lng float8, radius_m int = 3000` | `table(fed_spot_days_7d int, active_feeders_7d int, open_cover_requests int, posts_7d int)` | "Bu hafta mahallende" kartı. `fed_spot_days_7d` = son 7 günde `fed` check-in'i olan farklı (nokta, gün) sayısı: PRD'nin kuzey yıldızı metriği |
+
+### `create_community_post` sonucu
+
+```jsonc
+{ "status": "created", "post_id": "…", "moderation_state": "approved" | "pending" }
+{ "status": "rejected_content" }
+{ "status": "limit_reached", "limit": 10 }
+{ "status": "invalid", "reason": "body_empty" | "body_too_long" | "cover_needs_spot" | "cover_dates" | "spot_not_found" }
+```
+`lat`/`lng` nokta bağlı değilse zorunludur (yoksa exception). `cover_request` dışındaki türlerde `p_cover_*` yok sayılır.
+
+### `add_community_comment` sonucu
+
+```jsonc
+{ "status": "created", "comment_id": "…" }
+{ "status": "rejected_content" }
+{ "status": "limit_reached", "limit": 60 }
+{ "status": "invalid", "reason": "body_empty" | "body_too_long" }
+{ "status": "post_not_found" }
+```
+Yan etki: paylaşımın yazarına `community_comment` bildirimi (`post_id` dolu). Yazar kendine yorum yazdıysa,
+taraflar engelliyse, yazarın `community_updates` tercihi kapalıysa veya aynı paylaşım için okunmamış aynı tür
+bildirim zaten varsa gönderilmez.
+
+### `toggle_cover_volunteer` sonucu
+
+```jsonc
+{ "status": "ok", "volunteered": true, "volunteer_count": 2 }
+{ "status": "not_cover_request" }
+{ "status": "own_post" }
+{ "status": "closed" }            // cover_to geçmişte
+{ "status": "post_not_found" }
+```
+Yan etki (gönüllü olunca): yazara `cover_volunteered` bildirimi (`post_id` ve `spot_id` dolu); yukarıdaki aynı
+koşullarla bastırılır.
+
+## Push
+
+`push-dispatch` APNs payload'una `post_id` ekler. `community_comment` ve `cover_volunteered` sessiz saat kuralına
+uyar; günlük 3 push limiti yalnızca `need_food_nearby` içindir.

@@ -72,7 +72,8 @@ public struct NeedsTabScreen: View {
                 .frame(height: 240)
         } else if model.isEmpty {
             EmptyStateView(
-                systemImage: "checkmark.seal.fill",
+                mascot: .duo,
+                mood: .happy,
                 title: String(localized: "Yakınında açık ihtiyaç yok. Harika!"),
                 message: model.hasActiveFilter
                     ? String(localized: "Filtreleri temizleyip tekrar bakabilirsin.")

@@ -38,6 +38,7 @@ public struct AppServices: Sendable {
     public var notifications: any NotificationRepository
     public var moderation: any ModerationRepository
     public var donations: any DonationRepository
+    public var community: any CommunityRepository
     public var media: any MediaUploader
     public var spotCache: any SpotCache
     public var checkInQueue: OfflineCheckInQueue
@@ -54,6 +55,7 @@ public struct AppServices: Sendable {
         notifications: any NotificationRepository,
         moderation: any ModerationRepository,
         donations: any DonationRepository,
+        community: any CommunityRepository,
         media: any MediaUploader,
         spotCache: any SpotCache,
         checkInQueue: OfflineCheckInQueue,
@@ -69,6 +71,7 @@ public struct AppServices: Sendable {
         self.notifications = notifications
         self.moderation = moderation
         self.donations = donations
+        self.community = community
         self.media = media
         self.spotCache = spotCache
         self.checkInQueue = checkInQueue
@@ -94,6 +97,7 @@ public struct AppServices: Sendable {
             notifications: backend,
             moderation: backend,
             donations: backend,
+            community: backend,
             media: backend,
             spotCache: InMemorySpotCache(),
             checkInQueue: queue,

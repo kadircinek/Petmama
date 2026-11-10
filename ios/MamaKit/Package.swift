@@ -8,6 +8,7 @@ import PackageDescription
 //   MamaDesign      → Tasarım sistemi (renkler, tipografi, bileşenler). SwiftUI.
 //   MamaSupabase    → Repository protokollerinin Supabase implementasyonu.
 //   MamaPersistence → SwiftData çevrimdışı önbellek + check-in kuyruğu.
+//   FeatureCommunity → Mahalle: besleyicilerin akışı, yorumlar, "Yerime bakar mısın?" (D17).
 //   Feature*        → Ekranlar + ViewModel'ler. ViewModel'ler Linux'ta derlenir;
 //                     SwiftUI dosyaları `#if canImport(SwiftUI)` ile sarılıdır.
 //   AppFeature      → Kompozisyon kökü: tab bar, rota çözümleme, servis kurulumu.
@@ -27,7 +28,12 @@ let package = Package(
     ],
     targets: [
         .target(name: "MamaCore"),
-        .target(name: "MamaDesign", dependencies: ["MamaCore"]),
+        .target(
+            name: "MamaDesign",
+            dependencies: ["MamaCore"],
+            // Maskot ikonları (SVG, asset catalog). Üretici: scripts/generate_mascots.py
+            resources: [.process("Resources")]
+        ),
         .target(
             name: "MamaSupabase",
             dependencies: ["MamaCore", .product(name: "Supabase", package: "supabase-swift")]
@@ -41,13 +47,14 @@ let package = Package(
         .target(name: "FeatureNeeds", dependencies: ["MamaCore", "MamaDesign"]),
         .target(name: "FeatureDonate", dependencies: ["MamaCore", "MamaDesign"]),
         .target(name: "FeatureProfile", dependencies: ["MamaCore", "MamaDesign"]),
+        .target(name: "FeatureCommunity", dependencies: ["MamaCore", "MamaDesign"]),
 
         .target(
             name: "AppFeature",
             dependencies: [
                 "MamaCore", "MamaDesign", "MamaSupabase", "MamaPersistence",
                 "FeatureOnboarding", "FeatureMap", "FeatureSpots", "FeatureAnimals",
-                "FeatureNeeds", "FeatureDonate", "FeatureProfile",
+                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity",
             ]
         ),
 
@@ -61,7 +68,7 @@ let package = Package(
             name: "FeatureTests",
             dependencies: [
                 "MamaCore", "FeatureOnboarding", "FeatureMap", "FeatureSpots", "FeatureAnimals",
-                "FeatureNeeds", "FeatureDonate", "FeatureProfile",
+                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity",
             ]
         ),
     ]

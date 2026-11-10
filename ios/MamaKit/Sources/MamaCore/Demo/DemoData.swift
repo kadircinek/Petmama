@@ -11,6 +11,11 @@ public struct DemoSeed: Sendable {
     public var needs: [Need]
     public var guardians: [(userId: UUID, spotId: UUID, schedule: Set<Weekday>)]
     public var donationOverview: DonationOverview
+    /// Mahalle paylaşımları ve paylaşımın yapıldığı yer (yalnızca kaba konumu tutulur).
+    public var posts: [(post: CommunityPost, coordinate: Coordinate)]
+    public var comments: [CommunityComment]
+    public var paws: [(postId: UUID, userIds: [UUID])]
+    public var volunteers: [(postId: UUID, userIds: [UUID])]
     /// Demo modunda "giriş yap" ile oturum açılan kullanıcı.
     public var demoUserId: UUID
 }
@@ -167,6 +172,54 @@ public enum DemoData {
 
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = NotificationPolicy.timeZone
+
+        // Mahalle akışı (D17). Kimlikler: paylaşım id(6, n), yorum id(7, n).
+        let today = calendar.startOfDay(for: now)
+        func day(_ offset: Int) -> Date { calendar.date(byAdding: .day, value: offset, to: today) ?? today }
+        let moda = Coordinate.modaKadikoy
+        let posts: [(post: CommunityPost, coordinate: Coordinate)] = [
+            (CommunityPost(id: id(6, 1), kind: .coverRequest,
+                           body: "Hafta sonu şehir dışındayım. Moda Sahili'ndeki kaplara cumartesi ve pazar sabahı bakabilecek biri var mı? Mama dolabın yanındaki kutuda.",
+                           authorId: ayseId, authorName: "Ayşe", authorIsVerified: true,
+                           spotId: id(2, 2), coverFrom: day(2), coverTo: day(3), createdAt: ago(hours: 3)), moda),
+            (CommunityPost(id: id(6, 2), kind: .note,
+                           body: "Pamuk bu sabah parkın girişinde beni bekliyordu. Kışlık tüyleri gelmiş, pamuk gibi olmuş gerçekten.",
+                           authorId: zeynepId, authorName: "Zeynep",
+                           spotId: id(2, 1), animalId: id(4, 1), createdAt: ago(hours: 5)), moda),
+            (CommunityPost(id: id(6, 3), kind: .question,
+                           body: "Kış için köpük kulübe yapmak istiyorum. Daha önce yapan var mı, malzemeyi nereden aldınız?",
+                           authorId: emreId, authorName: "Emre", createdAt: ago(hours: 20)),
+             GeoMath.offset(moda, north: 400, east: 300)),
+            (CommunityPost(id: id(6, 4), kind: .supply,
+                           body: "Elimde açılmamış 3 kg yavru kedi maması var. Yavrusu olan bir noktaya bakan varsa vereyim.",
+                           authorId: zeynepId, authorName: "Zeynep", createdAt: ago(hours: 28)),
+             GeoMath.offset(moda, north: -300, east: 200)),
+            (CommunityPost(id: id(6, 5), kind: .alert,
+                           body: "Rıhtım tarafında kaldırıma bırakılmış şüpheli bir mama gördüm, topladım ve zabıtaya haber verdim. O taraftan geçenler dikkat etsin.",
+                           authorId: emreId, authorName: "Emre",
+                           spotId: id(2, 16), createdAt: ago(hours: 40)), moda),
+            (CommunityPost(id: id(6, 6), kind: .note,
+                           body: "Kadıköy tarafında yeni bir su kabı noktası açtık, sabahları dolduruyorum.",
+                           authorId: emreId, authorName: "Emre", createdAt: ago(hours: 60)),
+             GeoMath.offset(moda, north: 9000, east: 0)),
+        ]
+        let comments: [CommunityComment] = [
+            CommunityComment(id: id(7, 1), postId: id(6, 3), body: "Ben geçen kış yaptım. Yapı marketten strafor levha ve alüminyum bant yetiyor, istersen ölçüleri atarım.",
+                             authorId: ayseId, authorName: "Ayşe", authorIsVerified: true, createdAt: ago(hours: 18)),
+            CommunityComment(id: id(7, 2), postId: id(6, 3), body: "Girişini rüzgâr almayan tarafa bakacak şekilde koy, içine saman iyi oluyor.",
+                             authorId: zeynepId, authorName: "Zeynep", createdAt: ago(hours: 16)),
+            CommunityComment(id: id(7, 3), postId: id(6, 1), body: "Pazar sabahı ben uğrarım.",
+                             authorId: emreId, authorName: "Emre", createdAt: ago(hours: 2)),
+        ]
+        let paws: [(postId: UUID, userIds: [UUID])] = [
+            (id(6, 2), [ayseId, emreId]),
+            (id(6, 3), [zeynepId]),
+            (id(6, 5), [ayseId, zeynepId]),
+        ]
+        let volunteers: [(postId: UUID, userIds: [UUID])] = [
+            (id(6, 1), [emreId]),
+        ]
+
         let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
 
         return DemoSeed(
@@ -178,6 +231,10 @@ public enum DemoData {
             needs: needs,
             guardians: guardians,
             donationOverview: DonationOverview(month: monthStart, kgDistributed: 412, donorCount: 37),
+            posts: posts,
+            comments: comments,
+            paws: paws,
+            volunteers: volunteers,
             demoUserId: meId
         )
     }

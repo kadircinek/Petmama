@@ -39,7 +39,7 @@ public struct FollowingScreen: View {
     private var content: some View {
         if !session.isSignedIn {
             EmptyStateView(
-                systemImage: "heart",
+                mascot: .cat,
                 title: String(localized: "Takip etmek için giriş yap"),
                 message: String(localized: "Beslediğin noktaları ve sevdiğin hayvanları takip et, haberleri buraya gelsin."),
                 actionTitle: String(localized: "Giriş yap"),
@@ -50,7 +50,7 @@ public struct FollowingScreen: View {
             LoadingView().frame(height: 240).plainRow()
         } else if model.hasLoaded && model.isEmpty {
             EmptyStateView(
-                systemImage: "heart",
+                mascot: .cat,
                 title: String(localized: "Henüz takip ettiğin bir şey yok"),
                 message: String(localized: "Bir noktanın ya da hayvanın sayfasındaki kalbe dokun; yeni mama ve ihtiyaç haberleri burada toplansın.")
             )

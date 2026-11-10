@@ -8,7 +8,7 @@ import MamaCore
 @Observable
 public final class CommunityFeedViewModel {
     /// Sunucudaki `max_rows` üst sınırı (docs/backend-contract.md → `community_feed`).
-    public static let maxServerRows = 50
+    public nonisolated static let maxServerRows = 50
 
     public private(set) var posts: [CommunityPost] = []
     public private(set) var summary: CommunitySummary?
@@ -28,23 +28,37 @@ public final class CommunityFeedViewModel {
     public var error: MamaError?
 
     public let pageSize: Int
+    /// Tek istekte tazelenebilecek en fazla paylaşım.
+    public let maxRowsPerRequest: Int
     @ObservationIgnored private let services: AppServices
     /// Art arda yüklemelerde (filtre, sheet kapanışı) yalnızca en son isteğin sonucu yazılır.
     @ObservationIgnored private var generation = 0
     @ObservationIgnored private var pawsInFlight: Set<UUID> = []
 
-    public init(services: AppServices, pageSize: Int = CommunityPolicy.pageSize) {
+    public init(
+        services: AppServices,
+        pageSize: Int = CommunityPolicy.pageSize,
+        maxRowsPerRequest: Int = CommunityFeedViewModel.maxServerRows
+    ) {
         self.services = services
-        self.pageSize = min(max(pageSize, 1), Self.maxServerRows)
+        let cap = min(max(maxRowsPerRequest, 1), Self.maxServerRows)
+        self.maxRowsPerRequest = cap
+        self.pageSize = min(max(pageSize, 1), cap)
     }
 
     public var now: Date { services.now() }
     public var hasActiveFilter: Bool { selectedKind != nil }
-    public var isEmpty: Bool { hasLoaded && !requiresSignIn && posts.isEmpty }
+    /// Gösterilecek kart yokken yükleme sürüyor (ilk açılış, filtre değişimi).
+    public var showsLoadingPlaceholder: Bool { !hasLoaded || (isLoading && posts.isEmpty) }
+    /// Gerçekten boş: yüklendi, hata yok, paylaşım yok. (Yüklenemediyse boş durum değil hata gösterilir.)
+    public var isEmpty: Bool { hasLoaded && !isLoading && !requiresSignIn && error == nil && posts.isEmpty }
 
     // MARK: - Yükleme
 
-    /// İlk sayfayı ve özeti yükler. `keepingDepth` ile (sheet kapanınca) o ana kadar açılmış paylaşım sayısı korunur.
+    /// İlk sayfayı ve özeti yükler.
+    ///
+    /// `keepingDepth` (sheet kapanışı, detaydan dönüş): kaydırma konumu bozulmasın diye o ana kadar açılmış
+    /// paylaşımlar korunur. Tek isteğe sığan baş kısım sunucudan tazelenir; daha eski kartlar olduğu gibi kalır.
     public func load(near coordinate: Coordinate?, signedIn: Bool = true, keepingDepth: Bool = false) async {
         generation += 1
         let token = generation
@@ -52,11 +66,16 @@ public final class CommunityFeedViewModel {
             showSignInGate()
             return
         }
+        if requiresSignIn {
+            // Giriş yapıldı: davet yerine yükleniyor durumu görünsün.
+            requiresSignIn = false
+            hasLoaded = false
+        }
         isLoading = true
         defer { if token == generation { isLoading = false } }
 
         let center = coordinate ?? .modaKadikoy
-        let limit = keepingDepth ? min(max(posts.count, pageSize), Self.maxServerRows) : pageSize
+        let limit = keepingDepth ? min(max(posts.count, pageSize), maxRowsPerRequest) : pageSize
         let community = services.community
         async let summaryResult = try? await community.summary(near: center, radiusMeters: CommunityPolicy.feedRadiusMeters)
         do {
@@ -69,8 +88,9 @@ public final class CommunityFeedViewModel {
             )
             let freshSummary = await summaryResult
             guard token == generation else { return }
-            posts = page
-            canLoadMore = page.count >= limit
+            let tail = keepingDepth && page.count >= limit ? olderPosts(than: page) : []
+            posts = page + tail
+            if tail.isEmpty { canLoadMore = page.count >= limit }
             hasViewerLocation = coordinate != nil
             if let freshSummary { summary = freshSummary }
             requiresSignIn = false
@@ -212,6 +232,13 @@ public final class CommunityFeedViewModel {
     }
 
     // MARK: - Yardımcılar
+
+    /// Tazelenen baş kısmın en eski paylaşımından daha eski, hâlâ elde duran kartlar.
+    private func olderPosts(than page: [CommunityPost]) -> [CommunityPost] {
+        guard let oldest = page.last, posts.count > page.count else { return [] }
+        let fresh = Set(page.map(\.id))
+        return posts.filter { $0.createdAt < oldest.createdAt && !fresh.contains($0.id) }
+    }
 
     private func update(_ postId: UUID, _ change: (inout CommunityPost) -> Void) {
         guard let index = posts.firstIndex(where: { $0.id == postId }) else { return }

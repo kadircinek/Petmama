@@ -16,7 +16,7 @@ public struct SectionHeader: View {
 
     public var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(LocalizedStringKey(title))
+            Text(mama: title)
                 .font(MamaFont.title3)
                 .foregroundStyle(MamaColor.textPrimary)
                 .accessibilityAddTraits(.isHeader)
@@ -54,12 +54,12 @@ public struct QuickActionTile: View {
                     .background(Circle().fill(MamaColor.card.opacity(0.7)))
                 Spacer(minLength: 0)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(LocalizedStringKey(title))
+                    Text(mama: title)
                         .font(MamaFont.headline)
                         .foregroundStyle(MamaColor.textPrimary)
                         .multilineTextAlignment(.leading)
                     if let subtitle {
-                        Text(LocalizedStringKey(subtitle))
+                        Text(mama: subtitle)
                             .font(MamaFont.caption)
                             .foregroundStyle(MamaColor.textSecondary)
                             .multilineTextAlignment(.leading)
@@ -103,7 +103,7 @@ public struct StatsStrip: View {
                     Text(item.value)
                         .font(MamaFont.title2)
                         .foregroundStyle(MamaColor.textPrimary)
-                    Text(LocalizedStringKey(item.label))
+                    Text(mama: item.label)
                         .font(MamaFont.caption)
                         .foregroundStyle(MamaColor.textSecondary)
                         .multilineTextAlignment(.center)
@@ -210,9 +210,9 @@ public struct ChoiceCard: View {
                     .frame(width: 46, height: 46)
                     .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(tint))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(LocalizedStringKey(title)).font(MamaFont.headline).foregroundStyle(MamaColor.textPrimary)
+                    Text(mama: title).font(MamaFont.headline).foregroundStyle(MamaColor.textPrimary)
                     if let subtitle {
-                        Text(LocalizedStringKey(subtitle)).font(MamaFont.caption).foregroundStyle(MamaColor.textSecondary)
+                        Text(mama: subtitle).font(MamaFont.caption).foregroundStyle(MamaColor.textSecondary)
                     }
                 }
                 Spacer()
@@ -253,7 +253,7 @@ public struct InfoRow: View {
             Image(systemName: systemImage)
                 .foregroundStyle(MamaColor.textSecondary)
                 .frame(width: 24)
-            Text(LocalizedStringKey(title)).foregroundStyle(MamaColor.textSecondary)
+            Text(mama: title).foregroundStyle(MamaColor.textSecondary)
             Spacer()
             Text(value).foregroundStyle(MamaColor.textPrimary).multilineTextAlignment(.trailing)
         }

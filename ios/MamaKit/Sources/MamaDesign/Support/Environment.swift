@@ -17,6 +17,15 @@ extension EnvironmentValues {
     }
 }
 
+extension Text {
+    /// Tasarım bileşenlerindeki metinler için: String Catalog'da karşılığı varsa çevirisini, yoksa metnin
+    /// kendisini gösterir. `Text(LocalizedStringKey(…))` yerine kullanılır çünkü o, metni Markdown olarak
+    /// yorumlar; kullanıcının yazdığı bir başlıktaki `[bağlantı](…)` tıklanabilir hale gelirdi.
+    public init(mama text: String) {
+        self.init(verbatim: Bundle.main.localizedString(forKey: text, value: text, table: nil))
+    }
+}
+
 extension Coordinate {
     public init(_ coordinate: CLLocationCoordinate2D) {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)

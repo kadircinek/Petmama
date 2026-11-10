@@ -43,7 +43,7 @@ public struct TagChip: View {
             if let systemImage {
                 Image(systemName: systemImage).imageScale(.small)
             }
-            Text(LocalizedStringKey(text)).lineLimit(1)
+            Text(mama: text).lineLimit(1)
         }
         .font(MamaFont.caption)
         .foregroundStyle(foreground)
@@ -108,7 +108,7 @@ public struct SelectableChip: View {
         Button(action: action) {
             HStack(spacing: 6) {
                 if let systemImage { Image(systemName: systemImage) }
-                Text(LocalizedStringKey(title)).lineLimit(1)
+                Text(mama: title).lineLimit(1)
             }
             .font(MamaFont.subheadline.weight(.semibold))
             .foregroundStyle(isSelected ? MamaColor.onInk : MamaColor.textPrimary)

@@ -109,8 +109,11 @@ final class CommunityFeedViewModelTests: XCTestCase {
 
     func testFarAwayLocationIsEmpty() async {
         let model = CommunityFeedViewModel(services: makeServices(makeBackend()))
+        XCTAssertTrue(model.showsLoadingPlaceholder, "ilk yüklemeden önce boş durum değil yükleniyor görünür")
+        XCTAssertFalse(model.isEmpty)
         await model.load(near: GeoMath.offset(.modaKadikoy, north: 40_000, east: 0))
         XCTAssertTrue(model.isEmpty)
+        XCTAssertFalse(model.showsLoadingPlaceholder)
         XCTAssertFalse(model.hasActiveFilter)
     }
 
@@ -149,6 +152,7 @@ final class CommunityFeedViewModelTests: XCTestCase {
         XCTAssertEqual(model.error, .offline)
         XCTAssertFalse(model.requiresSignIn)
         XCTAssertTrue(model.hasLoaded)
+        XCTAssertFalse(model.isEmpty, "yüklenemeyen akış 'henüz paylaşım yok' diye gösterilmez")
 
         await stub.heal(.feed)
         await model.load(near: .modaKadikoy)
@@ -240,6 +244,32 @@ final class CommunityFeedViewModelTests: XCTestCase {
 
         await model.load(near: .modaKadikoy)
         XCTAssertEqual(model.posts.count, 2, "çekip yenileme ilk sayfaya döner")
+    }
+
+    func testDeepFeedRefreshesHeadAndKeepsOlderCards() async throws {
+        // Tek istekte en fazla 3 paylaşım tazelenebiliyor; kullanıcı 5 paylaşım derinliğe inmiş.
+        let backend = makeBackend()
+        let model = CommunityFeedViewModel(services: makeServices(backend), pageSize: 2, maxRowsPerRequest: 3)
+        await model.load(near: .modaKadikoy)
+        await model.loadMore(near: .modaKadikoy)
+        await model.loadMore(near: .modaKadikoy)
+        XCTAssertEqual(model.posts.map(\.id), nearbyPostIds)
+        XCTAssertFalse(model.canLoadMore)
+
+        // Sheet'ten yeni paylaşım geldi: başa eklenir, eski kartlar yerinde kalır.
+        let outcome = try await backend.createPost(CommunityPostDraft(body: "Yeni haber", coordinate: .modaKadikoy))
+        guard case .created(let newId, _) = outcome else { return XCTFail("paylaşım oluşmalıydı") }
+        await model.load(near: .modaKadikoy, keepingDepth: true)
+        XCTAssertEqual(model.posts.map(\.id), [newId] + nearbyPostIds)
+        XCTAssertFalse(model.canLoadMore, "eski kartlar korunduğunda sayfalama durumu değişmez")
+
+        // Baş kısımdan silinen paylaşım düşer; kuyruk yine korunur.
+        await backend.setCurrentUser(DemoData.ayseId)
+        _ = try await backend.deletePost(id: DemoData.id(6, 1))
+        await backend.setCurrentUser(DemoData.meId)
+        await model.load(near: .modaKadikoy, keepingDepth: true)
+        XCTAssertEqual(model.posts.map(\.id), [newId] + Array(nearbyPostIds.dropFirst()))
+        XCTAssertEqual(Set(model.posts.map(\.id)).count, model.posts.count)
     }
 
     func testPageSizeIsClampedToServerMaximum() async {

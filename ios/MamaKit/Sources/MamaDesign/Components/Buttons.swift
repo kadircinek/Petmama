@@ -143,7 +143,7 @@ public struct MamaTextButton: View {
 
     public var body: some View {
         Button(action: action) {
-            Text(LocalizedStringKey(title))
+            Text(mama: title)
                 .font(MamaFont.subheadline.weight(.semibold))
                 .foregroundStyle(MamaColor.textSecondary)
                 .frame(minHeight: MamaMetrics.minTapSize)

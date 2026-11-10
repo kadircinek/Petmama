@@ -45,6 +45,11 @@ public final class PostDetailViewModel {
             showSignInGate()
             return
         }
+        if requiresSignIn {
+            // Giriş yapıldı: davet yerine yükleniyor durumu görünsün.
+            requiresSignIn = false
+            hasLoaded = false
+        }
         isLoading = true
         defer {
             isLoading = false

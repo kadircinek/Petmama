@@ -45,18 +45,18 @@ public struct EmptyStateView: View {
                     .background(Circle().fill(MamaColor.tileMint))
                     .accessibilityHidden(true)
             }
-            Text(LocalizedStringKey(title))
+            Text(mama: title)
                 .font(MamaFont.title3)
                 .foregroundStyle(MamaColor.textPrimary)
                 .multilineTextAlignment(.center)
             if let message {
-                Text(LocalizedStringKey(message))
+                Text(mama: message)
                     .font(MamaFont.subheadline)
                     .foregroundStyle(MamaColor.textSecondary)
                     .multilineTextAlignment(.center)
             }
             if let actionTitle, let action {
-                Button(action: action) { Text(LocalizedStringKey(actionTitle)) }
+                Button(action: action) { Text(mama: actionTitle) }
                     .buttonStyle(.mamaPrimary(fullWidth: false))
                     .padding(.top, 4)
             }
@@ -102,7 +102,7 @@ public struct BannerView: View {
     public var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon).foregroundStyle(tint)
-            Text(LocalizedStringKey(message))
+            Text(mama: message)
                 .font(MamaFont.subheadline)
                 .foregroundStyle(MamaColor.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -125,7 +125,7 @@ public struct ToastView: View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .foregroundStyle(tint)
-            Text(LocalizedStringKey(toast.message))
+            Text(mama: toast.message)
                 .font(MamaFont.subheadline.weight(.semibold))
                 .foregroundStyle(MamaColor.onInk)
                 .multilineTextAlignment(.leading)
@@ -166,7 +166,7 @@ public struct LoadingView: View {
         VStack(spacing: 12) {
             ProgressView().controlSize(.large)
             if let title {
-                Text(LocalizedStringKey(title)).font(MamaFont.subheadline).foregroundStyle(MamaColor.textSecondary)
+                Text(mama: title).font(MamaFont.subheadline).foregroundStyle(MamaColor.textSecondary)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

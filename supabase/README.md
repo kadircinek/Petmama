@@ -102,6 +102,10 @@ tests/                      SQL testleri + run.sh
   update public.community_posts set moderation_state = 'approved' where id = '<uuid>';   -- ya da 'rejected'
   ```
   Raporlar kapatılmadan yeniden onaylanan içerik bir sonraki raporda tekrar gizlenir.
+  Akış ve özet yarıçapı sunucuda **1000–10 000 m**'ye sıkıştırılır (`cell` ≈ 1,1 km'lik ızgara; daha küçük yarıçap
+  kullanıcının kendi paylaşımını kaçırırdı), `max_rows` 1–50'ye. Paylaşım satırındaki `created_at` milisaniyeye
+  kırpılmış döner; `community_feed` `p_before`'u aynı kırpılmış değerle karşılaştırır (istemci son satırın
+  `created_at`'ini olduğu gibi geri gönderir).
 - **PostgREST**: `reports` tablosuna `Prefer: return=minimal` ile eklenmeli (yalnızca moderatör okuyabilir).
 
 ## Testler

@@ -269,7 +269,9 @@ extension InMemoryBackend {
         guard (preferencesByUser[author] ?? .default).communityUpdates else { return }
         let hasUnread = (notificationsByUser[author] ?? []).contains { $0.kind == kind && $0.postId == post.id && !$0.isRead }
         guard !hasUnread else { return }
-        notify(author, AppNotification(kind: kind, title: title, body: body, spotId: post.spotId, postId: post.id, createdAt: now()))
+        // Sunucuyla aynı: yalnızca "Ben bakarım" bildirimi noktayı da taşır.
+        let spotId = kind == .coverVolunteered ? post.spotId : nil
+        notify(author, AppNotification(kind: kind, title: title, body: body, spotId: spotId, postId: post.id, createdAt: now()))
     }
 
     func removeCommunityContent(of userId: UUID) {

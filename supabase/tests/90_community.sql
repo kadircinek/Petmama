@@ -164,8 +164,6 @@ begin
   select cell into c from community_posts where id = pid2;
   perform tests.check(extensions.st_y(c::extensions.geometry) = 43.99 and extensions.st_x(c::extensions.geometry) = 29.01,
                       'direct cell write is rounded too (trigger)');
-  perform tests.check((select bool_and(created_at = date_trunc('milliseconds', created_at)) from community_posts where id in (pid, pid2)),
-                      'created_at stored with millisecond precision (stable keyset cursor)');
 
   perform tests.login(v);
   select * into pr from community_feed(b_lat, b_lng) f where f.id = pid;
@@ -265,6 +263,61 @@ begin
   perform tests.eq(n, 50, 'feed: max_rows capped at 50');
   select count(*)::int into n from community_feed(b_lat, b_lng);
   perform tests.eq(n, 30, 'feed: default page size 30');
+  perform tests.admin();
+end
+$$;
+
+-- Keyset imleci milisaniye hassasiyetinde: istemci son satırın created_at'ini milisaniyeyle geri gönderir,
+-- Postgres ise mikrosaniye saklar. Satırdaki created_at kırpılmış döner ve filtre aynı değere uygulanır;
+-- sayfa sınırındaki satır tekrar gelmez, bir önceki milisaniyedeki satır da atlanmaz.
+do $$
+declare
+  b_lat  float8 := tests.base_lat() + 3.75;   -- 44.70
+  b_lng  float8 := tests.base_lng();
+  a      uuid := tests.make_user('İmleç Yazar');
+  v      uuid := tests.make_user('İmleç Okur');
+  newer  uuid;
+  older  uuid;
+  oldest uuid;
+  pr     community_post_row;
+  ids    uuid[];
+  cur    timestamptz;
+begin
+  insert into community_posts (author_id, kind, body, cell, created_at)
+  values (a, 'note', 'yeni (mikrosaniyeli)', private.make_point(b_lat, b_lng), '2026-11-04 10:00:00.123678+00') returning id into newer;
+  insert into community_posts (author_id, kind, body, cell, created_at)
+  values (a, 'note', 'bir önceki milisaniye', private.make_point(b_lat, b_lng), '2026-11-04 10:00:00.122999+00') returning id into older;
+  insert into community_posts (author_id, kind, body, cell, created_at)
+  values (a, 'note', 'en eski', private.make_point(b_lat, b_lng), '2026-11-04 09:00:00.000001+00') returning id into oldest;
+  perform tests.eq((select created_at from community_posts where id = newer), timestamptz '2026-11-04 10:00:00.123678+00',
+                   'stored created_at keeps its microseconds');
+
+  perform tests.login(v);
+  -- sayfa 1
+  select * into pr from community_feed(lat => b_lat, lng => b_lng, max_rows => 1);
+  perform tests.eq(pr.id, newer, 'cursor page 1 (max_rows 1) → newest post');
+  perform tests.eq(pr.created_at, timestamptz '2026-11-04 10:00:00.123+00', 'feed created_at is truncated to milliseconds');
+  perform tests.eq((select d.created_at from community_post_detail(newer) d), timestamptz '2026-11-04 10:00:00.123+00',
+                   'detail created_at is truncated to milliseconds too');
+  cur := pr.created_at;
+
+  -- sayfa 2: dönen created_at aynen p_before olur
+  ids := array(select f.id from community_feed(lat => b_lat, lng => b_lng, p_before => cur, max_rows => 1) f);
+  perform tests.eq(ids, array[older], 'cursor page 2 → the other post (previous millisecond is not skipped)');
+  ids := array(select f.id from community_feed(lat => b_lat, lng => b_lng, p_before => cur) f);
+  perform tests.eq(ids, array[older, oldest], 'cursor page 2 never repeats the first post');
+  -- istemcinin göndereceği metin biçimi (ISO-8601, milisaniye)
+  ids := array(select f.id from community_feed(lat => b_lat, lng => b_lng, p_before => '2026-11-04T10:00:00.123Z', max_rows => 1) f);
+  perform tests.eq(ids, array[older], 'cursor as ISO-8601 millisecond text gives the same page');
+
+  -- sayfa 3 ve son
+  select f.created_at into cur from community_feed(lat => b_lat, lng => b_lng, p_before => cur, max_rows => 1) f;
+  perform tests.eq(cur, timestamptz '2026-11-04 10:00:00.122+00', 'page 2 cursor is truncated as well');
+  ids := array(select f.id from community_feed(lat => b_lat, lng => b_lng, p_before => cur, max_rows => 1) f);
+  perform tests.eq(ids, array[oldest], 'cursor page 3 → oldest post');
+  select f.created_at into cur from community_feed(lat => b_lat, lng => b_lng, p_before => cur, max_rows => 1) f;
+  ids := array(select f.id from community_feed(lat => b_lat, lng => b_lng, p_before => cur, max_rows => 1) f);
+  perform tests.eq(coalesce(array_length(ids, 1), 0), 0, 'cursor walk ends with an empty page (3 posts, 3 pages, no repeats)');
   perform tests.admin();
 end
 $$;

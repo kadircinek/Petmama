@@ -98,11 +98,9 @@ grant insert (community_updates), update (community_updates) on public.notificat
 -- ---------------------------------------------------------------------------
 -- Trigger'lar
 -- ---------------------------------------------------------------------------
--- * cell her yazımda 2 ondalığa yuvarlanır (≈1,1 km) — RPC dışı yazımlarda da (seed, service_role).
--- * created_at milisaniyeye kırpılır: akış `p_before` ile sayfalanır (keyset) ve istemci zaman
---   damgasını milisaniye hassasiyetiyle geri gönderir; mikrosaniye saklansaydı sayfa sınırındaki
---   satır tekrar gelebilir ya da atlanabilirdi.
-create function private.normalize_community_post()
+-- cell her yazımda 2 ondalığa yuvarlanır (≈1,1 km) — RPC dışı yazımlarda da (seed, service_role);
+-- notify_center'daki (0005) kalıbın aynısı.
+create function private.round_post_cell()
 returns trigger
 language plpgsql
 security definer
@@ -112,14 +110,13 @@ begin
   new.cell := private.make_point(
     round(extensions.st_y(new.cell::extensions.geometry)::numeric, 2)::float8,
     round(extensions.st_x(new.cell::extensions.geometry)::numeric, 2)::float8);
-  new.created_at := date_trunc('milliseconds', new.created_at);
   return new;
 end
 $$;
 
-create trigger community_posts_normalize
-  before insert or update of cell, created_at on public.community_posts
-  for each row execute function private.normalize_community_post();
+create trigger community_posts_round_cell
+  before insert or update of cell on public.community_posts
+  for each row execute function private.round_post_cell();
 
 create trigger community_posts_updated_at before update on public.community_posts
   for each row execute function private.set_updated_at();

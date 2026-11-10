@@ -31,7 +31,7 @@ create type public.community_post_row as (
   comment_count      int,      -- yalnızca izleyiciye görünür yorumlar
   distance_m         float8,   -- izleyicinin konumundan cell'e; konum verilmediyse null
   moderation_state   public.moderation_state,
-  created_at         timestamptz
+  created_at         timestamptz   -- milisaniyeye kırpılmış (community_feed'in `p_before` imleci)
 );
 
 create type public.community_comment_row as (
@@ -84,6 +84,8 @@ $$;
 --   * comment_count ve volunteer_count izleyiciye göredir: engelli kişilerin yorumu/gönüllülüğü sayılmaz
 --     (liste RPC'leriyle tutarlı). paw_count anonim toplamdır.
 --   * distance_m kaba konuma (cell) göredir.
+--   * created_at milisaniyeye kırpılır: istemci bu değeri `p_before` olarak milisaniye hassasiyetiyle
+--     geri gönderir; mikrosaniyeli dönseydi sayfa sınırındaki satır tekrar gelebilir ya da atlanabilirdi.
 create function private.to_post_row(
   p_post   public.community_posts,
   p_uid    uuid,
@@ -119,7 +121,7 @@ as $$
         and private.community_visible(c.moderation_state, c.author_id, p_uid, p_is_mod)),
     case when p_ref is not null then extensions.st_distance(p_post.cell, p_ref) end,
     p_post.moderation_state,
-    p_post.created_at
+    date_trunc('milliseconds', p_post.created_at)
   from (select 1) as one
   left join public.profiles au on au.id = p_post.author_id
   left join public.spots sp on sp.id = p_post.spot_id and private.spot_visible(sp, p_uid, p_is_mod)
@@ -167,8 +169,11 @@ $$;
 
 -- ---------------------------------------------------------------------------
 -- community_feed — yakındaki paylaşımlar, yeniden eskiye. Sayfalama keyset: bir sonraki sayfa için
--- son satırın created_at'i `p_before` olarak gönderilir. Yarıçap 1000–10 000 m'ye sıkıştırılır
--- (cell ≈1,1 km'lik ızgara olduğundan daha küçük yarıçap kullanıcının kendi paylaşımını bile kaçırırdı).
+-- son satırın created_at'i `p_before` olarak gönderilir. Satırdaki created_at milisaniyeye kırpılmıştır
+-- ve filtre aynı kırpılmış değere uygulanır: sayfa sınırındaki satır asla tekrar gelmez. (İmleçle aynı
+-- milisaniyeye düşen başka bir paylaşım varsa o atlanır; tek mahallede pratikte görülmez.)
+-- Yarıçap 1000–10 000 m'ye sıkıştırılır (cell ≈1,1 km'lik ızgara olduğundan daha küçük yarıçap
+-- kullanıcının kendi paylaşımını bile kaçırırdı).
 -- ---------------------------------------------------------------------------
 create function public.community_feed(
   lat      float8,
@@ -196,17 +201,18 @@ begin
   select r.*
   from (
     -- önce sayfa seçilir; sayaçlar (to_post_row) yalnızca dönen satırlar için hesaplanır
-    select p
+    select p as post
     from public.community_posts p
     where extensions.st_dwithin(p.cell, v_ref, v_radius)
       and (p_kind is null or p.kind = p_kind)
-      and (p_before is null or p.created_at < p_before)
+      and (p_before is null or date_trunc('milliseconds', p.created_at) < p_before)
       and private.community_visible(p.moderation_state, p.author_id, v_uid, v_mod)
     order by p.created_at desc, p.id desc
     limit greatest(1, least(coalesce(community_feed.max_rows, 30), 50))
   ) page
-  cross join lateral private.to_post_row(page.p, v_uid, v_mod, v_ref) r
-  order by r.created_at desc, r.id desc;
+  cross join lateral private.to_post_row(page.post, v_uid, v_mod, v_ref) r
+  -- saklanan (mikrosaniyeli) zamana göre: aynı milisaniyedeki satırların sırası da kararlı
+  order by (page.post).created_at desc, (page.post).id desc;
 end
 $$;
 

@@ -241,6 +241,7 @@ Besleyicilerin birbiriyle etkileşime girdiği sayfa (D17). İlkeler:
 - `community_paws(post_id, user_id, created_at, pk(post_id, user_id))` — "pati bırak" tepkisi
 - `cover_volunteers(post_id, user_id, created_at, pk(post_id, user_id))` — "Ben bakarım"
 - `notifications.post_id uuid null → community_posts on delete cascade` (yeni sütun)
+- `notifications.actor_id uuid null → profiles on delete cascade` (yeni sütun): bildirimi tetikleyen kişi; hesabı silinince adını anan bildirim de silinir
 - `notification_prefs.community_updates bool not null default true` (yeni sütun)
 
 Dördü de RLS açık ve **doğrudan erişim yok**; yalnızca RPC. Hesap silinince kullanıcının paylaşım, yorum, pati ve
@@ -257,7 +258,7 @@ gönüllülük kayıtları silinir (kişisel içerik, PRD 9.5).
 | `cover_request` | görünür bir `spot_id` zorunlu; `cover_from ≥ bugün`, `cover_to ≥ cover_from`, süre ≤ 30 gün |
 | Düşük güven puanı (`trust_score < 5`) | paylaşım `moderation_state = 'pending'` ile oluşur, yalnızca yazarına görünür |
 | Otomatik gizleme | bir paylaşım veya yorum **3 farklı kullanıcı** tarafından raporlanırsa `pending` olur (reports insert trigger'ı) |
-| Akış yarıçapı | varsayılan 3000 m, en fazla 10 000 m |
+| Akış yarıçapı | varsayılan 3000 m; sunucu 1000–10 000 m aralığına sıkıştırır (kaba konum ≈1 km olduğundan daha küçüğü anlamsız) |
 
 ## `community_post_row`
 
@@ -285,7 +286,7 @@ created_at timestamptz
 
 | RPC | Parametreler | Dönüş | Not |
 |---|---|---|---|
-| `community_feed` | `lat, lng float8, radius_m int = 3000, p_kind community_post_kind = null, p_before timestamptz = null, max_rows int = 30` | `setof community_post_row` | `created_at` azalan; sayfalama `p_before` ile (keyset); `max_rows` en fazla 50 |
+| `community_feed` | `lat, lng float8, radius_m int = 3000, p_kind community_post_kind = null, p_before timestamptz = null, max_rows int = 30` | `setof community_post_row` | `created_at` azalan; sayfalama `p_before` ile (keyset); `max_rows` en fazla 50. `created_at` satırda **milisaniyeye kırpılmış** döner ve imleç aynı kırpılmış değerle karşılaştırılır (istemci milisaniye hassasiyetiyle gönderir) |
 | `community_post_detail` | `p_post_id uuid, lat float8 = null, lng float8 = null` | `setof community_post_row` (0/1) | gizli/engelli/yok → 0 satır |
 | `community_comments_of` | `p_post_id uuid` | `setof community_comment_row` | `created_at` artan, en fazla 200 |
 | `cover_volunteers_of` | `p_post_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool)` | |
@@ -293,7 +294,7 @@ created_at timestamptz
 | `add_community_comment` | `p_post_id uuid, p_body text` | `jsonb` | bkz. aşağı |
 | `toggle_post_paw` | `p_post_id uuid` | `jsonb` | `{status:'ok', pawed bool, paw_count int}` \| `{status:'post_not_found'}` |
 | `toggle_cover_volunteer` | `p_post_id uuid` | `jsonb` | bkz. aşağı |
-| `delete_community_post` | `p_post_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | yazar veya moderatör |
+| `delete_community_post` | `p_post_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | yazar veya moderatör; bilinmeyen id → `not_found` istisnası |
 | `delete_community_comment` | `p_comment_id uuid` | `jsonb {status:'ok'|'not_allowed'}` | yorumun yazarı, paylaşımın yazarı veya moderatör |
 | `community_summary` | `lat, lng float8, radius_m int = 3000` | `table(fed_spot_days_7d int, active_feeders_7d int, open_cover_requests int, posts_7d int)` | "Bu hafta mahallende" kartı. `fed_spot_days_7d` = son 7 günde `fed` check-in'i olan farklı (nokta, gün) sayısı: PRD'nin kuzey yıldızı metriği |
 
@@ -305,7 +306,10 @@ created_at timestamptz
 { "status": "limit_reached", "limit": 10 }
 { "status": "invalid", "reason": "body_empty" | "body_too_long" | "cover_needs_spot" | "cover_dates" | "spot_not_found" }
 ```
-`lat`/`lng` nokta bağlı değilse zorunludur (yoksa exception). `cover_request` dışındaki türlerde `p_cover_*` yok sayılır.
+`lat`/`lng` nokta bağlı değilse zorunludur (yoksa `invalid_coordinates` istisnası; istemci bunu göndermeden önce yakalar). `cover_request` dışındaki
+türlerde `p_cover_*` yok sayılır. Denetim sırası: metin, küfür, günlük limit, nokta, tarih kuralları, konum.
+Görünürlük: `pending` içeriği yazarı ve moderatör görür, `rejected` içeriği yalnızca moderatör. Gönüllü sayısı ve listesi
+izleyiciyle engelli kullanıcıları içermez.
 
 ### `add_community_comment` sonucu
 

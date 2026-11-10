@@ -66,7 +66,7 @@ scripts/linux-swift.sh test
 bash supabase/tests/run.sh
 ```
 Son durum: Linux'ta **414 Swift testi** (MamaCore, Supabase DTO'ları, tüm ViewModel'ler, AppFeature) ve
-**592 SQL assertion'ı** (`supabase/postgres` Docker imajı) geçiyor. SwiftUI görünümleri Linux'ta derlenemez;
+**611 SQL assertion'ı** (`supabase/postgres` Docker imajı) geçiyor. SwiftUI görünümleri Linux'ta derlenemez;
 onları CI'daki `ios-build` işi Xcode ile derler ve aynı testleri iPhone simülatöründe çalıştırır.
 
 CI (`.github/workflows/ci.yml`): Linux `swift test`, String Catalog kontrolü, SQL testleri ve macOS'ta Xcode

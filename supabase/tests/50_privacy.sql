@@ -111,4 +111,88 @@ begin
 end
 $$;
 
+-- neighborhood_summary konum kâhini olmamalı (PRD 9.1): nokta yarıçapa izleyiciye GÖSTERİLEN konumuyla
+-- girer. Aksi halde merkez kaydırılıp sayıların değiştiği sınır izlenerek bulanık bir noktanın gerçek
+-- konumu bulunabilirdi. Her nokta için, gerçek ve bulanık konum 1500 m çemberinin iki yanında kalacak
+-- şekilde iki merkez kurulur (bulanıklık 50–100 m → iki yanda da ≥ 25 m pay):
+--   "shown" merkezi: yalnızca bulanık konum içeride   ·   "true" merkezi: yalnızca gerçek konum içeride
+-- Her noktada dört sayacı da 1 yapan veri var: sayılıyorsa {1,1,1,1}, sayılmıyorsa {0,0,0,0}
+-- (sıra: fed_spots_today, open_needs, needs_food_spots, active_spots_7d).
+do $$
+declare
+  b_lat     float8 := tests.base_lat() + 0.60;
+  b_lng     float8 := tests.base_lng();
+  creator   uuid := tests.make_user('Özet: oluşturan');
+  viewer    uuid := tests.make_user('Özet: izleyici');
+  spot_vis  text[] := array['public', 'fuzzed', 'private'];   -- noktalar ≈8 km arayla: birbirini etkilemez
+  shown_lat float8[] := '{}';
+  shown_lng float8[] := '{}';
+  true_lat  float8[] := '{}';
+  true_lng  float8[] := '{}';
+  sid       uuid;
+  loc       extensions.geography;
+  fz        extensions.geography;
+  az        float8;
+  mid       extensions.geography;
+  c_shown   extensions.geography;
+  c_true    extensions.geography;
+  i         int;
+  r         record;
+  got       int[];
+begin
+  for i in 1..3 loop
+    sid := tests.make_spot(b_lat, b_lng + (i - 1) * 0.1, 'özet ' || spot_vis[i], spot_vis[i]::spot_visibility,
+                           creator, now());
+    insert into checkins (spot_id, user_id, kind, user_distance_m) values
+      (sid, creator, 'fed', 5), (sid, creator, 'need_food', 5);
+    insert into needs (spot_id, type, created_by) values (sid, 'vet', creator);
+
+    select sp.location, private.fuzz_point(sp.id, sp.location) into loc, fz from spots sp where sp.id = sid;
+    az      := extensions.st_azimuth(loc, fz);
+    mid     := extensions.st_project(loc, extensions.st_distance(loc, fz) / 2, az);
+    c_shown := extensions.st_project(mid, 1500, az);
+    c_true  := extensions.st_project(mid, 1500, az + pi());
+    perform tests.check(extensions.st_distance(c_shown, fz) < 1490 and extensions.st_distance(c_shown, loc) > 1510
+                        and extensions.st_distance(c_true, loc) < 1490 and extensions.st_distance(c_true, fz) > 1510,
+                        format('setup (%s spot): true and displayed location straddle the 1500 m radius', spot_vis[i]));
+    shown_lat := shown_lat || extensions.st_y(c_shown::extensions.geometry);
+    shown_lng := shown_lng || extensions.st_x(c_shown::extensions.geometry);
+    true_lat  := true_lat  || extensions.st_y(c_true::extensions.geometry);
+    true_lng  := true_lng  || extensions.st_x(c_true::extensions.geometry);
+  end loop;
+
+  for r in
+    select * from (values
+      -- izleyici   nokta       "shown" merkezi   "true" merkezi
+      ('anon',    'public',  array[1,1,1,1], array[0,0,0,0]),   -- anon: her nokta bulanık
+      ('anon',    'fuzzed',  array[1,1,1,1], array[0,0,0,0]),
+      ('anon',    'private', array[0,0,0,0], array[0,0,0,0]),   -- anon: private hiç sayılmaz
+      ('viewer',  'public',  array[0,0,0,0], array[1,1,1,1]),   -- giriş yapmış: public tam
+      ('viewer',  'fuzzed',  array[1,1,1,1], array[0,0,0,0]),   --               fuzzed/private bulanık
+      ('viewer',  'private', array[1,1,1,1], array[0,0,0,0]),
+      ('creator', 'fuzzed',  array[0,0,0,0], array[1,1,1,1]),   -- oluşturan: tam (haritada gördüğüyle aynı)
+      ('creator', 'private', array[0,0,0,0], array[1,1,1,1])
+    ) as m(who, vis, want_shown, want_true)
+  loop
+    i := array_position(spot_vis, r.vis);
+    case r.who
+      when 'anon'   then perform tests.anon();
+      when 'viewer' then perform tests.login(viewer);
+      else               perform tests.login(creator);
+    end case;
+
+    select array[t.fed_spots_today, t.open_needs, t.needs_food_spots, t.active_spots_7d] into got
+    from neighborhood_summary(shown_lat[i], shown_lng[i], 1500) t;
+    perform tests.eq(got, r.want_shown,
+                     format('neighborhood_summary, %s + %s spot: only the DISPLAYED point inside the radius', r.who, r.vis));
+
+    select array[t.fed_spots_today, t.open_needs, t.needs_food_spots, t.active_spots_7d] into got
+    from neighborhood_summary(true_lat[i], true_lng[i], 1500) t;
+    perform tests.eq(got, r.want_true,
+                     format('neighborhood_summary, %s + %s spot: only the TRUE point inside the radius', r.who, r.vis));
+  end loop;
+  perform tests.admin();
+end
+$$;
+
 rollback;

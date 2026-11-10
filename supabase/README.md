@@ -21,6 +21,7 @@ migrations/
   …0013_community_tables.sql community_posts / _comments / _paws, cover_volunteers, notifications.post_id, RLS (doğrudan erişim yok)
   …0014_community_rpc.sql   community_post_row / community_comment_row, 11 Mahalle RPC'si, 3 raporda otomatik gizleme trigger'ı
   …0015_community_push.sql  push_claim_batch artık post_id de döndürür
+  …0016_neighborhood_summary_privacy.sql neighborhood_summary noktaları GÖSTERİLEN konumlarıyla sayar (PRD 9.1: konum kâhini değil)
 functions/
   push-dispatch/            APNs gönderici (pg_cron → pg_net, her dakika)
   delete-account/           hesap silme (PRD 9.5)

@@ -35,6 +35,8 @@ zorunluluğu (derleme adımı; bilerek demo için `MAMA_ALLOW_DEMO_RELEASE=YES`)
 `delete-account` → appleid.apple.com/auth/revoke), APNs ortamı token başına (`device_tokens.apns_env`), engelleme
 ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar haritada kalır).
 
+**✅ Tanışma (Buluşmalar + Hayvanseverler) tamamlandı (14 Kasım 2026):** Mahalle'de Buluşmalar sekmesi (liste, detay, katıl/ayrıl, buluşma aç, haritada buluşma pinleri ve filtre) ve Profil'de Hayvanseverler (görünürlük + yaklaşık mesafe bantları, ilgi alanları, tanışma isteği gönder/kabul/geri çek, bağlantı kaldır) eklendi. Katılma, buluşma açma ve tanışma için önce 18+ ve KVKK onayı alınıyor; buluşma sohbetleri grup, hayvanseverler arası sohbetler bire bir; mesaj raporlama ve engelleme (engellenen kişi liste ve sohbetten kayboluyor), Sohbetler kutusu ve bildirim yönlendirmesi var. Backend: 7 migration (enum'lar, tablolar, sosyal profil, buluşmalar, bağlantılar, sohbet, push) + SQL testleri (92–95); demo modunda betikli kullanıcı isteği ~3 sn sonra kabul eder ve mesajlara cevap verir. Simülatörde uçtan uca doğrulandı (demo modu).
+
 ## 3. Faz 2 — Gerçek backend kurulumu (hesap/erişim gerekiyor)
 
 - [ ] Supabase projesi (Frankfurt) oluştur, `supabase db push` ile migration'ları uygula
@@ -42,6 +44,7 @@ ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar hari
 - [ ] Apple: APNs anahtarı (.p8), Sign in with Apple servis kimliği → Supabase Auth provider
 - [ ] Edge function secret'ları: APNs (`APNS_*`), Apple token iptali (`APPLE_TEAM_ID`, `APPLE_CLIENT_ID`, `APPLE_SIWA_KEY_ID`, `APPLE_SIWA_PRIVATE_KEY`)
 - [ ] `ios/App/Config/Secrets.xcconfig` (URL + publishable key) ve gerçek cihazda uçtan uca test
+- [ ] Realtime (`conversation:<id>` yayını ve `realtime.messages` politikası) ve Apple/APNs ile gerçek projede doğrulanacak.
 
 ## 4. Faz 3 — Eksik özellikler
 

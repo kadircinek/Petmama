@@ -295,15 +295,24 @@ final class MeetupFormatTests: XCTestCase {
         XCTAssertEqual(MeetupFormat.when(meetup(at: istanbul(2026, 11, 21, 10)), now: now), "Cmt 21 Kas 10:00")
     }
 
-    /// Review Focus 4: cihaz saat dilimi UTC olsa da İstanbul saati yazılır.
+    /// Review Focus 4: işlem saat dilimi İstanbul dışında olsa da İstanbul saati yazılır.
     func testFormatIgnoresProcessTimeZone() {
-        let previous = NSTimeZone.default
-        NSTimeZone.default = TimeZone(identifier: "UTC")!
-        defer { NSTimeZone.default = previous }
+        let oldTZ = getenv("TZ").map { String(cString: $0) }
+        let oldDefault = NSTimeZone.default
+        setenv("TZ", "America/New_York", 1)
+        tzset()
+        NSTimeZone.resetSystemTimeZone()
+        NSTimeZone.default = TimeZone(identifier: "America/New_York")!
+        defer {
+            if let oldTZ { setenv("TZ", oldTZ, 1) } else { unsetenv("TZ") }
+            tzset()
+            NSTimeZone.resetSystemTimeZone()
+            NSTimeZone.default = oldDefault
+        }
+        XCTAssertEqual(TimeZone.current.identifier, "America/New_York")
         let now = istanbul(2026, 11, 14, 9)
         XCTAssertEqual(MeetupFormat.when(meetup(at: istanbul(2026, 11, 14, 10)), now: now), "Bugün 10:00")
         XCTAssertEqual(MeetupFormat.when(meetup(at: istanbul(2026, 11, 21, 10)), now: now), "Cmt 21 Kas 10:00")
-        // İstanbul gece yarısından hemen sonra (UTC'de hâlâ bir önceki gün).
         XCTAssertEqual(MeetupFormat.when(meetup(at: istanbul(2026, 11, 15, 0, 30)), now: now), "Yarın 00:30")
     }
 

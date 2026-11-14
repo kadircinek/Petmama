@@ -36,8 +36,8 @@ public final class ChatViewModel {
         let stream = services.chatUpdates.updates(conversationId: conversationId)
         updatesTask = Task { [weak self] in
             for await _ in stream {
-                if Task.isCancelled { break }
-                await self?.refreshNewest()
+                guard let self, !Task.isCancelled else { break }
+                await self.refreshNewest()
             }
         }
         await loadSummary()

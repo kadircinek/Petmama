@@ -26,10 +26,11 @@ public final class MeetupsViewModel {
         defer { isLoading = false; hasLoaded = true }
         do {
             async let list = services.social.meetups(near: coordinate, radiusMeters: SocialPolicy.radiusMeters)
-            async let profile = services.social.socialProfile()
+            async let profile = try? await services.social.socialProfile()
             let (loaded, mine) = try await (list, profile)
             meetups = loaded
-            needsConsent = !(mine?.hasConsented ?? false)
+            // Profil okunamazsa liste yine de gösterilir; onay verilmemiş sayılır.
+            needsConsent = !((mine ?? nil)?.hasConsented ?? false)
         } catch {
             self.error = MamaError.classify(error)
         }

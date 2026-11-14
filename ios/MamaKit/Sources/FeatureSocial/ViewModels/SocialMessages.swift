@@ -6,6 +6,10 @@ public enum SocialMessages {
     public static let consentRequired = "Önce sosyal onayı vermelisin."
     public static let meetupFull = "Bu buluşma doldu."
 
+    public static let leaveFailed = "Düzenleyen buluşmadan ayrılamaz, yalnızca iptal edebilir."
+    public static let removeFailed = "Bu kişi çıkarılamadı."
+    public static let cancelFailed = "Bu buluşma iptal edilemedi."
+
     public static func message(for outcome: JoinMeetupOutcome) -> String? {
         switch outcome {
         case .joined: return nil

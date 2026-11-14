@@ -52,7 +52,7 @@ public final class MeetupDetailViewModel {
     public func leave() async -> Bool {
         await act { [services, meetupId] in
             let done = try await services.social.leaveMeetup(id: meetupId)
-            return (done, done ? nil : "Düzenleyen buluşmadan ayrılamaz, yalnızca iptal edebilir.")
+            return (done, done ? nil : SocialMessages.leaveFailed)
         } ?? false
     }
 
@@ -60,7 +60,7 @@ public final class MeetupDetailViewModel {
     public func remove(_ userId: UUID) async -> Bool {
         await act { [services, meetupId] in
             let done = try await services.social.removeParticipant(meetupId: meetupId, userId: userId)
-            return (done, done ? nil : "Bu kişi çıkarılamadı.")
+            return (done, done ? nil : SocialMessages.removeFailed)
         } ?? false
     }
 
@@ -68,7 +68,7 @@ public final class MeetupDetailViewModel {
     public func cancel() async -> Bool {
         await act { [services, meetupId] in
             let done = try await services.social.cancelMeetup(id: meetupId)
-            return (done, done ? nil : "Bu buluşma iptal edilemedi.")
+            return (done, done ? nil : SocialMessages.cancelFailed)
         } ?? false
     }
 

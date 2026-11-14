@@ -11,6 +11,9 @@ public actor OfflineCheckInQueue: CheckInRepository {
     private let store: any PendingCheckInStore
     private let repository: any CheckInRepository
     private var isFlushing = false
+    /// O anki oturumun kullanıcısı. Kuyruğa giren taslaklar bununla işaretlenir; `flush` yalnızca
+    /// bu kullanıcının taslaklarını gönderir. `nil` (oturum yok) iken hiçbir şey gönderilmez.
+    public private(set) var owner: UUID?
 
     public init(store: any PendingCheckInStore, repository: any CheckInRepository) {
         self.store = store
@@ -18,6 +21,8 @@ public actor OfflineCheckInQueue: CheckInRepository {
     }
 
     public func checkIn(_ draft: CheckInDraft) async throws -> CheckInOutcome {
+        var draft = draft
+        if draft.userId == nil { draft.userId = owner }
         do {
             return try await repository.checkIn(draft)
         } catch {
@@ -36,14 +41,31 @@ public actor OfflineCheckInQueue: CheckInRepository {
         await store.load().count
     }
 
+    public func pendingDrafts() async -> [CheckInDraft] {
+        await store.load()
+    }
+
+    /// Oturum değişince çağrılır (giriş, çıkış, açılışta oturum geri yükleme).
+    public func setOwner(_ userId: UUID?) {
+        owner = userId
+    }
+
+    /// Çıkışta ve hesap silmede: bekleyen taslaklar bir sonraki hesaba geçmesin.
+    public func clear() async {
+        await store.save([])
+    }
+
     /// Kuyruktakileri sırayla gönderir. Bağlantı yine koparsa kalanları korur.
     @discardableResult
     public func flush(now: Date = Date()) async -> [CheckInOutcome] {
-        guard !isFlushing else { return [] }
+        guard !isFlushing, let owner else { return [] }
         isFlushing = true
         defer { isFlushing = false }
 
-        var remaining = await store.load().filter { now.timeIntervalSince($0.createdAt) <= Self.maxAge }
+        // Bayat olanlar ve başka hesaba ait (ya da sahipsiz, eski sürümden kalma) taslaklar atılır.
+        var remaining = await store.load().filter {
+            now.timeIntervalSince($0.createdAt) <= Self.maxAge && $0.userId == owner
+        }
         var outcomes: [CheckInOutcome] = []
         while let next = remaining.first {
             do {

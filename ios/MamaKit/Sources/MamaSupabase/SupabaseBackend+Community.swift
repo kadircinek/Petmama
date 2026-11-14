@@ -279,10 +279,25 @@ extension SupabaseBackend: NotificationRepository {
         ]
     }
 
-    public func registerDeviceToken(_ token: String) async throws {
+    public func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {
         try await perform {
             _ = try requireUserId()
-            _ = try await rpc("register_device_token", ["p_token": .string(token)])
+            _ = try await rpc("register_device_token", [
+                "p_token": .string(token),
+                "p_env": .string(environment.rawValue),
+            ])
+        }
+    }
+
+    /// RLS: kullanıcı yalnızca kendi token satırını silebilir (backend-contract, `device_tokens` silme: kendi).
+    public func unregisterDeviceToken(_ token: String) async throws {
+        try await perform {
+            let userId = try requireUserId()
+            try await client.from("device_tokens")
+                .delete(returning: .minimal)
+                .eq("user_id", value: userId.postgresString)
+                .eq("token", value: token)
+                .execute()
         }
     }
 

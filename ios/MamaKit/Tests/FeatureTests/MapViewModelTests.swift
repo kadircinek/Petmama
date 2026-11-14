@@ -156,11 +156,13 @@ final class MapViewModelTests: XCTestCase {
 
     func testQueuedCheckInsFlushAfterReconnect() async {
         let (services, _) = MapSpotsFixture.services()
-        let draft = CheckInDraft(spotId: DemoData.id(2, 1), kind: .fed, userCoordinate: MapSpotsFixture.coordinate(ofSpot: 1),
-                                 createdAt: MapSpotsFixture.now)
-        let pendingStore = InMemoryPendingCheckInStore([draft])
         let backend = MapSpotsFixture.backend()
+        let owner = await backend.currentUserId()
+        let draft = CheckInDraft(spotId: DemoData.id(2, 1), kind: .fed, userId: owner,
+                                 userCoordinate: MapSpotsFixture.coordinate(ofSpot: 1), createdAt: MapSpotsFixture.now)
+        let pendingStore = InMemoryPendingCheckInStore([draft])
         let queue = OfflineCheckInQueue(store: pendingStore, repository: backend)
+        await queue.setOwner(owner)
         var withQueue = services
         withQueue.checkIns = queue
         withQueue.checkInQueue = queue

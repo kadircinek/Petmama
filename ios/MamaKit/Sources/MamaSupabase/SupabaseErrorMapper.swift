@@ -149,6 +149,10 @@ enum SupabaseErrorMapper {
     // MARK: - HTTP / Storage
 
     static func map(status: Int, message: String) -> MamaError {
+        // delete-account: Apple hesabında onay kodu eksik / süresi dolmuş (istemci yeniden Apple onayı alır).
+        if status == 400, message.contains("apple_reauth_required") {
+            return .invalidInput(SessionStore.appleConfirmationRequiredMessage)
+        }
         switch status {
         case 401: return .notSignedIn
         case 403: return .permissionDenied

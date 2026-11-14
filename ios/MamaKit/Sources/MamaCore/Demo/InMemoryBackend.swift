@@ -9,6 +9,8 @@ public actor InMemoryBackend {
     var users: [UUID: UserProfile]
     var passwords: [String: (password: String, userId: UUID)] = [:]
     var currentUser: UUID?
+    /// Oturum Apple ile mi açıldı? (Gerçek backend'de kimlik sağlayıcısı kullanıcıya bağlıdır.)
+    var signedInWithApple = false
     let demoUserId: UUID
 
     var spots: [UUID: Spot]
@@ -156,6 +158,7 @@ extension InMemoryBackend: AuthRepository {
 
     public func signInWithApple(idToken: String, nonce: String, fullName: String?) async throws -> UserProfile {
         currentUser = demoUserId
+        signedInWithApple = true
         if let fullName, !fullName.isEmpty { users[demoUserId]?.displayName = fullName }
         return users[demoUserId]!
     }
@@ -166,6 +169,7 @@ extension InMemoryBackend: AuthRepository {
             throw MamaError.invalidCredentials
         }
         currentUser = user.id
+        signedInWithApple = false
         return user
     }
 
@@ -179,15 +183,36 @@ extension InMemoryBackend: AuthRepository {
         users[user.id] = user
         passwords[key] = (password, user.id)
         currentUser = user.id
+        signedInWithApple = false
         return user
     }
 
     public func sendPasswordReset(email: String) async throws {}
 
-    public func signOut() async throws { currentUser = nil }
+    public func completeAuthLink(_ url: URL) async throws -> UserProfile {
+        throw MamaError.invalidInput("Demo modunda e-posta bağlantıları kullanılmaz.")
+    }
 
-    public func deleteAccount() async throws {
+    public func updatePassword(_ newPassword: String) async throws {
         let userId = try requireUser()
+        for (email, entry) in passwords where entry.userId == userId {
+            passwords[email] = (newPassword, userId)
+        }
+    }
+
+    public func signOut() async throws {
+        currentUser = nil
+        signedInWithApple = false
+    }
+
+    public func usesAppleSignIn() async -> Bool { currentUser != nil && signedInWithApple }
+
+    public func deleteAccount(appleAuthorizationCode: String?) async throws {
+        let userId = try requireUser()
+        if signedInWithApple, (appleAuthorizationCode ?? "").isEmpty {
+            throw MamaError.invalidInput(SessionStore.appleConfirmationRequiredMessage)
+        }
+        signedInWithApple = false
         users[userId] = nil
         passwords = passwords.filter { $0.value.userId != userId }
         for (id, spot) in spots where spot.createdBy == userId { spots[id]?.createdBy = nil }
@@ -666,9 +691,14 @@ extension InMemoryBackend: NotificationRepository {
         preferencesByUser[userId] = preferences
     }
 
-    public func registerDeviceToken(_ token: String) async throws {
+    public func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {
         let userId = try requireUser()
         deviceTokens[userId] = token
+    }
+
+    public func unregisterDeviceToken(_ token: String) async throws {
+        let userId = try requireUser()
+        if deviceTokens[userId] == token { deviceTokens[userId] = nil }
     }
 
     public func updateNotifyCenter(_ coordinate: Coordinate) async throws {

@@ -40,6 +40,8 @@ final class BackendSmokeTests: XCTestCase {
         XCTAssertEqual(notifications, [])
         let preferences = try await services.notifications.preferences()
         XCTAssertEqual(preferences, .default)
+        let usesApple = await services.auth.usesAppleSignIn()
+        XCTAssertFalse(usesApple)
         let blocked = try await services.moderation.blockedUserIds()
         XCTAssertEqual(blocked, [])
         let search = try await services.spots.search(query: "   ", near: nil)
@@ -71,6 +73,7 @@ final class BackendSmokeTests: XCTestCase {
         await assertNotSignedIn { try await services.profiles.setFollowing(true, target: .spot, id: UUID()) }
         await assertNotSignedIn { try await services.profiles.setGuardian(spotId: UUID(), schedule: [.monday]) }
         await assertNotSignedIn { try await services.notifications.updatePreferences(.default) }
+        await assertNotSignedIn { try await services.notifications.unregisterDeviceToken("a1b2c3d4e5f60718") }
         await assertNotSignedIn { try await services.moderation.report(ReportDraft(target: .spot, targetId: UUID(), reason: .spam)) }
         await assertNotSignedIn { _ = try await services.media.uploadJPEG(Data([0xFF, 0xD8])) }
         await assertNotSignedIn { try await services.auth.deleteAccount() }

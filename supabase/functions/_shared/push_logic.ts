@@ -38,7 +38,10 @@ export interface PushRow {
   quiet_start: number;
   quiet_end: number;
   need_food_pushed_today: number;
+  /** production APNs token'ları (TestFlight / App Store). */
   tokens: string[];
+  /** sandbox APNs token'ları (Xcode'dan kurulan Debug derlemeleri). */
+  sandbox_tokens: string[];
 }
 
 export type Decision = "send" | "quiet_hours" | "daily_cap" | "no_token";
@@ -80,7 +83,7 @@ export function decidePushes(rows: PushRow[], now: Date): Map<string, Decision> 
     if (!sentToday.has(row.user_id)) sentToday.set(row.user_id, row.need_food_pushed_today ?? 0);
 
     let decision: Decision;
-    if (!row.tokens || row.tokens.length === 0) {
+    if ((row.tokens?.length ?? 0) + (row.sandbox_tokens?.length ?? 0) === 0) {
       decision = "no_token";
     } else if (isQuietHour(hour, row.quiet_start ?? 22, row.quiet_end ?? 7)) {
       decision = "quiet_hours";
@@ -101,6 +104,14 @@ export function decidePushes(rows: PushRow[], now: Date): Map<string, Decision> 
 
 export function apnsOrigin(env: string | undefined): string {
   return env === "production" ? "https://api.push.apple.com" : "https://api.sandbox.push.apple.com";
+}
+
+/** Her token kendi ortamının APNs adresine gider (token ortamı `device_tokens.apns_env`). */
+export function apnsJobs(row: PushRow): { token: string; origin: string }[] {
+  return [
+    ...(row.tokens ?? []).map((token) => ({ token, origin: apnsOrigin("production") })),
+    ...(row.sandbox_tokens ?? []).map((token) => ({ token, origin: apnsOrigin("sandbox") })),
+  ];
 }
 
 export function base64url(input: Uint8Array | string): string {

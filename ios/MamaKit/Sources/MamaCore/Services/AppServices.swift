@@ -1,5 +1,13 @@
 import Foundation
 
+/// Bu derlemenin APNs ortamı (`aps-environment` entitlement'ı). Sunucu her token'ı kendi ortamına gönderir.
+public enum APNsEnvironment: String, Hashable, Sendable {
+    /// Xcode'dan kurulan Debug derlemeleri.
+    case sandbox
+    /// TestFlight ve App Store.
+    case production
+}
+
 /// Uygulama yapılandırması (Info.plist / xcconfig'den okunur).
 public struct AppConfig: Hashable, Sendable {
     public var isDemo: Bool
@@ -9,6 +17,7 @@ public struct AppConfig: Hashable, Sendable {
     public var privacyPolicyURL: URL?
     public var termsURL: URL?
     public var kvkkNoticeURL: URL?
+    public var apnsEnvironment: APNsEnvironment
 
     public init(
         isDemo: Bool,
@@ -16,7 +25,8 @@ public struct AppConfig: Hashable, Sendable {
         supportEmail: String = "destek@mamaharitasi.app",
         privacyPolicyURL: URL? = nil,
         termsURL: URL? = nil,
-        kvkkNoticeURL: URL? = nil
+        kvkkNoticeURL: URL? = nil,
+        apnsEnvironment: APNsEnvironment = .production
     ) {
         self.isDemo = isDemo
         self.donation = donation
@@ -24,6 +34,7 @@ public struct AppConfig: Hashable, Sendable {
         self.privacyPolicyURL = privacyPolicyURL
         self.termsURL = termsURL
         self.kvkkNoticeURL = kvkkNoticeURL
+        self.apnsEnvironment = apnsEnvironment
     }
 }
 

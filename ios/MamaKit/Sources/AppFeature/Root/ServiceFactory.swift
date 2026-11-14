@@ -32,7 +32,9 @@ enum ServiceFactory {
             anonKey: key,
             config: configuration.app,
             spotCache: spotCache,
-            pendingStore: pendingStore
+            pendingStore: pendingStore,
+            // E-posta doğrulama ve şifre sıfırlama bağlantıları uygulamaya döner (AppRootView.onOpenURL).
+            authRedirectURL: AuthLink.callbackURL
         )
         #if canImport(ImageIO)
         // Yüklemeden önce EXIF/GPS temizle ve 1600 px'e küçült (PRD 7.1). Uploader da yapıyor; çift güvence.

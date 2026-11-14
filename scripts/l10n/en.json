@@ -688,5 +688,13 @@
   "Şu an bağlantı yok. Bağlantı gelince tekrar deneriz.": "No connection right now. We'll try again when you're back online.",
   "Şu an yakınında mama bekleyen nokta yok. Harika!": "No spots near you are waiting for food right now. Great!",
   "Şüpheli bir durumda Alo 153'ü, acil durumda 112'yi ara.": "If something looks suspicious, call Alo 153; in an emergency, call 112.",
-  "Şüpheli durum / hayvana zarar": "Suspicious activity / harm to an animal"
+  "Şüpheli durum / hayvana zarar": "Suspicious activity / harm to an animal",
+  "Bağlantı doğrulandı. Hesabın için yeni bir şifre seç.": "Link verified. Choose a new password for your account.",
+  "E-postan doğrulandı. Hoş geldin!": "Your email is verified. Welcome!",
+  "Yeni şifre (en az 8 karakter)": "New password (at least 8 characters)",
+  "Yeni şifre (tekrar)": "New password (again)",
+  "Yeni şifre belirle": "Set a new password",
+  "Yeni şifren kaydedildi.": "Your new password is saved.",
+  "Şifreyi kaydet": "Save password",
+  "Apple ile onayla ve sil": "Confirm with Apple and delete"
 }

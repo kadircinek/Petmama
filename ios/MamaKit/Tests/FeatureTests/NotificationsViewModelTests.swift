@@ -13,7 +13,8 @@ private actor StubNotificationRepository: NotificationRepository {
     func markRead(ids: [UUID]) async throws { markedIds.append(contentsOf: ids) }
     func preferences() async throws -> NotificationPreferences { .default }
     func updatePreferences(_ preferences: NotificationPreferences) async throws {}
-    func registerDeviceToken(_ token: String) async throws {}
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {}
+    func unregisterDeviceToken(_ token: String) async throws {}
     func updateNotifyCenter(_ coordinate: Coordinate) async throws {}
 }
 

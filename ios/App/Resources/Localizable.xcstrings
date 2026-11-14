@@ -937,6 +937,23 @@
         }
       }
     },
+    "Apple ile onayla ve sil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple ile onayla ve sil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm with Apple and delete"
+          }
+        }
+      }
+    },
     "Ara": {
       "extractionState": "manual",
       "localizations": {
@@ -1256,6 +1273,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "You're covering · Undo"
+          }
+        }
+      }
+    },
+    "Bağlantı doğrulandı. Hesabın için yeni bir şifre seç.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantı doğrulandı. Hesabın için yeni bir şifre seç."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link verified. Choose a new password for your account."
           }
         }
       }
@@ -3024,6 +3058,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Email or password didn't match."
+          }
+        }
+      }
+    },
+    "E-postan doğrulandı. Hoş geldin!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-postan doğrulandı. Hoş geldin!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your email is verified. Welcome!"
           }
         }
       }
@@ -10406,6 +10457,74 @@
         }
       }
     },
+    "Yeni şifre (en az 8 karakter)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni şifre (en az 8 karakter)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New password (at least 8 characters)"
+          }
+        }
+      }
+    },
+    "Yeni şifre (tekrar)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni şifre (tekrar)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New password (again)"
+          }
+        }
+      }
+    },
+    "Yeni şifre belirle": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni şifre belirle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set a new password"
+          }
+        }
+      }
+    },
+    "Yeni şifren kaydedildi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni şifren kaydedildi."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your new password is saved."
+          }
+        }
+      }
+    },
     "Yerime bakar mısın isteklerini gösterir": {
       "extractionState": "manual",
       "localizations": {
@@ -11541,6 +11660,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Forgot my password"
+          }
+        }
+      }
+    },
+    "Şifreyi kaydet": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şifreyi kaydet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save password"
           }
         }
       }

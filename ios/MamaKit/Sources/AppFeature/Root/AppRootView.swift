@@ -59,6 +59,20 @@ public struct AppRootView: View {
         .onChange(of: model.session.isSignedIn) { _, _ in
             Task { await model.signedInStateChanged() }
         }
+        // E-posta doğrulama / şifre sıfırlama bağlantıları (mamaharitasi://auth-callback).
+        .onOpenURL { url in
+            Task { await model.handleOpenURL(url) }
+        }
+        .sheet(isPresented: Binding(
+            get: { model.session.isRecoveringPassword },
+            set: { if !$0 { model.session.dismissPasswordRecovery() } }
+        )) {
+            NewPasswordScreen { saved in
+                model.session.dismissPasswordRecovery()
+                if saved { model.router.showToast("Yeni şifren kaydedildi.") }
+            }
+            .environment(model.session)
+        }
         .task(id: notifyCenterKey) {
             await model.updateNotifyCenterIfNeeded(model.location.coordinate)
         }

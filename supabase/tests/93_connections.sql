@@ -154,7 +154,11 @@ begin
   perform tests.eq((select count(*)::int from connections where id = req), 0, 'row deleted after withdraw');
   perform tests.login(v);
   perform tests.eq((select connection_state from animal_lovers_near() where user_id = t[7]), 'none', 'state none after withdraw');
-  perform tests.eq(send_connection_request(t[8])->>'status', 'sent', 'slot freed → sent');
+  perform tests.eq(send_connection_request(t[8])->>'status', 'limit_reached', 'withdraw does not free a slot → limit_reached');
+  -- sonraki adımlar için: gönderimleri geçmiş güne al (ertesi gün)
+  perform tests.admin();
+  update connection_request_sends set sent_at = now() - interval '2 days' where user_id = v;
+  perform tests.login(v);
 
   -- reddetme: m reddeder; v outgoing_pending görmeye devam eder; cooldown; 31 gün sonra yeni istek
   perform tests.admin();
@@ -174,10 +178,6 @@ begin
   update connections set responded_at = now() - interval '31 days', created_at = now() - interval '32 days' where id = req;
   perform tests.login(v);
   perform tests.eq((select connection_state from animal_lovers_near() where user_id = m), 'none', 'after 30 days declined row ignored');
-  -- limit hâlâ dolu (10 satır bugün: n, f, t1..t6, t8 + m sıfırlanınca) → önce yer aç
-  perform tests.admin();
-  delete from connections where requester_id = v and addressee_id = t[1];
-  perform tests.login(v);
   j := send_connection_request(m);
   perform tests.eq(j->>'status', 'sent', 'after 31 days → sent');
   perform tests.eq((j->>'request_id')::uuid, req, 'declined row reused');
@@ -205,7 +205,6 @@ begin
   perform tests.eq((select connection_state from animal_lovers_near() where user_id = n), 'none', 'removed → none');
   perform tests.eq(remove_connection(n)->>'status', 'not_found', 'remove twice → not_found');
   perform tests.admin();
-  delete from connections where requester_id = v and addressee_id = t[2];   -- limit için yer
   perform tests.login(v);
   j := send_connection_request(n);
   perform tests.eq(j->>'status', 'sent', 'removed → new request sent');
@@ -216,6 +215,18 @@ begin
   perform tests.admin();
   perform tests.check((select closed_at is null from conversations where id = conv), 'conversation reopened');
   perform tests.eq((select count(*)::int from conversation_members where conversation_id = conv), 2, 'still 2 members');
+
+  -- remove sonrası karşı istekle otomatik kabul de aynı sohbeti yeniden açar
+  perform tests.login(v);
+  perform tests.eq(remove_connection(n)->>'status', 'ok', 'remove again');
+  perform tests.eq(send_connection_request(n)->>'status', 'sent', 'v→n sent after second removal');
+  perform tests.login(n);
+  j := send_connection_request(v);
+  perform tests.eq(j->>'status', 'auto_accepted', 'n→v auto_accepted after removal');
+  perform tests.eq((j->>'conversation_id')::uuid, conv, 'auto_accept reuses same conversation');
+  perform tests.admin();
+  perform tests.check((select closed_at is null from conversations where id = conv), 'auto_accept reopens conversation');
+  perform tests.eq((select count(*)::int from connection_request_sends where user_id = n), 0, 'auto_accepted not counted as a send');
 
   -- Review Focus 2: görünürlüğü kapatan alıcı önceki isteği yine de yanıtlayabilir
   perform tests.login(t[3]);

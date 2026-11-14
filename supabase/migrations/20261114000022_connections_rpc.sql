@@ -7,10 +7,20 @@
 --     pending → accepted | declined;  accepted → removed;  pending → (geri çekilince satır silinir).
 -- * `declined` satır, `responded_at + 30 gün` sonra yok sayılır; `removed` satır hemen yok sayılır. Yeni istek
 --   aynı satırı sıfırlar (gönderen/alıcı, not, `created_at = now()`, statü `pending`) — çift tekilliği korunur.
--- * Günlük istek limiti `created_at` ile sayılır (sıfırlama `created_at`'i yeniler).
+-- * Günlük istek limiti kalıcı `connection_request_sends` kayıtlarıyla sayılır: geri çekme ve satır sıfırlama
+--   sayımı etkilemez (gönder-geri çek döngüsüyle limit aşılamaz). Otomatik kabul gönderim sayılmaz.
 -- * Kabul (elle ya da karşı istekle otomatik) bire bir sohbet açar; kaldırılmış bağlantı yeniden kabul edilirse
 --   mevcut sohbet yeniden açılır (`connection_id` tekil).
 -- * Okuma RPC'leri sosyal onay yoksa boş döner; yazma RPC'leri `consent_required` ister.
+
+-- Gönderilen isteklerin kalıcı kaydı (günlük limit sayımı); yalnızca RPC'ler yazar/okur
+create table public.connection_request_sends (
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  sent_at timestamptz not null default now()
+);
+create index connection_request_sends_user_idx on public.connection_request_sends (user_id, sent_at);
+alter table public.connection_request_sends enable row level security;
+revoke all on public.connection_request_sends from anon, authenticated;
 
 -- Yardımcı: bağlantının bire bir sohbetini aç (varsa yeniden aç) ve iki üyeyi ekle
 create function private.open_direct_conversation(p_connection_id uuid, p_a uuid, p_b uuid)
@@ -235,8 +245,8 @@ begin
     return jsonb_build_object('status', 'rejected_content');
   end if;
 
-  if (select count(*) from public.connections c
-       where c.requester_id = v_uid and c.created_at >= private.istanbul_day_start()) >= c_daily_limit then
+  if (select count(*) from public.connection_request_sends s
+       where s.user_id = v_uid and s.sent_at >= private.istanbul_day_start()) >= c_daily_limit then
     return jsonb_build_object('status', 'limit_reached', 'limit', c_daily_limit);
   end if;
 
@@ -259,6 +269,7 @@ begin
     returning id into v_id;
   end if;
 
+  insert into public.connection_request_sends (user_id) values (v_uid);
   return jsonb_build_object('status', 'sent', 'request_id', v_id);
 end
 $$;

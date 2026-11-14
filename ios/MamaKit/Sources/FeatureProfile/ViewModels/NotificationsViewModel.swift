@@ -95,6 +95,8 @@ public final class NotificationsViewModel {
     /// Mahalle bildirimi paylaşıma, ihtiyaç bildirimi ihtiyaca, nokta bildirimi noktaya, teslim bildirimi
     /// "Bağışım nereye gitti?" ekranına.
     public static func route(for notification: AppNotification) -> AppRoute? {
+        if let conversationId = notification.conversationId { return .conversation(conversationId) }
+        if let meetupId = notification.meetupId { return .meetup(meetupId) }
         if let postId = notification.postId { return .post(postId) }
         if let needId = notification.needId { return .need(needId) }
         if let spotId = notification.spotId { return .spot(spotId) }

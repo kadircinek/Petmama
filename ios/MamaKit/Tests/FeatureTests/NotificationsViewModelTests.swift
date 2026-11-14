@@ -121,5 +121,12 @@ final class NotificationsViewModelTests: XCTestCase {
         XCTAssertEqual(NotificationsViewModel.route(for: spotOnly), .spot(spotId))
         XCTAssertEqual(NotificationsViewModel.route(for: donation), .donationTrace)
         XCTAssertNil(NotificationsViewModel.route(for: bare))
+
+        let meetupId = DemoData.id(8, 1)
+        let conversationId = DemoData.id(9, 1)
+        let chat = AppNotification(kind: .chatMessage, title: "", body: "", meetupId: meetupId, conversationId: conversationId)
+        let cancelled = AppNotification(kind: .meetupCancelled, title: "", body: "", spotId: spotId, meetupId: meetupId)
+        XCTAssertEqual(NotificationsViewModel.route(for: chat), .conversation(conversationId))
+        XCTAssertEqual(NotificationsViewModel.route(for: cancelled), .meetup(meetupId))
     }
 }

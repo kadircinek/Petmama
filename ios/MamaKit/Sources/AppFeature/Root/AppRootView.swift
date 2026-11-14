@@ -8,6 +8,7 @@ import FeatureMap
 import FeatureNeeds
 import FeatureOnboarding
 import FeatureProfile
+import FeatureSocial
 
 /// Uygulamanın kök görünümü: açılış → ilk kullanım akışı → sekmeler.
 public struct AppRootView: View {
@@ -98,8 +99,12 @@ struct MainTabView: View {
                 .tag(AppTab.map)
                 .toolbar(.hidden, for: .tabBar)
             TabStack(tab: .community, services: services) {
-                // Mahalle: besleyicilerin akışı + İhtiyaçlar bölümü (D17).
-                CommunityTabScreen(services: services) { NeedsTabScreen(services: services) }
+                // Mahalle: besleyicilerin akışı, Buluşmalar (D19) ve İhtiyaçlar bölümü (D17).
+                CommunityTabScreen(services: services) {
+                    MeetupsListView(services: services)
+                } needs: {
+                    NeedsTabScreen(services: services)
+                }
             }
                 .tag(AppTab.community)
                 .toolbar(.hidden, for: .tabBar)

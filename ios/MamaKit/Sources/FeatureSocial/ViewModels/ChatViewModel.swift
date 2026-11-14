@@ -12,6 +12,8 @@ public final class ChatViewModel {
     public private(set) var messages: [ChatMessage] = []
     public var draft = ""
     public private(set) var title = ""
+    /// Tür, karşı taraf ve bağlı buluşma (başlık menüsü için); yüklenemezse `nil`.
+    public private(set) var summary: ConversationSummary?
     public private(set) var isReadOnly = false
     public private(set) var isSending = false
     public private(set) var canLoadOlder = false
@@ -86,6 +88,7 @@ public final class ChatViewModel {
 
     private func loadSummary() async {
         guard let summary = try? await services.social.conversations().first(where: { $0.id == conversationId }) else { return }
+        self.summary = summary
         title = summary.title
         isReadOnly = summary.isReadOnly
     }

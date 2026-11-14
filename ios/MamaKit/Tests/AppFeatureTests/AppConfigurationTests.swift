@@ -58,6 +58,18 @@ final class AppConfigurationTests: XCTestCase {
         XCTAssertEqual(PushPayload.route(from: ["spot_id": spot.uuidString])?.route, .spot(spot))
         XCTAssertNil(PushPayload.route(from: ["spot_id": "bozuk"]))
         XCTAssertEqual(PushPayload.hexToken(Data([0x0a, 0xff, 0x01])), "0aff01")
+
+        // Tanışma: sohbet > buluşma > paylaşım > ihtiyaç > nokta.
+        let conversation = UUID()
+        let meetup = UUID()
+        let chat = PushPayload.route(from: [
+            "conversation_id": conversation.uuidString, "meetup_id": meetup.uuidString, "post_id": post.uuidString,
+        ])
+        XCTAssertEqual(chat?.route, .conversation(conversation))
+        XCTAssertEqual(chat?.tab, .profile)
+        let meetupTarget = PushPayload.route(from: ["meetup_id": meetup.uuidString, "spot_id": spot.uuidString])
+        XCTAssertEqual(meetupTarget?.route, .meetup(meetup))
+        XCTAssertEqual(meetupTarget?.tab, .community)
     }
 }
 

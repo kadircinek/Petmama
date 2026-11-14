@@ -5,15 +5,21 @@ import MamaDesign
 
 /// "Mahalle" sekmesinin kökü (D17): besleyicilerin birbiriyle etkileştiği sayfa. `NavigationStack`'i AppFeature sağlar.
 ///
-/// "Akış" bölümü paylaşımları gösterir ve giriş gerektirir; "İhtiyaçlar" bölümü dışarıdan verilen ihtiyaç
-/// listesidir (feature modülleri birbirini import etmediği için AppFeature enjekte eder).
-public struct CommunityTabScreen<NeedsContent: View>: View {
+/// "Akış" bölümü paylaşımları gösterir ve giriş gerektirir; "Buluşmalar" (Tanışma) ve "İhtiyaçlar" bölümleri
+/// dışarıdan verilen listelerdir (feature modülleri birbirini import etmediği için AppFeature enjekte eder).
+public struct CommunityTabScreen<MeetupsContent: View, NeedsContent: View>: View {
     @State private var model: CommunityFeedViewModel
     @Environment(AppRouter.self) private var router
+    private let meetups: () -> MeetupsContent
     private let needs: () -> NeedsContent
 
-    public init(services: AppServices, @ViewBuilder needs: @escaping () -> NeedsContent) {
+    public init(
+        services: AppServices,
+        @ViewBuilder meetups: @escaping () -> MeetupsContent,
+        @ViewBuilder needs: @escaping () -> NeedsContent
+    ) {
         _model = State(initialValue: CommunityFeedViewModel(services: services))
+        self.meetups = meetups
         self.needs = needs
     }
 
@@ -23,6 +29,7 @@ public struct CommunityTabScreen<NeedsContent: View>: View {
                 selection: sectionBinding,
                 options: [
                     (value: CommunitySection.feed, title: String(localized: "Akış")),
+                    (value: CommunitySection.meetups, title: String(localized: "Buluşmalar")),
                     (value: CommunitySection.needs, title: String(localized: "İhtiyaçlar")),
                 ]
             )
@@ -34,8 +41,7 @@ public struct CommunityTabScreen<NeedsContent: View>: View {
             case .feed:
                 CommunityFeedView(model: model)
             case .meetups:
-                // Geçici: buluşma listesi Tanışma görev 9'da AppFeature'dan enjekte edilir.
-                EmptyView()
+                meetups()
             case .needs:
                 needs()
             }
@@ -57,6 +63,8 @@ public struct CommunityTabScreen<NeedsContent: View>: View {
 #Preview("Akış") {
     PreviewEnvironment { services in
         CommunityTabScreen(services: services) {
+            Text("Buluşmalar")
+        } needs: {
             Text("İhtiyaçlar")
         }
     }
@@ -65,6 +73,8 @@ public struct CommunityTabScreen<NeedsContent: View>: View {
 #Preview("Giriş yok") {
     PreviewEnvironment(signedIn: false) { services in
         CommunityTabScreen(services: services) {
+            Text("Buluşmalar")
+        } needs: {
             Text("İhtiyaçlar")
         }
     }

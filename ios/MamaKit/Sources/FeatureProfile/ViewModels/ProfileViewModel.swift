@@ -31,6 +31,8 @@ public final class ProfileViewModel {
     public private(set) var stats: ProfileStats = .zero
     public private(set) var hasLoadedStats = false
     public private(set) var unreadNotificationCount = 0
+    /// Sohbetlerdeki okunmamış mesajlar (Tanışma).
+    public private(set) var unreadChatCount = 0
     public private(set) var isLoading = false
     public var error: MamaError?
 
@@ -46,6 +48,7 @@ public final class ProfileViewModel {
             stats = .zero
             hasLoadedStats = false
             unreadNotificationCount = 0
+            unreadChatCount = 0
             error = nil
             return
         }
@@ -65,6 +68,9 @@ public final class ProfileViewModel {
         // Bildirim rozeti alınamazsa profil yine de gösterilir.
         if let items = try? await services.notifications.notifications() {
             unreadNotificationCount = items.filter { !$0.isRead }.count
+        }
+        if let conversations = try? await services.social.conversations() {
+            unreadChatCount = conversations.reduce(0) { $0 + $1.unreadCount }
         }
     }
 
@@ -105,8 +111,13 @@ public final class ProfileViewModel {
     }
 
     /// Bildirim satırındaki rozet: 99'dan fazlası "99+".
-    public var unreadBadgeText: String? {
-        guard unreadNotificationCount > 0 else { return nil }
-        return unreadNotificationCount > 99 ? "99+" : "\(unreadNotificationCount)"
+    public var unreadBadgeText: String? { Self.badgeText(unreadNotificationCount) }
+
+    /// "Sohbetler" satırındaki rozet.
+    public var unreadChatBadgeText: String? { Self.badgeText(unreadChatCount) }
+
+    private static func badgeText(_ count: Int) -> String? {
+        guard count > 0 else { return nil }
+        return count > 99 ? "99+" : "\(count)"
     }
 }

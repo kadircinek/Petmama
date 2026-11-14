@@ -343,3 +343,166 @@ koşullarla bastırılır.
 
 `push-dispatch` APNs payload'una `post_id` ekler. `community_comment` ve `cover_volunteered` sessiz saat kuralına
 uyar; günlük 3 push limiti yalnızca `need_food_nearby` içindir.
+
+# Tanışma (buluşmalar + Hayvanseverler + sohbet) — v0.3
+
+Mahalle'nin üstüne kurulan sosyal katman (D19, spec: `docs/superpowers/specs/2026-11-14-tanisma-design.md`).
+Migration'lar: `20261114000018…24`. İlkeler:
+
+- **Tümü giriş gerektirir.** Bu bölümdeki her RPC yalnızca `authenticated` rolüne açıktır; tablolar RLS açık ve
+  `anon`/`authenticated` doğrudan okuyamaz/yazamaz (yalnızca `security definer` RPC'ler).
+- **18+ sosyal onay** (`social_profiles.adult_confirmed_at` + `terms_accepted_at`, `give_social_consent`). Onay yoksa
+  yazma RPC'leri `{status:'consent_required'}` döner; okuma RPC'leri boş döner. İstisna: buluşma listesi ve detayı
+  onaysız da okunur (kullanıcı görür, katılmak/açmak isteyince onay ekranı gelir).
+- **Bire bir sohbet yalnızca karşılıklı kabulle** açılır (istek → kabul). Kişiler haritada asla pin değildir;
+  Hayvanseverler listesi yalnızca **mesafe bandı** döner.
+- **Konum:** `social_profiles.cell` enlem/boylam **2 ondalığa** yuvarlanır (≈1 km, `round_social_cell` trigger'ı).
+  Liste sorgusu istemcinin noktasını değil, izleyicinin **sunucudaki kendi `cell`**'ini kullanır (üçgenleme yok).
+  Buluşma noktası ise tam saklanır ve gösterilir: herkese açık bir buluşma yeri, kişisel konum değil.
+- **Engelleme iki yönlü** (`private.blocked_between`): bire bir sohbet gizlenir, grup sohbetinde mesajlar görünmez,
+  listelerde birbirlerini görmezler; buluşmanın düzenleyeniyle engel varsa buluşma `not_found`/görünmez.
+- Hesap silinince sosyal profil, bağlantılar, mesajlar ve üyelikler cascade silinir; düzenlenen **gelecek** buluşmalar
+  katılımcılara `meetup_cancelled` bildirimiyle silinir.
+
+## Enum'lar
+
+| Tip | Değerler |
+|---|---|
+| `social_interest` | `cats`, `dogs`, `birds`, `neutering`, `fostering`, `vet_transport`, `food_donation`, `photography` |
+| `meetup_status` | `active`, `cancelled` |
+| `participant_status` | `joined`, `removed` (çıkarılan tekrar katılamaz) |
+| `connection_status` | `pending`, `accepted`, `declined`, `removed` |
+| `conversation_kind` | `meetup`, `direct` |
+| `distance_band` | `under_1km` (< 1000 m), `1_3km` (< 3000 m), `3_10km` (≤ 10 000 m); 10 km dışı dönmez |
+| `report_target` (ek) | `meetup`, `chat_message` |
+| `notification_kind` (ek) | `meetup_joined`, `meetup_cancelled`, `meetup_reminder`, `connection_request`, `connection_accepted`, `chat_message` |
+
+## Tablolar
+
+- `social_profiles(user_id pk → profiles on delete cascade, is_visible bool default false, about text ≤300, interests social_interest[], cell geography(Point) [≈1 km], adult_confirmed_at, terms_accepted_at, updated_at)`
+- `meetups(id, organizer_id → profiles cascade, title 3–80, description ≤600, starts_at, ends_at [süre 30 dk–8 saat], place_name 1–80, location geography(Point) [tam], spot_id → spots set null, capacity null|2–50, status, created_at)`
+- `meetup_participants(meetup_id → meetups cascade, user_id → profiles cascade, status participant_status, joined_at, pk(meetup_id, user_id))` — düzenleyen de `joined` satırıdır
+- `connections(id, requester_id, addressee_id → profiles cascade, note ≤200, status, created_at, responded_at)` — sırasız çift başına tek satır
+- `conversations(id, kind, meetup_id unique → meetups cascade, connection_id unique → connections set null, created_at, closed_at)`
+- `conversation_members(conversation_id → conversations cascade, user_id → profiles cascade, last_read_at, pk)`
+- `chat_messages(id, conversation_id → conversations cascade, author_id → profiles cascade, body 1–1000, moderation_state default 'approved', created_at)`
+- `notifications.meetup_id → meetups on delete set null`, `notifications.conversation_id → conversations on delete cascade` (yeni sütunlar)
+- `notification_prefs.social_updates bool not null default true` (yeni sütun; iOS `NotificationPreferences.socialUpdates`, Ayarlar › "Mahalle ve tanışma bildirimleri")
+
+Görünürlüğün tek kaynağı `private.conversation_visible` / `private.conversation_read_only`. Üyesi 2'den az kalan
+direct sohbet salt okunurdur, başlığı "Silinmiş kullanıcı".
+
+## Kurallar
+
+| Kural | Değer |
+|---|---|
+| Buluşma başlangıcı | `now() + 1 saat` … `now() + 60 gün` |
+| Buluşma süresi | 30 dk – 8 saat (istemci varsayılanı 2 saat) |
+| Günlük buluşma (İstanbul günü) | 3 → `limit_reached` |
+| Buluşma sohbeti | bitişten **24 saat** sonra (ya da iptalde) salt okunur; bitişten **30 gün** sonra mesajlar silinir (`social-chat-retention` cron, 03:20) |
+| Günlük bağlantı isteği | 10 → `limit_reached` |
+| Reddedilen istek | gönderene "beklemede" görünür; aynı kişiye **30 gün** `cooldown` |
+| Karşı taraf zaten istek attıysa | yeni istek `auto_accepted` |
+| Mesaj | yalnızca metin, 1–1000; sohbet başına dakikada 20, kullanıcı başına günde 500 → `rate_limited` |
+| Küfür filtresi | `private.contains_profanity` → `rejected_content` |
+| Otomatik gizleme | mesaj **3 farklı kullanıcı** tarafından raporlanırsa `pending` (yalnızca yazarı görür) |
+| Hayvanseverleri kim görür | yalnızca kendisi görünür (`is_visible`) ve konumlu olanlar; görünmeyen tarayamaz, istek atamaz |
+
+## `meetup_row`
+
+```
+id uuid, title text, description text, starts_at timestamptz, ends_at timestamptz,
+place_name text, lat float8, lng float8,
+spot_id uuid, spot_title text,          /* nokta izleyene görünür değilse ikisi de null */
+capacity int, participant_count int,    /* düzenleyen dahil, joined olanlar */
+status meetup_status,
+organizer_id uuid, organizer_name text, organizer_avatar_url text, organizer_is_verified bool,
+viewer_role text,                       /* organizer | participant | removed | none */
+conversation_id uuid,                   /* yalnızca organizer/participant için dolu */
+distance_m float8,                      /* izleyicinin verdiği konumdan; verilmediyse null */
+created_at timestamptz
+```
+
+## RPC'ler (hepsi auth)
+
+| RPC | Parametreler | Dönüş | Not |
+|---|---|---|---|
+| `social_profile_me` | — | `table(is_visible bool, about text, interests social_interest[], consented bool)` | satır yoksa 0 satır |
+| `give_social_consent` | — | `jsonb {status:'ok'}` | idempotent; satırı `is_visible = false` ile oluşturur |
+| `update_social_profile` | `p_is_visible bool, p_about text, p_interests social_interest[], lat float8 = null, lng float8 = null` | `jsonb` | `ok` \| `consent_required` \| `rejected_content` \| `invalid` (`reason: about_too_long \| location_required`). Görünür olmak için konum gerekir (verilmezse önceki `cell`) |
+| `meetups_near` | `lat, lng float8, radius_m int = 10000` | `setof meetup_row` | aktif, bitmemiş; yakından uzağa, sonra başlangıca göre. `radius_m` 1–50 000 dışı → `invalid_radius` istisnası. Onaysız da okunur |
+| `meetup_detail` | `p_meetup_id uuid, lat float8 = null, lng float8 = null` | `setof meetup_row` (0/1) | iptal edilmiş de döner; düzenleyenle engel → 0 satır |
+| `meetup_participants` | `p_meetup_id uuid` | `table(user_id uuid, display_name text, avatar_url text, is_verified_feeder bool, is_organizer bool)` | yalnızca düzenleyen/katılımcı görür; diğerlerine boş |
+| `create_meetup` | `p_title text, p_description text, p_starts_at timestamptz, p_duration_minutes int, p_place_name text, lat float8, lng float8, p_spot_id uuid = null, p_capacity int = null` | `jsonb` | bkz. aşağı |
+| `join_meetup` | `p_meetup_id uuid` | `jsonb` | `{status:'joined', conversation_id}` \| `full` \| `removed` \| `cancelled` \| `ended` \| `consent_required` \| `not_found` |
+| `leave_meetup` | `p_meetup_id uuid` | `jsonb` | `ok` \| `organizer_cannot_leave` (düzenleyen iptal eder) |
+| `remove_meetup_participant` | `p_meetup_id uuid, p_user_id uuid` | `jsonb` | `ok` \| `not_allowed` (yalnızca düzenleyen, aktif ve bitmemiş buluşma) |
+| `cancel_meetup` | `p_meetup_id uuid` | `jsonb` | `ok` (zaten iptalse de) \| `not_allowed` (düzenleyen değil ya da bitmiş) |
+| `animal_lovers_near` | `p_interest social_interest = null` | `table(user_id, display_name, avatar_url, about, interests, is_verified_feeder, fed_30d int, distance_band, shared_interest_count int, connection_state text, request_id uuid, conversation_id uuid)` | izleyicinin kendi `cell`'inden ≤10 km; mesafe bandına, sonra ortak ilgi sayısına göre. `connection_state`: `none \| outgoing_pending \| incoming_pending \| connected` |
+| `incoming_connection_requests` | — | `table(request_id, user_id, display_name, avatar_url, about, interests, is_verified_feeder, note, created_at)` | bana gelen `pending` istekler |
+| `send_connection_request` | `p_user_id uuid, p_note text = null` | `jsonb` | bkz. aşağı |
+| `respond_connection` | `p_request_id uuid, p_accept bool` | `jsonb` | `{status:'accepted', conversation_id}` \| `declined` \| `not_found` |
+| `withdraw_connection_request` | `p_request_id uuid` | `jsonb` | `ok` \| `not_found` |
+| `remove_connection` | `p_user_id uuid` | `jsonb` | `ok` \| `not_found`; bire bir sohbet kapanır. Yeniden kabulde aynı sohbet yeniden açılır |
+| `my_conversations` | — | `table(conversation_id, kind, title, meetup_id, other_user_id, other_avatar_url, last_body, last_at, unread int, read_only bool)` | son mesaja göre, en fazla 200. `title`: buluşma başlığı ya da karşı tarafın adı |
+| `conversation_messages` | `p_conversation_id uuid, p_before timestamptz = null, max_rows int = 50` | `table(id, author_id, author_name, author_avatar_url, body, created_at, is_pending bool)` | eskiden yeniye; `p_before` ile daha eskiler (keyset) |
+| `send_chat_message` | `p_conversation_id uuid, p_body text` | `jsonb` | `{status:'sent', message_id, created_at}` \| `not_member` \| `read_only` \| `rate_limited` \| `rejected_content` \| `consent_required` \| `invalid` (`reason: body_empty \| body_too_long`) |
+| `mark_conversation_read` | `p_conversation_id uuid` | `void` | `last_read_at = now()`; o sohbetin `chat_message` bildirimlerini de okundu yapar |
+| `can_listen_conversation` | `p_topic text` | `bool` | Realtime yetkisi: `conversation:<uuid>` biçimli konu ve izleyici görünür sohbetin üyesi. Hatalı konu → `false` (istisna değil) |
+
+### `create_meetup` sonucu
+
+```jsonc
+{ "status": "created", "meetup_id": "…", "conversation_id": "…" }
+{ "status": "consent_required" }
+{ "status": "rejected_content" }
+{ "status": "limit_reached", "limit": 3 }
+{ "status": "invalid", "reason": "title_length" | "description_too_long" | "place_name_length" | "start_too_soon"
+                                | "start_too_late" | "duration_range" | "capacity_range" | "spot_not_found" }
+```
+Düzenleyen `joined` katılımcı olarak eklenir ve buluşmanın grup sohbeti açılır.
+
+### `send_connection_request` sonucu
+
+```jsonc
+{ "status": "sent", "request_id": "…" }
+{ "status": "auto_accepted", "conversation_id": "…" }   // karşı taraf zaten istek atmıştı
+{ "status": "consent_required" }
+{ "status": "not_visible" }        // ben ya da karşı taraf görünür değil
+{ "status": "already_connected" }
+{ "status": "already_pending" }
+{ "status": "cooldown" }           // reddedilen istekten sonra 30 gün
+{ "status": "rejected_content" }
+{ "status": "limit_reached", "limit": 10 }
+{ "status": "invalid", "reason": "note_too_long" }
+{ "status": "not_found" }
+```
+
+## Bildirimler
+
+Hepsi `private.notify_social` üstünden üretilir (AFTER trigger'lar): iki yönlü engel, alıcının `social_updates`
+tercihi (satır yoksa açık) ve "gönderen = alıcı değil" kuralı. İptal edilmiş ya da bitmiş buluşma için bildirim yok.
+
+| Tür | Alıcı | Dolu sütunlar |
+|---|---|---|
+| `meetup_joined` | düzenleyen | `meetup_id`, `actor_id` |
+| `meetup_cancelled` | katılımcılar (düzenleyen hariç); hesap silmede de | `meetup_id` |
+| `meetup_reminder` | düzenleyen + katılımcılar, buluşma başına bir kez; cron `meetup-reminders` her 15 dk, 2 saat içinde başlayanlar | `meetup_id` |
+| `connection_request` | alıcı | `actor_id` |
+| `connection_accepted` | ilk gönderen (otomatik kabulde diğer taraf) | `actor_id` |
+| `chat_message` | yazar dışındaki üyeler; aynı sohbet için okunmamış bildirim varsa yenisi yok. **Mesaj metni içermez**, yalnızca yazar adı | `conversation_id`, `actor_id` |
+
+## Push
+
+`push_claim_batch` sonuna `meetup_id`, `conversation_id` eklendi; `push-dispatch` bunları APNs payload'una koyar
+(`thread-id` = sohbet). Sosyal türler sessiz saate uyar, `need_food_nearby` günlük sınırına girmez. iOS yönlendirmesi
+(`PushPayload`): `conversation_id` → Profil › sohbet, `meetup_id` → Mahalle › buluşma (öncelik: sohbet > buluşma >
+paylaşım > ihtiyaç > nokta). Bildirimler ekranı da aynı önceliği kullanır.
+
+## Realtime
+
+Mesaj eklenince (`approved` ise) `chat_messages_realtime` trigger'ı **özel** Broadcast kanalına yayın yapar:
+konu `conversation:<conversation_id>`, olay `message`, payload yalnızca `{conversation_id}` (metin yok; istemci
+`conversation_messages` ile çeker). `realtime.messages` üzerindeki `chat_members_can_listen` politikası dinlemeyi
+`can_listen_conversation(realtime.topic())` ile üyelere sınırlar. `realtime.send` yoksa (yerel test imajı) kurulum
+atlanır; istemci bağlantı yoksa 5 sn'de bir yeniler.

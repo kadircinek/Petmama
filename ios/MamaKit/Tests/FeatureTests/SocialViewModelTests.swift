@@ -228,6 +228,9 @@ final class SocialChatTests: XCTestCase {
         await model.start()
         defer { model.stop() }
         XCTAssertFalse(model.isReadOnly)
+        // Başlık menüsü (engelle / bağlantıyı kaldır) için sohbet özeti.
+        XCTAssertEqual(model.summary?.kind, .direct)
+        XCTAssertEqual(model.summary?.otherUserId, DemoData.ayseId)
         model.draft = "Merhaba!"
         await model.send()
         XCTAssertEqual(model.messages.map(\.body), ["Merhaba!"])

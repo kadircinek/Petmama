@@ -9,6 +9,7 @@ import FeatureMap
 import FeatureNeeds
 import FeatureOnboarding
 import FeatureProfile
+import FeatureSocial
 import FeatureSpots
 
 /// `AppRoute` → ekran. Feature modülleri birbirini tanımaz; eşleme burada yapılır.
@@ -42,9 +43,16 @@ struct RouteDestination: View {
             VetHelpScreen(needId: needId, services: services)
         case .privacy:
             PrivacyScreen(services: services)
-        case .meetup, .conversation, .conversations, .animalLovers, .connectionRequests:
-            // Geçici: Tanışma ekranları (görev 9) gelene kadar.
-            Text(verbatim: "…")
+        case .meetup(let id):
+            MeetupDetailScreen(meetupId: id, services: services)
+        case .conversation(let id):
+            ChatScreen(conversationId: id, services: services)
+        case .conversations:
+            ConversationsScreen(services: services)
+        case .animalLovers:
+            AnimalLoversScreen(services: services)
+        case .connectionRequests:
+            ConnectionRequestsScreen(services: services)
         }
     }
 }
@@ -79,9 +87,10 @@ struct SheetDestination: View {
             EditProfileSheet(services: services)
         case .createPost(let kind, let spotId):
             CreatePostSheet(kind: kind, spotId: spotId, services: services)
-        case .createMeetup, .socialConsent:
-            // Geçici: Tanışma ekranları (görev 9) gelene kadar.
-            Text(verbatim: "…")
+        case .createMeetup(let spotId):
+            CreateMeetupSheet(spotId: spotId, services: services)
+        case .socialConsent:
+            SocialConsentSheet(services: services)
         }
     }
 }

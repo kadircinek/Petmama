@@ -29,6 +29,10 @@ public struct ProfileTabScreen: View {
         .navigationTitle(String(localized: "Profil"))
         .task(id: session.userId) { await model.load(session: session) }
         .refreshable { await model.load(session: session) }
+        // Sohbet ya da bildirimden köke dönünce okunmamış rozetleri tazele.
+        .onChange(of: router.path(for: .profile).isEmpty) { _, isRoot in
+            if isRoot { Task { await model.load(session: session) } }
+        }
     }
 
     // MARK: - Oturum açık
@@ -47,6 +51,24 @@ public struct ProfileTabScreen: View {
         MenuCard {
             NavigationLink(value: AppRoute.following) {
                 MenuRow(title: String(localized: "Takip ettiklerim"), systemImage: "heart.fill", tint: MamaColor.tilePeach)
+            }
+            MenuDivider()
+            NavigationLink(value: AppRoute.animalLovers) {
+                MenuRow(
+                    title: String(localized: "Hayvanseverler"),
+                    systemImage: "person.2.fill",
+                    tint: MamaColor.tileMint,
+                    subtitle: String(localized: "Çevrendeki besleyicilerle tanış")
+                )
+            }
+            MenuDivider()
+            NavigationLink(value: AppRoute.conversations) {
+                MenuRow(
+                    title: String(localized: "Sohbetler"),
+                    systemImage: "bubble.left.and.bubble.right.fill",
+                    tint: MamaColor.tileBlue,
+                    badge: model.unreadChatBadgeText
+                )
             }
             MenuDivider()
             NavigationLink(value: AppRoute.notifications) {

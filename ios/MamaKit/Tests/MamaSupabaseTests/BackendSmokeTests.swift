@@ -20,6 +20,8 @@ final class BackendSmokeTests: XCTestCase {
         XCTAssertTrue(services.auth is SupabaseBackend)
         XCTAssertTrue(services.spots is SupabaseBackend)
         XCTAssertTrue(services.media is SupabaseBackend)
+        XCTAssertTrue(services.social is SupabaseBackend)
+        XCTAssertTrue(services.chatUpdates is SupabaseChatUpdates)
         XCTAssertTrue(services.checkIns is OfflineCheckInQueue)
         XCTAssertFalse(services.config.isDemo)
         let userId = await services.auth.currentUserId()
@@ -77,6 +79,33 @@ final class BackendSmokeTests: XCTestCase {
         await assertNotSignedIn { try await services.moderation.report(ReportDraft(target: .spot, targetId: UUID(), reason: .spam)) }
         await assertNotSignedIn { _ = try await services.media.uploadJPEG(Data([0xFF, 0xD8])) }
         await assertNotSignedIn { try await services.auth.deleteAccount() }
+
+        // Tanışma: her RPC oturumu ağa çıkmadan kontrol eder.
+        let social = services.social
+        let coordinate = Coordinate.modaKadikoy
+        await assertNotSignedIn { _ = try await social.socialProfile() }
+        await assertNotSignedIn { _ = try await social.giveSocialConsent() }
+        await assertNotSignedIn { _ = try await social.updateSocialProfile(isVisible: true, about: "", interests: [], at: coordinate) }
+        await assertNotSignedIn { _ = try await social.meetups(near: coordinate, radiusMeters: 5000) }
+        await assertNotSignedIn { _ = try await social.meetup(id: UUID(), near: nil) }
+        await assertNotSignedIn { _ = try await social.meetupParticipants(meetupId: UUID()) }
+        await assertNotSignedIn {
+            _ = try await social.createMeetup(MeetupDraft(title: "Tur", startsAt: Date().addingTimeInterval(7200), placeName: "Park", coordinate: coordinate))
+        }
+        await assertNotSignedIn { _ = try await social.joinMeetup(id: UUID()) }
+        await assertNotSignedIn { _ = try await social.leaveMeetup(id: UUID()) }
+        await assertNotSignedIn { _ = try await social.removeParticipant(meetupId: UUID(), userId: UUID()) }
+        await assertNotSignedIn { _ = try await social.cancelMeetup(id: UUID()) }
+        await assertNotSignedIn { _ = try await social.animalLovers(interest: nil) }
+        await assertNotSignedIn { _ = try await social.sendConnectionRequest(to: UUID(), note: nil) }
+        await assertNotSignedIn { _ = try await social.respondToConnection(requestId: UUID(), accept: true) }
+        await assertNotSignedIn { try await social.withdrawConnectionRequest(id: UUID()) }
+        await assertNotSignedIn { try await social.removeConnection(userId: UUID()) }
+        await assertNotSignedIn { _ = try await social.incomingConnectionRequests() }
+        await assertNotSignedIn { _ = try await social.conversations() }
+        await assertNotSignedIn { _ = try await social.messages(conversationId: UUID(), before: nil, limit: 50) }
+        await assertNotSignedIn { _ = try await social.sendMessage(conversationId: UUID(), body: "Merhaba") }
+        await assertNotSignedIn { try await social.markConversationRead(id: UUID()) }
     }
 
     /// Mahalle RPC'lerinin hiçbiri `anon` rolüne açık değil: okumalar dahil hepsi yerelde `notSignedIn` ile

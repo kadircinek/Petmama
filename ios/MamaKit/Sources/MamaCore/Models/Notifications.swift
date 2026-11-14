@@ -32,6 +32,9 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
     public var spotId: UUID?
     public var needId: UUID?
     public var postId: UUID?
+    /// Tanışma bildirimleri: buluşma ve sohbet.
+    public var meetupId: UUID?
+    public var conversationId: UUID?
     public var readAt: Date?
     public var createdAt: Date
 
@@ -43,6 +46,8 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
         spotId: UUID? = nil,
         needId: UUID? = nil,
         postId: UUID? = nil,
+        meetupId: UUID? = nil,
+        conversationId: UUID? = nil,
         readAt: Date? = nil,
         createdAt: Date = Date()
     ) {
@@ -53,11 +58,29 @@ public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
         self.spotId = spotId
         self.needId = needId
         self.postId = postId
+        self.meetupId = meetupId
+        self.conversationId = conversationId
         self.readAt = readAt
         self.createdAt = createdAt
     }
 
     public var isRead: Bool { readAt != nil }
+
+    /// `meetupId` / `conversationId` eklenmeden önce kaydedilmiş bildirimler de çözülsün (eksikse boş).
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        kind = try c.decode(NotificationKind.self, forKey: .kind)
+        title = try c.decode(String.self, forKey: .title)
+        body = try c.decode(String.self, forKey: .body)
+        spotId = try c.decodeIfPresent(UUID.self, forKey: .spotId)
+        needId = try c.decodeIfPresent(UUID.self, forKey: .needId)
+        postId = try c.decodeIfPresent(UUID.self, forKey: .postId)
+        meetupId = try c.decodeIfPresent(UUID.self, forKey: .meetupId)
+        conversationId = try c.decodeIfPresent(UUID.self, forKey: .conversationId)
+        readAt = try c.decodeIfPresent(Date.self, forKey: .readAt)
+        createdAt = try c.decode(Date.self, forKey: .createdAt)
+    }
 }
 
 /// Ayarlar ekranındaki bildirim tercihleri (PRD 5.7, ekran 23).

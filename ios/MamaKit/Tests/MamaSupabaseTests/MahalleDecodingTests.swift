@@ -464,9 +464,10 @@ final class MahalleDecodingTests: XCTestCase {
 
     func testNotificationColumnsIncludePostId() {
         XCTAssertEqual(NotificationDTO.columns.split(separator: ",").map(String.init),
-                       ["id", "kind", "title", "body", "spot_id", "need_id", "post_id", "read_at", "created_at"])
+                       ["id", "kind", "title", "body", "spot_id", "need_id", "post_id", "meetup_id", "conversation_id",
+                        "read_at", "created_at"])
         // Seçilen her sütun DTO'da karşılığı olan bir anahtar olmalı.
-        let keys: [NotificationDTO.CodingKeys] = [.id, .kind, .title, .body, .spotId, .needId, .postId, .readAt, .createdAt]
+        let keys: [NotificationDTO.CodingKeys] = [.id, .kind, .title, .body, .spotId, .needId, .postId, .meetupId, .conversationId, .readAt, .createdAt]
         XCTAssertEqual(Set(keys.map(\.rawValue)), Set(NotificationDTO.columns.split(separator: ",").map(String.init)))
     }
 
@@ -515,7 +516,7 @@ final class MahalleDecodingTests: XCTestCase {
     func testPreferenceColumnsAndWriteFieldsCoverCommunityUpdates() throws {
         let columns = NotificationPrefsDTO.columns.split(separator: ",").map(String.init)
         XCTAssertEqual(columns, ["radius_m", "quiet_start", "quiet_end", "need_food_nearby", "followed_updates",
-                                 "guardian_alerts", "community_updates"])
+                                 "guardian_alerts", "community_updates", "social_updates"])
 
         let preferences = NotificationPreferences(radiusMeters: 2000, quietStartHour: 23, quietEndHour: 8, needFoodNearby: false,
                                                   followedUpdates: true, guardianAlerts: false, communityUpdates: false)

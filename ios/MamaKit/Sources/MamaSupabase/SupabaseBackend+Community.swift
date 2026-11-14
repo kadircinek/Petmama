@@ -276,6 +276,7 @@ extension SupabaseBackend: NotificationRepository {
             "followed_updates": .bool(preferences.followedUpdates),
             "guardian_alerts": .bool(preferences.guardianAlerts),
             "community_updates": .bool(preferences.communityUpdates),
+            "social_updates": .bool(preferences.socialUpdates),
         ]
     }
 

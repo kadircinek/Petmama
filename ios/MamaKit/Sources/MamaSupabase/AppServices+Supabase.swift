@@ -44,8 +44,8 @@ extension AppServices {
             moderation: backend,
             donations: backend,
             community: backend,
-            social: UnavailableSocialRepository(),
-            chatUpdates: PollingChatUpdates(),
+            social: backend,
+            chatUpdates: SupabaseChatUpdates(client: backend.client, fallback: PollingChatUpdates()),
             media: backend,
             spotCache: spotCache,
             checkInQueue: queue,
@@ -53,32 +53,4 @@ extension AppServices {
             now: now
         )
     }
-}
-
-/// Geçici: Supabase sosyal eşlemesi gelene kadar (Tanışma görev 7) her çağrı sunucu hatası verir.
-/// Sosyal ekranlar henüz yok; bu tip yalnızca `AppServices` kurulsun diye var.
-struct UnavailableSocialRepository: SocialRepository {
-    private func unavailable<T>() throws -> T { throw MamaError.server("social_unavailable") }
-
-    func socialProfile() async throws -> SocialProfile? { try unavailable() }
-    func giveSocialConsent() async throws -> SocialProfile { try unavailable() }
-    func updateSocialProfile(isVisible: Bool, about: String, interests: [SocialInterest], at coordinate: Coordinate?) async throws -> SocialProfileOutcome { try unavailable() }
-    func meetups(near center: Coordinate, radiusMeters: Int) async throws -> [Meetup] { try unavailable() }
-    func meetup(id: UUID, near center: Coordinate?) async throws -> Meetup? { try unavailable() }
-    func meetupParticipants(meetupId: UUID) async throws -> [MeetupParticipant] { try unavailable() }
-    func createMeetup(_ draft: MeetupDraft) async throws -> CreateMeetupOutcome { try unavailable() }
-    func joinMeetup(id: UUID) async throws -> JoinMeetupOutcome { try unavailable() }
-    func leaveMeetup(id: UUID) async throws -> Bool { try unavailable() }
-    func removeParticipant(meetupId: UUID, userId: UUID) async throws -> Bool { try unavailable() }
-    func cancelMeetup(id: UUID) async throws -> Bool { try unavailable() }
-    func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover] { try unavailable() }
-    func sendConnectionRequest(to userId: UUID, note: String?) async throws -> SendRequestOutcome { try unavailable() }
-    func respondToConnection(requestId: UUID, accept: Bool) async throws -> UUID? { try unavailable() }
-    func withdrawConnectionRequest(id: UUID) async throws { try unavailable() as Void }
-    func removeConnection(userId: UUID) async throws { try unavailable() as Void }
-    func incomingConnectionRequests() async throws -> [ConnectionRequest] { try unavailable() }
-    func conversations() async throws -> [ConversationSummary] { try unavailable() }
-    func messages(conversationId: UUID, before: Date?, limit: Int) async throws -> [ChatMessage] { try unavailable() }
-    func sendMessage(conversationId: UUID, body: String) async throws -> SendMessageOutcome { try unavailable() }
-    func markConversationRead(id: UUID) async throws { try unavailable() as Void }
 }

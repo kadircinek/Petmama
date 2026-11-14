@@ -40,6 +40,8 @@ final class BackendSmokeTests: XCTestCase {
         XCTAssertEqual(notifications, [])
         let preferences = try await services.notifications.preferences()
         XCTAssertEqual(preferences, .default)
+        let usesApple = await services.auth.usesAppleSignIn()
+        XCTAssertFalse(usesApple)
         let blocked = try await services.moderation.blockedUserIds()
         XCTAssertEqual(blocked, [])
         let search = try await services.spots.search(query: "   ", near: nil)

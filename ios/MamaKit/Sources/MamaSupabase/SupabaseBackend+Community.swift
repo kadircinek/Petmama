@@ -279,10 +279,13 @@ extension SupabaseBackend: NotificationRepository {
         ]
     }
 
-    public func registerDeviceToken(_ token: String) async throws {
+    public func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {
         try await perform {
             _ = try requireUserId()
-            _ = try await rpc("register_device_token", ["p_token": .string(token)])
+            _ = try await rpc("register_device_token", [
+                "p_token": .string(token),
+                "p_env": .string(environment.rawValue),
+            ])
         }
     }
 

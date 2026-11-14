@@ -17,7 +17,17 @@ public protocol AuthRepository: Sendable {
     func updatePassword(_ newPassword: String) async throws
     func signOut() async throws
     /// Uygulama içinden hesap silme (FR-P3). Kişisel veri silinir, topluluk verisi anonimleşir.
-    func deleteAccount() async throws
+    /// Apple ile açılmış hesapta `appleAuthorizationCode` zorunludur: sunucu Apple token'ını iptal eder
+    /// (App Store 5.1.1(v)). Kod, silmeden hemen önce yeniden Apple onayıyla alınır (tek kullanımlık, 5 dk).
+    func deleteAccount(appleAuthorizationCode: String?) async throws
+    /// Oturumdaki hesap Apple ile mi açılmış? (Silmeden önce Apple onayı gerekir mi?)
+    func usesAppleSignIn() async -> Bool
+}
+
+extension AuthRepository {
+    public func deleteAccount() async throws {
+        try await deleteAccount(appleAuthorizationCode: nil)
+    }
 }
 
 public protocol SpotRepository: Sendable {
@@ -75,7 +85,7 @@ public protocol NotificationRepository: Sendable {
     func markRead(ids: [UUID]) async throws
     func preferences() async throws -> NotificationPreferences
     func updatePreferences(_ preferences: NotificationPreferences) async throws
-    func registerDeviceToken(_ token: String) async throws
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws
     /// Çıkıştan önce çağrılır: bu cihaz artık bu hesabın bildirimlerini almaz.
     func unregisterDeviceToken(_ token: String) async throws
     /// Yakındaki bildirimler için yalnızca son kaba konum (D8).

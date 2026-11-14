@@ -22,21 +22,25 @@ Kod tabanı sağlam. Eksikler büyük ölçüde **bağlantı (wiring), operasyon
 | 1.2 ✅ | Çıkışta cihaz token'ı silinmiyor → eski hesap bildirim almaya devam ediyor, yeni hesap token'ı yeniden açılışa kadar alamıyor | `SessionStore.swift:49-52`, `AppModel.swift:52-56` | 🔴 Kritik |
 | 1.3 ✅ | Çevrimdışı check-in kuyruğu kullanıcıya bağlı değil, çıkışta temizlenmiyor → başka hesap adına gönderilebilir | `CheckIn.swift:73-82`, `OfflineCheckInQueue.swift:41-46` | 🔴 Kritik |
 | 1.4 ✅ | `Secrets.xcconfig` yoksa Release build sessizce demo moduna düşüyor (demo giriş ipucu, `example.org` bağış linki) | `AppConfiguration.swift:31,48`, `ServiceFactory.swift:11-13` | 🔴 Kritik |
-| 1.5 | Hesap silmede Apple token iptali (revoke) yok — Apple, SIWA hesapları için zorunlu tutuyor | `functions/delete-account/index.ts:64-65` | 🟠 Yüksek |
-| 1.6 | APNs ortamı backend genelinde tek; TestFlight token'ları production olduğu hâlde README sandbox diyor → token'lar `BadDeviceToken` ile siliniyor. Ortam token ile birlikte saklanmalı | `_shared/push_logic.ts:102-103`, `supabase/README.md:68-69` | 🟠 Yüksek |
-| 1.7 | Engelleme yalnızca Mahalle içeriğini gizliyor; engellenen kullanıcının nokta/ihtiyaç/hayvanları görünmeye devam ediyor | RPC'ler + ilgili ViewModel'ler | 🟡 Orta |
+| 1.5 ✅ | Hesap silmede Apple token iptali (revoke) yok — Apple, SIWA hesapları için zorunlu tutuyor | `functions/delete-account/index.ts:64-65` | 🟠 Yüksek |
+| 1.6 ✅ | APNs ortamı backend genelinde tek; TestFlight token'ları production olduğu hâlde README sandbox diyor → token'lar `BadDeviceToken` ile siliniyor. Ortam token ile birlikte saklanmalı | `_shared/push_logic.ts:102-103`, `supabase/README.md:68-69` | 🟠 Yüksek |
+| 1.7 ✅ | Engelleme yalnızca Mahalle içeriğini gizliyor; engellenen kullanıcının nokta/ihtiyaç/hayvanları görünmeye devam ediyor | RPC'ler + ilgili ViewModel'ler | 🟡 Orta |
 | 1.8 | ViewModel toast/hata metinleri yalnızca Türkçe (EN eksik) | `DECISIONS.md:33` | 🟡 Orta |
 
 **1.1–1.4 tamamlandı (14 Kasım 2026):** e-posta bağlantıları (`AuthLink`, `onOpenURL`, "Yeni şifre" ekranı),
 çıkışta token silme ve yeni hesaba yeniden kayıt, kullanıcıya bağlı check-in kuyruğu, Release'de `Secrets.xcconfig`
 zorunluluğu (derleme adımı; bilerek demo için `MAMA_ALLOW_DEMO_RELEASE=YES`).
 
+**1.5–1.7 tamamlandı (14 Kasım 2026):** hesap silmede Apple token iptali (yeniden Apple onayı +
+`delete-account` → appleid.apple.com/auth/revoke), APNs ortamı token başına (`device_tokens.apns_env`), engelleme
+ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar haritada kalır).
+
 ## 3. Faz 2 — Gerçek backend kurulumu (hesap/erişim gerekiyor)
 
 - [ ] Supabase projesi (Frankfurt) oluştur, `supabase db push` ile migration'ları uygula
 - [ ] Vault: `push_dispatch_url`, `push_dispatch_secret`; konum bulanıklaştırma tuzu (fuzz salt)
 - [ ] Apple: APNs anahtarı (.p8), Sign in with Apple servis kimliği → Supabase Auth provider
-- [ ] Edge function secret'ları: APNs, `delete-account` için Apple revoke anahtarları
+- [ ] Edge function secret'ları: APNs (`APNS_*`), Apple token iptali (`APPLE_TEAM_ID`, `APPLE_CLIENT_ID`, `APPLE_SIWA_KEY_ID`, `APPLE_SIWA_PRIVATE_KEY`)
 - [ ] `ios/App/Config/Secrets.xcconfig` (URL + publishable key) ve gerçek cihazda uçtan uca test
 
 ## 4. Faz 3 — Eksik özellikler

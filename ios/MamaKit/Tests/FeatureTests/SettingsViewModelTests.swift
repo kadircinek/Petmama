@@ -15,6 +15,32 @@ final class SettingsViewModelTests: XCTestCase {
         return (backend, services, session)
     }
 
+    // MARK: - Apple ile açılan hesabın silinmesi (Apple token iptali için yeniden onay)
+
+    func testAppleAccountNeedsAppleConfirmationToDelete() async {
+        let (_, services, session) = await makeEnvironment(signedIn: false)
+        _ = await session.signInWithApple(idToken: "id-token", nonce: "nonce", fullName: nil)
+        let model = SettingsViewModel(services: services)
+        await model.load(isSignedIn: true)
+        XCTAssertTrue(model.requiresAppleConfirmationToDelete)
+
+        let withoutCode = await model.deleteAccount(session: session)
+        XCTAssertFalse(withoutCode)
+        XCTAssertEqual(model.error, .invalidInput(SessionStore.appleConfirmationRequiredMessage))
+        XCTAssertTrue(session.isSignedIn)
+
+        let withCode = await model.deleteAccount(session: session, appleAuthorizationCode: "apple-code")
+        XCTAssertTrue(withCode)
+        XCTAssertFalse(session.isSignedIn)
+    }
+
+    func testEmailAccountDeletesWithoutAppleConfirmation() async {
+        let (_, services, _) = await makeEnvironment()
+        let model = SettingsViewModel(services: services)
+        await model.load(isSignedIn: true)
+        XCTAssertFalse(model.requiresAppleConfirmationToDelete)
+    }
+
     func testLoadsDefaultPreferences() async {
         let (_, services, _) = await makeEnvironment()
         let model = SettingsViewModel(services: services)

@@ -59,7 +59,7 @@ public final class AppModel {
 
     private func registerDeviceTokenIfNeeded() async {
         guard let userId = session.userId, let token = deviceToken, deviceTokenOwner != userId else { return }
-        if (try? await services.notifications.registerDeviceToken(token)) != nil {
+        if (try? await services.notifications.registerDeviceToken(token, environment: services.config.apnsEnvironment)) != nil {
             deviceTokenOwner = userId
         }
     }

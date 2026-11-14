@@ -937,6 +937,23 @@
         }
       }
     },
+    "Apple ile onayla ve sil": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple ile onayla ve sil"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm with Apple and delete"
+          }
+        }
+      }
+    },
     "Ara": {
       "extractionState": "manual",
       "localizations": {

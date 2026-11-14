@@ -48,7 +48,8 @@ actor StubLinkAuth: AuthRepository {
     func signUp(email: String, password: String, displayName: String) async throws -> UserProfile { user }
     func sendPasswordReset(email: String) async throws {}
     func signOut() async throws { signedIn = false }
-    func deleteAccount() async throws {}
+    func deleteAccount(appleAuthorizationCode: String?) async throws {}
+    func usesAppleSignIn() async -> Bool { false }
 
     func completeAuthLink(_ url: URL) async throws -> UserProfile {
         completedLinks.append(url)

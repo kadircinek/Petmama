@@ -80,9 +80,11 @@ Satırdaki `is_location_exact` istemciye hangi durumda olduğunu söyler.
 - `follows(user_id, target_type follow_target, target_id uuid, created_at, pk(user_id, target_type, target_id))`
 - `spot_gone_reports(spot_id, user_id, created_at, pk(spot_id, user_id))`
 - `reports(id, reporter_id, target_type, target_id, reason, details, status, created_at, resolved_at)`
-- `blocks(user_id, blocked_user_id, created_at, pk)`
+- `blocks(user_id, blocked_user_id, created_at, pk)` — engelleme Mahalle dışında da uygulanır (iki yönlü,
+  moderatör hariç): engellenenin ihtiyaçları (`need_visible`), hayvanları (`animals_at_spot`; tablo okumasında RLS
+  tek yönlü), koruyucu kaydı gizlenir; oluşturduğu nokta haritada kalır ama `note`/`photo_url` null döner.
 - `notifications(id, user_id, kind, title, body, spot_id null, need_id null, read_at, pushed_at, created_at)`
-- `device_tokens(token pk, user_id, platform text default 'ios', updated_at)`
+- `device_tokens(token pk, user_id, platform text default 'ios', apns_env text default 'production' — sandbox | production, updated_at)`
 - `notification_prefs(user_id pk, radius_m int default 1000, quiet_start smallint default 22, quiet_end smallint default 7, need_food_nearby bool default true, followed_updates bool default true, guardian_alerts bool default true, notify_center geography(Point) null, updated_at)`
   — `notify_center` kullanıcının **yalnızca son** kaba konumudur (3 ondalık, ≈110 m'ye yuvarlanır), geçmiş tutulmaz.
 - `donation_events(id, user_id null, kind text, ref_code, created_at)`
@@ -160,7 +162,7 @@ Hepsi `select * from rpc(...)` / PostgREST `POST /rpc/<ad>` ile çağrılır. "a
 | `profile_stats` | `p_user_id uuid` | `table(fed_spot_count int, checkin_count int, resolved_need_count int, verified_checkins_30d int)` | |
 | `neighborhood_summary` | `lat, lng float8, radius_m int = 1500` | `table(fed_spots_today int, open_needs int, needs_food_spots int, active_spots_7d int)` | anon OK |
 | `followed_spots` | — | `setof spot_row` | auth |
-| `register_device_token` | `p_token text` | `void` | auth |
+| `register_device_token` | `p_token text, p_env text default 'production'` (sandbox \| production) | `void` | auth |
 | _(tablo)_ `device_tokens` DELETE | `token = …` (RLS: kendi) | — | auth — çıkıştan hemen önce istemci kendi token'ını siler |
 | `update_notify_center` | `lat, lng float8` | `void` | auth; 3 ondalığa yuvarlar |
 | `donation_overview` | — | `table(month date, kg_distributed numeric, donor_count int)` | anon OK, içinde bulunulan ay |
@@ -197,7 +199,7 @@ Yan etkiler:
 | Fonksiyon | Tetikleyici | Görev |
 |---|---|---|
 | `push-dispatch` | pg_cron her dakika (pg_net) veya elle | `notifications.pushed_at is null` satırlarını APNs'e gönderir. Sessiz saat (kullanıcının `quiet_start`–`quiet_end`, `Europe/Istanbul`) ve `need_food_nearby` için günde en fazla 3 push kuralı uygulanır; uygulanmayanlar uygulama içi kalır. |
-| `delete-account` | istemci (JWT ile) | `auth.admin.deleteUser`; FK'lar sayesinde kişisel veri silinir, nokta/hayvan kayıtları `created_by = null` ile kalır (PRD 9.5). |
+| `delete-account` | istemci (JWT ile) | `auth.admin.deleteUser`; FK'lar sayesinde kişisel veri silinir, nokta/hayvan kayıtları `created_by = null` ile kalır (PRD 9.5). Apple ile bağlı hesapta gövde `{"apple_authorization_code": "…"}` zorunlu: sunucu Apple token'ını iptal eder (App Store 5.1.1(v)); kod yok/geçersiz → `400 apple_reauth_required`. |
 
 ## Cron (pg_cron)
 

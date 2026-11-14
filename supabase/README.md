@@ -60,14 +60,20 @@ tests/                      SQL testleri + run.sh
    ```sh
    supabase secrets set \
      APNS_KEY_ID=XXXXXXXXXX APNS_TEAM_ID=YYYYYYYYYY \
-     APNS_BUNDLE_ID=app.petmama.mamaharitasi APNS_ENV=production \
+     APNS_BUNDLE_ID=app.petmama.mamaharitasi \
      APNS_PRIVATE_KEY="$(cat AuthKey_XXXXXXXXXX.p8)" \
+     APPLE_TEAM_ID=YYYYYYYYYY APPLE_CLIENT_ID=app.petmama.mamaharitasi \
+     APPLE_SIWA_KEY_ID=ZZZZZZZZZZ APPLE_SIWA_PRIVATE_KEY="$(cat AuthKey_ZZZZZZZZZZ.p8)" \
      PUSH_DISPATCH_SECRET="$(openssl rand -hex 32)"
    supabase functions deploy push-dispatch --no-verify-jwt
    supabase functions deploy delete-account
    ```
-   `SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` Supabase tarafından otomatik verilir. TestFlight/geliştirme
-   derlemeleri sandbox token üretir: o ortamda `APNS_ENV=sandbox`.
+   `SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` Supabase tarafından otomatik verilir. APNs ortamı token başına
+   saklanır (`device_tokens.apns_env`): Xcode'dan kurulan Debug derlemeleri `sandbox`, TestFlight ve App Store
+   `production` token'ı kaydeder; push-dispatch her token'ı kendi ortamına gönderir. `APNS_ENV` sırrı gerekmez.
+   Aynı .p8 anahtarı iki ortamda da çalışır. `APPLE_SIWA_*`: "Sign in with Apple" yetkili anahtar (Apple Developer →
+   Keys); `delete-account` hesap silinirken Apple token'ını iptal eder. Eksikse silme yapılır ama iptal atlanır
+   (loglanır) — App Store incelemesinden önce mutlaka ayarlayın.
 
 5. **Cron → push-dispatch bağlantısı**: URL ve paylaşılan sır veritabanında saklanır (koda gömülmez).
    Vault (önerilen):

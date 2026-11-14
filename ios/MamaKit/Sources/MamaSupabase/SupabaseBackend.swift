@@ -219,10 +219,24 @@ extension SupabaseBackend: AuthRepository {
         }
     }
 
-    public func deleteAccount() async throws {
+    public func usesAppleSignIn() async -> Bool {
+        guard let user = client.auth.currentUser else { return false }
+        return user.identities?.contains { $0.provider == "apple" } == true
+            || user.appMetadata["provider"]?.stringValue == "apple"
+    }
+
+    public func deleteAccount(appleAuthorizationCode: String?) async throws {
         try await perform {
             _ = try requireUserId()
-            try await client.functions.invoke("delete-account")
+            let code = appleAuthorizationCode?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if code.isEmpty, await usesAppleSignIn() {
+                throw MamaError.invalidInput(SessionStore.appleConfirmationRequiredMessage)
+            }
+            // Apple hesabında sunucu kodu token'a çevirip Apple'da iptal eder (delete-account).
+            try await client.functions.invoke(
+                "delete-account",
+                options: FunctionInvokeOptions(body: DeleteAccountBody(appleAuthorizationCode: code.isEmpty ? nil : code))
+            )
             // Kullanıcı sunucuda silindi; logout çağrısı 401/404 dönebilir, yerel oturum yine kapanır.
             try? await client.auth.signOut(scope: .local)
         }
@@ -257,3 +271,12 @@ final class InMemoryAuthLocalStorage: AuthLocalStorage, @unchecked Sendable {
     }
 }
 #endif
+
+/// `delete-account` gövdesi.
+struct DeleteAccountBody: Encodable {
+    let appleAuthorizationCode: String?
+
+    enum CodingKeys: String, CodingKey {
+        case appleAuthorizationCode = "apple_authorization_code"
+    }
+}

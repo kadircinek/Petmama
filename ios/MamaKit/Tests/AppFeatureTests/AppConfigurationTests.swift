@@ -30,6 +30,13 @@ final class AppConfigurationTests: XCTestCase {
         XCTAssertEqual(config.app.supportEmail, "iletisim@ornek.org")
     }
 
+    func testAPNsEnvironmentFromEntitlement() {
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: ["MAMA_APNS_ENV": "development"]).app.apnsEnvironment, .sandbox)
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: ["MAMA_APNS_ENV": "production"]).app.apnsEnvironment, .production)
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: [:]).app.apnsEnvironment, .production,
+                       "bilinmiyorsa sunucu varsayılanı")
+    }
+
     func testProductionWithoutPartnerKeepsDonationDisabled() {
         let config = AppConfiguration.from(infoDictionary: [
             "MAMA_SUPABASE_URL": "https://abc.supabase.co",
@@ -78,8 +85,9 @@ final class AppModelTests: XCTestCase {
 
     private static let token = "a1b2c3d4e5f60718"
 
-    private func makeModel(pending: [CheckInDraft] = []) -> (AppModel, SpyNotifications) {
+    private func makeModel(pending: [CheckInDraft] = [], apnsEnvironment: APNsEnvironment = .production) -> (AppModel, SpyNotifications) {
         var services = AppServices.demo()
+        services.config.apnsEnvironment = apnsEnvironment
         let spy = SpyNotifications(base: services.notifications)
         services.notifications = spy
         let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(pending), repository: services.checkIns)
@@ -118,6 +126,14 @@ final class AppModelTests: XCTestCase {
 
         let registered = await spy.registered
         XCTAssertEqual(registered, [Self.token, Self.token], "yeni hesap uygulama yeniden açılmadan bildirim almalı")
+    }
+
+    func testDeviceTokenRegisteredWithBuildsAPNsEnvironment() async {
+        let (model, spy) = makeModel(apnsEnvironment: .sandbox)
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+        let environments = await spy.registeredEnvironments
+        XCTAssertEqual(environments, [.sandbox])
     }
 
     func testSignOutClearsOfflineQueue() async {
@@ -172,6 +188,7 @@ final class AppModelTests: XCTestCase {
 actor SpyNotifications: NotificationRepository {
     let base: any NotificationRepository
     private(set) var registered: [String] = []
+    private(set) var registeredEnvironments: [APNsEnvironment] = []
     private(set) var unregistered: [String] = []
     private(set) var unregisterSawSignedInUser: [Bool] = []
 
@@ -183,9 +200,10 @@ actor SpyNotifications: NotificationRepository {
     func updatePreferences(_ preferences: NotificationPreferences) async throws { try await base.updatePreferences(preferences) }
     func updateNotifyCenter(_ coordinate: Coordinate) async throws { try await base.updateNotifyCenter(coordinate) }
 
-    func registerDeviceToken(_ token: String) async throws {
-        try await base.registerDeviceToken(token)
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {
+        try await base.registerDeviceToken(token, environment: environment)
         registered.append(token)
+        registeredEnvironments.append(environment)
     }
 
     func unregisterDeviceToken(_ token: String) async throws {

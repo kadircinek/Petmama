@@ -64,9 +64,9 @@ public final class SessionStore {
 
     /// FR-P3. Başarılıysa oturum kapanır.
     @discardableResult
-    public func deleteAccount() async -> Bool {
+    public func deleteAccount(appleAuthorizationCode: String? = nil) async -> Bool {
         do {
-            try await auth.deleteAccount()
+            try await auth.deleteAccount(appleAuthorizationCode: appleAuthorizationCode)
             profile = nil
             // Sunucu hesabı silerken cihaz token'ları da cascade ile silinir.
             await didEndSession?()
@@ -114,6 +114,8 @@ public final class SessionStore {
     }
 
     public static let minimumPasswordLength = 8
+    public static let appleConfirmationRequiredMessage =
+        "Hesabını silmek için Apple ile bir kez daha onaylaman gerekiyor."
 
     public func update(_ profile: UserProfile) {
         self.profile = profile

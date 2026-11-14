@@ -2,6 +2,7 @@
 // Harici bağımlılık yok (ağsız çalışır).
 
 import {
+  apnsJobs,
   apnsOrigin,
   base64url,
   buildApnsHeaders,
@@ -45,6 +46,7 @@ function row(over: Partial<PushRow> = {}): PushRow {
     quiet_end: 7,
     need_food_pushed_today: 0,
     tokens: ["tok-1"],
+    sandbox_tokens: [],
     ...over,
   };
 }
@@ -291,4 +293,19 @@ Deno.test("groupByStatus", () => {
   const g = groupByStatus([["a", "sent"], ["b", "quiet_hours"], ["c", "sent"]]);
   assertEquals(g.get("sent"), ["a", "c"]);
   assertEquals(g.get("quiet_hours"), ["b"]);
+});
+
+Deno.test("apnsJobs: each token goes to its own APNs environment", () => {
+  const r = row({ tokens: ["prod-1", "prod-2"], sandbox_tokens: ["dev-1"] });
+  assertEquals(apnsJobs(r), [
+    { token: "prod-1", origin: "https://api.push.apple.com" },
+    { token: "prod-2", origin: "https://api.push.apple.com" },
+    { token: "dev-1", origin: "https://api.sandbox.push.apple.com" },
+  ]);
+});
+
+Deno.test("decidePushes: sandbox-only device still gets the push", () => {
+  const noon = at("2026-11-04T09:00:00Z");
+  const r = row({ tokens: [], sandbox_tokens: ["dev-1"] });
+  assertEquals(decidePushes([r], noon).get(r.id), "send");
 });

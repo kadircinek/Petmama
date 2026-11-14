@@ -62,6 +62,8 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>MAMA_APNS_ENV</key>
+	<string>$(APS_ENVIRONMENT)</string>
 	<key>MAMA_SUPABASE_URL</key>
 	<string>$(MAMA_SUPABASE_URL)</string>
 	<key>MAMA_SUPABASE_ANON_KEY</key>

@@ -20,10 +20,13 @@ public final class SupabaseBackend: Sendable {
     public static let placeholderDisplayName = "Mama Dostu"
 
     public let client: SupabaseClient
+    /// E-posta bağlantılarının döneceği deep link (`AuthLink.callbackURL`).
+    let authRedirectURL: URL?
     let now: @Sendable () -> Date
 
-    public init(client: SupabaseClient, now: @escaping @Sendable () -> Date = { Date() }) {
+    public init(client: SupabaseClient, authRedirectURL: URL? = nil, now: @escaping @Sendable () -> Date = { Date() }) {
         self.client = client
+        self.authRedirectURL = authRedirectURL
         self.now = now
     }
 
@@ -47,7 +50,7 @@ public final class SupabaseBackend: Sendable {
                 )
             )
         )
-        self.init(client: client, now: now)
+        self.init(client: client, authRedirectURL: authRedirectURL, now: now)
     }
 
     /// Apple platformlarında Keychain; Linux'ta (testler, CI) bellek içi.
@@ -184,7 +187,25 @@ extension SupabaseBackend: AuthRepository {
 
     public func sendPasswordReset(email: String) async throws {
         try await perform {
-            try await client.auth.resetPasswordForEmail(Self.normalizedEmail(email))
+            // Bağlantı `?flow=recovery` ile döner: uygulama "yeni şifre" ekranını açar.
+            try await client.auth.resetPasswordForEmail(
+                Self.normalizedEmail(email),
+                redirectTo: authRedirectURL.map(AuthLink.recoveryRedirect(from:))
+            )
+        }
+    }
+
+    public func completeAuthLink(_ url: URL) async throws -> UserProfile {
+        try await perform {
+            let session = try await client.auth.session(from: url)
+            return try await ensureProfile(userId: session.user.id, preferredName: "")
+        }
+    }
+
+    public func updatePassword(_ newPassword: String) async throws {
+        try await perform {
+            _ = try requireUserId()
+            _ = try await client.auth.update(user: UserAttributes(password: newPassword))
         }
     }
 

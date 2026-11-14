@@ -286,6 +286,18 @@ extension SupabaseBackend: NotificationRepository {
         }
     }
 
+    /// RLS: kullanıcı yalnızca kendi token satırını silebilir (backend-contract, `device_tokens` silme: kendi).
+    public func unregisterDeviceToken(_ token: String) async throws {
+        try await perform {
+            let userId = try requireUserId()
+            try await client.from("device_tokens")
+                .delete(returning: .minimal)
+                .eq("user_id", value: userId.postgresString)
+                .eq("token", value: token)
+                .execute()
+        }
+    }
+
     /// Sunucu 3 ondalığa yuvarlar ve yalnızca son değeri tutar (D8).
     public func updateNotifyCenter(_ coordinate: Coordinate) async throws {
         try await perform {

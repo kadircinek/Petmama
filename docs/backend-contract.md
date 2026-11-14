@@ -161,6 +161,7 @@ Hepsi `select * from rpc(...)` / PostgREST `POST /rpc/<ad>` ile çağrılır. "a
 | `neighborhood_summary` | `lat, lng float8, radius_m int = 1500` | `table(fed_spots_today int, open_needs int, needs_food_spots int, active_spots_7d int)` | anon OK |
 | `followed_spots` | — | `setof spot_row` | auth |
 | `register_device_token` | `p_token text` | `void` | auth |
+| _(tablo)_ `device_tokens` DELETE | `token = …` (RLS: kendi) | — | auth — çıkıştan hemen önce istemci kendi token'ını siler |
 | `update_notify_center` | `lat, lng float8` | `void` | auth; 3 ondalığa yuvarlar |
 | `donation_overview` | — | `table(month date, kg_distributed numeric, donor_count int)` | anon OK, içinde bulunulan ay |
 | `log_donation_click` | `p_ref_code text` | `void` | anon OK (PRD 8.2: yalnızca "sayfaya gidildi" ölçülür) |

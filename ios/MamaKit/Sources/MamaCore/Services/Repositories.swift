@@ -11,6 +11,10 @@ public protocol AuthRepository: Sendable {
     func signIn(email: String, password: String) async throws -> UserProfile
     func signUp(email: String, password: String, displayName: String) async throws -> UserProfile
     func sendPasswordReset(email: String) async throws
+    /// E-posta doğrulama / şifre sıfırlama bağlantısıyla (deep link) oturum açar.
+    func completeAuthLink(_ url: URL) async throws -> UserProfile
+    /// Oturum açıkken şifreyi değiştirir (şifre sıfırlama bağlantısından sonra).
+    func updatePassword(_ newPassword: String) async throws
     func signOut() async throws
     /// Uygulama içinden hesap silme (FR-P3). Kişisel veri silinir, topluluk verisi anonimleşir.
     func deleteAccount() async throws
@@ -72,6 +76,8 @@ public protocol NotificationRepository: Sendable {
     func preferences() async throws -> NotificationPreferences
     func updatePreferences(_ preferences: NotificationPreferences) async throws
     func registerDeviceToken(_ token: String) async throws
+    /// Çıkıştan önce çağrılır: bu cihaz artık bu hesabın bildirimlerini almaz.
+    func unregisterDeviceToken(_ token: String) async throws
     /// Yakındaki bildirimler için yalnızca son kaba konum (D8).
     func updateNotifyCenter(_ coordinate: Coordinate) async throws
 }

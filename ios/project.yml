@@ -28,6 +28,17 @@ targets:
         excludes:
           - "Info.plist"
           - "*.entitlements"
+    preBuildScripts:
+      # Secrets.xcconfig yoksa uygulama sessizce demo moduna düşer (D7). Release'de bunu derlemede yakala.
+      - name: Release yapılandırma kontrolü
+        basedOnDependencyAnalysis: false
+        script: |
+          if [ "$CONFIGURATION" = "Release" ] && [ "$MAMA_ALLOW_DEMO_RELEASE" != "YES" ]; then
+            if [ -z "$MAMA_SUPABASE_URL" ] || [ -z "$MAMA_SUPABASE_ANON_KEY" ]; then
+              echo "error: Release derlemesi gerçek backend ister: ios/App/Config/Secrets.xcconfig içinde MAMA_SUPABASE_URL ve MAMA_SUPABASE_ANON_KEY boş. (Bilerek demo Release için MAMA_ALLOW_DEMO_RELEASE=YES.)"
+              exit 1
+            fi
+          fi
     configFiles:
       Debug: App/Config/Debug.xcconfig
       Release: App/Config/Release.xcconfig

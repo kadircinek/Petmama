@@ -73,4 +73,129 @@ final class AppModelTests: XCTestCase {
         await model.signedInStateChanged()
         XCTAssertTrue(model.session.isSignedIn)
     }
+
+    // MARK: - Oturum değişimi: cihaz token'ı ve çevrimdışı kuyruk
+
+    private static let token = "a1b2c3d4e5f60718"
+
+    private func makeModel(pending: [CheckInDraft] = []) -> (AppModel, SpyNotifications) {
+        var services = AppServices.demo()
+        let spy = SpyNotifications(base: services.notifications)
+        services.notifications = spy
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(pending), repository: services.checkIns)
+        services.checkIns = queue
+        services.checkInQueue = queue
+        return (AppModel(services: services, locationDriver: StaticLocationDriver()), spy)
+    }
+
+    private func signIn(_ model: AppModel) async {
+        _ = await model.session.signIn(email: "demo@mamaharitasi.app", password: "demo1234")
+        await model.signedInStateChanged()
+    }
+
+    func testSignOutUnregistersDeviceTokenBeforeEndingSession() async {
+        let (model, spy) = makeModel()
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+
+        await model.session.signOut()
+
+        let unregistered = await spy.unregistered
+        XCTAssertEqual(unregistered, [Self.token])
+        let signedInWhileUnregistering = await spy.unregisterSawSignedInUser
+        XCTAssertEqual(signedInWhileUnregistering, [true], "token oturum hâlâ açıkken silinmeli (RLS)")
+    }
+
+    func testDeviceTokenRegisteredAgainForNextAccount() async {
+        let (model, spy) = makeModel()
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+        await model.session.signOut()
+        await model.signedInStateChanged()
+
+        _ = await model.session.signUp(email: "ikinci@ornek.org", password: "sifre1234", displayName: "İkinci")
+        await model.signedInStateChanged()
+
+        let registered = await spy.registered
+        XCTAssertEqual(registered, [Self.token, Self.token], "yeni hesap uygulama yeniden açılmadan bildirim almalı")
+    }
+
+    func testSignOutClearsOfflineQueue() async {
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        let (model, _) = makeModel(pending: [draft])
+        await signIn(model)
+
+        await model.session.signOut()
+
+        let pending = await model.services.checkInQueue.pendingCount()
+        XCTAssertEqual(pending, 0)
+    }
+
+    func testDeleteAccountClearsOfflineQueue() async {
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        let (model, _) = makeModel(pending: [draft])
+        await signIn(model)
+
+        let deleted = await model.session.deleteAccount()
+
+        XCTAssertTrue(deleted)
+        let pending = await model.services.checkInQueue.pendingCount()
+        XCTAssertEqual(pending, 0)
+    }
+
+    // MARK: - E-posta bağlantıları (deep link)
+
+    func testExpiredAuthLinkShowsErrorToast() async {
+        let (model, _) = makeModel()
+        let handled = await model.handleOpenURL(URL(string: "mamaharitasi://auth-callback#error=access_denied&error_code=otp_expired")!)
+        XCTAssertTrue(handled)
+        XCTAssertEqual(model.router.toast?.message, AuthLink.expiredMessage)
+        XCTAssertEqual(model.router.toast?.style, .warning)
+    }
+
+    func testForeignURLIsIgnored() async {
+        let (model, _) = makeModel()
+        let handled = await model.handleOpenURL(URL(string: "https://ornek.org")!)
+        XCTAssertFalse(handled)
+        XCTAssertNil(model.router.toast)
+    }
+
+    func testSignInSetsQueueOwner() async {
+        let (model, _) = makeModel()
+        await signIn(model)
+        let owner = await model.services.checkInQueue.owner
+        XCTAssertEqual(owner, model.session.userId)
+    }
+}
+
+/// Bildirim deposunu sarar; token kayıt/silme çağrılarını kaydeder.
+actor SpyNotifications: NotificationRepository {
+    let base: any NotificationRepository
+    private(set) var registered: [String] = []
+    private(set) var unregistered: [String] = []
+    private(set) var unregisterSawSignedInUser: [Bool] = []
+
+    init(base: any NotificationRepository) { self.base = base }
+
+    func notifications() async throws -> [AppNotification] { try await base.notifications() }
+    func markRead(ids: [UUID]) async throws { try await base.markRead(ids: ids) }
+    func preferences() async throws -> NotificationPreferences { try await base.preferences() }
+    func updatePreferences(_ preferences: NotificationPreferences) async throws { try await base.updatePreferences(preferences) }
+    func updateNotifyCenter(_ coordinate: Coordinate) async throws { try await base.updateNotifyCenter(coordinate) }
+
+    func registerDeviceToken(_ token: String) async throws {
+        try await base.registerDeviceToken(token)
+        registered.append(token)
+    }
+
+    func unregisterDeviceToken(_ token: String) async throws {
+        // Demo backend oturum yoksa `requireUser` ile hata atar: başarı = oturum açıktı.
+        do {
+            try await base.unregisterDeviceToken(token)
+            unregisterSawSignedInUser.append(true)
+        } catch {
+            unregisterSawSignedInUser.append(false)
+        }
+        unregistered.append(token)
+    }
 }

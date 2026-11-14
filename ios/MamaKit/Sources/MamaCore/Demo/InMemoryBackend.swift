@@ -184,6 +184,17 @@ extension InMemoryBackend: AuthRepository {
 
     public func sendPasswordReset(email: String) async throws {}
 
+    public func completeAuthLink(_ url: URL) async throws -> UserProfile {
+        throw MamaError.invalidInput("Demo modunda e-posta bağlantıları kullanılmaz.")
+    }
+
+    public func updatePassword(_ newPassword: String) async throws {
+        let userId = try requireUser()
+        for (email, entry) in passwords where entry.userId == userId {
+            passwords[email] = (newPassword, userId)
+        }
+    }
+
     public func signOut() async throws { currentUser = nil }
 
     public func deleteAccount() async throws {
@@ -669,6 +680,11 @@ extension InMemoryBackend: NotificationRepository {
     public func registerDeviceToken(_ token: String) async throws {
         let userId = try requireUser()
         deviceTokens[userId] = token
+    }
+
+    public func unregisterDeviceToken(_ token: String) async throws {
+        let userId = try requireUser()
+        if deviceTokens[userId] == token { deviceTokens[userId] = nil }
     }
 
     public func updateNotifyCenter(_ coordinate: Coordinate) async throws {

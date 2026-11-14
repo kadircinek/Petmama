@@ -14,6 +14,7 @@ private actor StubNotificationRepository: NotificationRepository {
     func preferences() async throws -> NotificationPreferences { .default }
     func updatePreferences(_ preferences: NotificationPreferences) async throws {}
     func registerDeviceToken(_ token: String) async throws {}
+    func unregisterDeviceToken(_ token: String) async throws {}
     func updateNotifyCenter(_ coordinate: Coordinate) async throws {}
 }
 

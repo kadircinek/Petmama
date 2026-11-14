@@ -234,6 +234,7 @@ final class OfflineQueueTests: XCTestCase {
     func testQueuesWhenOfflineAndFlushesLater() async throws {
         let repo = FlakyRepository()
         let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(), repository: repo)
+        await queue.setOwner(UUID())
         let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
         let outcome = try await queue.checkIn(draft)
         XCTAssertEqual(outcome, .queuedOffline)
@@ -253,10 +254,59 @@ final class OfflineQueueTests: XCTestCase {
     func testStaleQueuedCheckInsAreDropped() async throws {
         let repo = FlakyRepository()
         await repo.setOnline(true)
-        let old = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy, createdAt: Date(timeIntervalSince1970: 0))
+        let owner = UUID()
+        let old = CheckInDraft(spotId: UUID(), kind: .fed, userId: owner, userCoordinate: .modaKadikoy,
+                               createdAt: Date(timeIntervalSince1970: 0))
         let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore([old]), repository: repo)
+        await queue.setOwner(owner)
         let results = await queue.flush(now: Date(timeIntervalSince1970: 13 * 3600))
         XCTAssertTrue(results.isEmpty)
+        let pending = await queue.pendingCount()
+        XCTAssertEqual(pending, 0)
+    }
+
+    func testQueuedDraftIsStampedWithOwner() async throws {
+        let repo = FlakyRepository()
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(), repository: repo)
+        let owner = UUID()
+        await queue.setOwner(owner)
+        _ = try await queue.checkIn(CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy))
+        let pending = await queue.pendingDrafts()
+        XCTAssertEqual(pending.map(\.userId), [owner])
+    }
+
+    func testFlushNeverSendsAnotherUsersDrafts() async throws {
+        let repo = FlakyRepository()
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(), repository: repo)
+        await queue.setOwner(UUID())
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        _ = try await queue.checkIn(draft)
+
+        await queue.setOwner(UUID())
+        await repo.setOnline(true)
+        let results = await queue.flush(now: draft.createdAt.addingTimeInterval(60))
+        XCTAssertTrue(results.isEmpty)
+        let received = await repo.received
+        XCTAssertTrue(received.isEmpty, "başka hesabın check-in'i gönderilmez")
+        let pending = await queue.pendingCount()
+        XCTAssertEqual(pending, 0, "sahibi olmayan taslak atılır")
+    }
+
+    func testFlushWithoutOwnerKeepsDrafts() async throws {
+        let repo = FlakyRepository()
+        await repo.setOnline(true)
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userId: UUID(), userCoordinate: .modaKadikoy)
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore([draft]), repository: repo)
+        let results = await queue.flush(now: draft.createdAt.addingTimeInterval(60))
+        XCTAssertTrue(results.isEmpty)
+        let pending = await queue.pendingCount()
+        XCTAssertEqual(pending, 1, "oturum açılınca gönderilmek üzere bekler")
+    }
+
+    func testClearRemovesPendingDrafts() async throws {
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore([draft]), repository: FlakyRepository())
+        await queue.clear()
         let pending = await queue.pendingCount()
         XCTAssertEqual(pending, 0)
     }

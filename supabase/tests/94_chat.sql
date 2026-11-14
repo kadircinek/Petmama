@@ -456,4 +456,79 @@ begin
 end
 $$;
 
+-- ---------------------------------------------------------------------------
+-- 4) Kaldırılmış bağlantının geçmişi geri görünmez (yeniden istek → geri çekme / engel)
+-- ---------------------------------------------------------------------------
+select tests.admin();
+do $$
+declare
+  ua   uuid := tests.make_user('Ilk');
+  ub   uuid := tests.make_user('Ikinci');
+  uc   uuid := tests.make_user('Ucuncu');
+  ud   uuid := tests.make_user('Dorduncu');
+  lat  float8 := tests.base_lat();
+  lng  float8 := tests.base_lng();
+  u    uuid;
+  j    jsonb;
+  dc   uuid;
+  dc2  uuid;
+  req  uuid;
+begin
+  foreach u in array array[ua, ub, uc, ud] loop
+    perform tests.login(u); perform give_social_consent();
+    perform update_social_profile(true, '', array[]::social_interest[], lat, lng);
+  end loop;
+
+  -- (a) kaldır → yeniden istek → geri çek
+  perform tests.admin();
+  dc := tests.connect_pair(ua, ub);
+  perform tests.login(ua);
+  perform tests.eq(send_chat_message(dc, 'Eski geçmiş')->>'status', 'sent', '(a) history message');
+  perform tests.eq(remove_connection(ub)->>'status', 'ok', '(a) A removes connection');
+  perform tests.login(ub);
+  j := send_connection_request(ua);
+  perform tests.eq(j->>'status', 'sent', '(a) B re-requests');
+  req := (j->>'request_id')::uuid;
+  perform tests.eq(withdraw_connection_request(req)->>'status', 'ok', '(a) B withdraws');
+  foreach u in array array[ua, ub] loop
+    perform tests.login(u);
+    perform tests.check(not exists (select 1 from my_conversations() where conversation_id = dc), '(a) not listed');
+    perform tests.eq((select count(*)::int from conversation_messages(dc)), 0, '(a) 0 messages');
+    perform tests.eq(send_chat_message(dc, 'x')->>'status', 'not_member', '(a) send → not_member');
+  end loop;
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from conversations where id = dc), 0, '(a) old conversation row gone');
+  perform tests.eq((select count(*)::int from chat_messages where conversation_id = dc), 0, '(a) old messages gone');
+  -- sonra yeni bağlantı: yeni, boş sohbet
+  perform tests.login(ub);
+  perform send_connection_request(ua);
+  perform tests.login(ua);
+  j := send_connection_request(ub);
+  perform tests.eq(j->>'status', 'auto_accepted', '(a) reconnect');
+  dc2 := (j->>'conversation_id')::uuid;
+  perform tests.check(dc2 <> dc, '(a) new conversation');
+  perform tests.eq((select count(*)::int from conversation_messages(dc2)), 0, '(a) new conversation has no old history');
+  perform tests.eq((select count(*)::int from my_conversations() where kind = 'direct'), 1, '(a) exactly one direct chat listed');
+
+  -- (b) kaldır → yeniden istek → engel → engeli kaldır
+  perform tests.admin();
+  dc := tests.connect_pair(uc, ud);
+  perform tests.login(uc);
+  perform tests.eq(send_chat_message(dc, 'Eski geçmiş')->>'status', 'sent', '(b) history message');
+  perform remove_connection(ud);
+  perform tests.login(ud);
+  perform tests.eq(send_connection_request(uc)->>'status', 'sent', '(b) D re-requests');
+  perform tests.login(uc);
+  insert into blocks (blocked_user_id) values (ud);
+  delete from blocks where blocked_user_id = ud;
+  foreach u in array array[uc, ud] loop
+    perform tests.login(u);
+    perform tests.check(not exists (select 1 from my_conversations() where conversation_id = dc), '(b) not listed after unblock');
+    perform tests.eq((select count(*)::int from conversation_messages(dc)), 0, '(b) 0 messages after unblock');
+  end loop;
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from conversations where id = dc), 0, '(b) old conversation row gone');
+end
+$$;
+
 rollback;

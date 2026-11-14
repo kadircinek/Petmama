@@ -41,7 +41,9 @@ as $$
   limit 1
 $$;
 
--- Sohbet izleyiciye görünür mü? (üyelik + bire bir için bağlantı/engel durumu)
+-- Sohbet izleyiciye görünür mü? (üyelik + bire bir için bağlantı/engel durumu). Bire bir: bağlantı `accepted` ve
+-- engel yok; ya da bağlantı satırı yok VE tek üye kaldı (karşı taraf hesabını sildi). Kabul edilmemiş bağlantı
+-- satırı silinince sohbeti de silinir (connections_drop_conversation), yetim sohbet kalmaz.
 create function private.conversation_visible(p_c public.conversations, p_uid uuid)
 returns boolean
 language sql stable
@@ -50,10 +52,12 @@ as $$
   select exists (select 1 from public.conversation_members cm
                  where cm.conversation_id = p_c.id and cm.user_id = p_uid)
      and (p_c.kind = 'meetup'
-          or ((p_c.connection_id is null
-               or exists (select 1 from public.connections cn
-                          where cn.id = p_c.connection_id and cn.status = 'accepted'))
-              and not coalesce(private.blocked_between(p_uid, private.direct_other_member(p_c.id, p_uid)), false)))
+          or (exists (select 1 from public.connections cn
+                      where cn.id = p_c.connection_id and cn.status = 'accepted')
+              and not coalesce(private.blocked_between(p_uid, private.direct_other_member(p_c.id, p_uid)), false))
+          -- bağlantı satırı yok: yalnızca karşı taraf hesabını sildiyse (tek üye kaldı) görünür
+          or (p_c.connection_id is null
+              and (select count(*) from public.conversation_members cm where cm.conversation_id = p_c.id) < 2))
 $$;
 
 -- Sohbet salt okunur mu? closed_at; buluşmada iptal veya bitişten 24 saat sonrası; bire bir'de 2'den az üye,
@@ -70,6 +74,7 @@ as $$
                          from public.meetups m where m.id = p_c.meetup_id), true)
            else
              (select count(*) from public.conversation_members cm where cm.conversation_id = p_c.id) < 2
+             or p_c.connection_id is null
              or coalesce((select cn.status <> 'accepted' from public.connections cn where cn.id = p_c.connection_id), false)
              or coalesce(private.blocked_between(p_uid, private.direct_other_member(p_c.id, p_uid)), false)
          end
@@ -316,8 +321,8 @@ create trigger blocks_apply_to_social
 --   * düzenlediği aktif, bitmemiş buluşmaların katılımcılarına `meetup_cancelled` bildirimi (düzenleyeni
 --     engellemiş olanlar hariç). `actor_id` boş: bildirim silinen kişiyle birlikte gitmesin; `meetup_id`
 --     buluşma cascade ile silinince null olur.
---   * karşı taraftan zaten gizli olan bire bir sohbetler (bağlantı kabul edilmiş değil: kaldırıldı/engel) tümden
---     silinir — aksi halde `connection_id` null olunca 'Silinmiş kullanıcı' olarak yeniden görünürlerdi.
+--   * kabul edilmemiş bağlantıların (kaldırıldı/engel) sohbetleri cascade ile silinen bağlantı satırıyla birlikte
+--     gider (connections_drop_conversation); kabul edilmiş bağlantının sohbeti kalan kişi için kalır.
 -- ---------------------------------------------------------------------------
 create function private.cancel_meetups_of_deleted()
 returns trigger
@@ -339,12 +344,6 @@ begin
     and mp.user_id <> old.id
     and not private.blocked_between(mp.user_id, old.id);
 
-  delete from public.conversations cv
-   using public.connections c
-   where cv.connection_id = c.id
-     and old.id in (c.requester_id, c.addressee_id)
-     and c.status <> 'accepted';
-
   return old;
 end
 $$;
@@ -352,6 +351,30 @@ $$;
 create trigger profiles_cancel_meetups
   before delete on public.profiles
   for each row execute function private.cancel_meetups_of_deleted();
+
+-- ---------------------------------------------------------------------------
+-- Bağlantı satırı silinirken (geri çekme, engelde bekleyen isteğin silinmesi, hesap silme cascade'i) statü
+-- `accepted` değilse bağlı bire bir sohbet de silinir: kaldırılmış bir bağlantı yeniden istenip geri çekilince ya da
+-- engellenince eski sohbet `connection_id` null olarak yetim kalıp geri görünmesin. `accepted` bağlantı RPC'lerle
+-- silinmez; yalnızca hesap silme cascade'inde silinir ve sohbet kalan kişi için ('Silinmiş kullanıcı') kalır.
+-- ---------------------------------------------------------------------------
+create function private.drop_conversation_of_connection()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+begin
+  if old.status <> 'accepted' then
+    delete from public.conversations cv where cv.connection_id = old.id;
+  end if;
+  return old;
+end
+$$;
+
+create trigger connections_drop_conversation
+  before delete on public.connections
+  for each row execute function private.drop_conversation_of_connection();
 
 -- ---------------------------------------------------------------------------
 -- Rapor → otomatik gizleme: 0014'teki tanımın kopyası + `chat_message`

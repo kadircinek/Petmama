@@ -411,7 +411,7 @@ extension InMemoryBackend: SocialRepository {
         guard hasConsented(me), let conversation = conversationRecords[conversationId],
               conversation.members[me] != nil, conversationVisible(conversation, to: me) else { return [] }
         let page = visibleMessages(in: conversationId, viewer: me)
-            .filter { before == nil || $0.createdAt < before! }
+            .filter { message in before.map { message.createdAt < $0 } ?? true }
             .suffix(min(max(limit, 1), 100))
         return Array(page)
     }
@@ -577,7 +577,19 @@ extension InMemoryBackend {
             authorId: other, authorName: author.displayName, authorAvatarURL: author.avatarURL,
             body: body, createdAt: message.createdAt.addingTimeInterval(Self.demoResponseDelay)
         ))
+        // Görünürlük `now()`'a bağlı kalır; yalnızca "yenile" sinyali duvar saatiyle zamanlanır, böylece açık sohbet
+        // ekranı cevap vakti gelince yeniden okur.
+        let hub = chatHub
+        let conversationId = conversation.id
+        let delay = replySignalDelay
+        Task.detached {
+            try? await Task.sleep(for: delay)
+            hub.notify(conversationId)
+        }
     }
+
+    /// Test yardımcısı: hazır cevap sinyalinin gecikmesi (varsayılan `demoResponseDelay`).
+    public func setReplySignalDelay(_ delay: Duration) { replySignalDelay = delay }
 
     func otherMember(of conversation: ConversationRecord, than me: UUID) -> UUID? {
         conversation.members.keys.filter { $0 != me }.min { $0.uuidString < $1.uuidString }

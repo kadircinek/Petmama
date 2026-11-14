@@ -52,6 +52,8 @@ public actor InMemoryBackend {
     let scriptedSocialUsers: Set<UUID>
     var cannedReplyIndex = 0
     let chatHub = ChatUpdateHub()
+    /// Hazır cevap için gecikmeli "yenile" sinyali (testlerde kısaltılır).
+    var replySignalDelay: Duration = .milliseconds(Int(InMemoryBackend.demoResponseDelay * 1000))
 
     let now: @Sendable () -> Date
 

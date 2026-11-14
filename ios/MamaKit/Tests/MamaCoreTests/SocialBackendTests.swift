@@ -359,12 +359,38 @@ final class SocialBackendTests: XCTestCase {
         XCTAssertEqual(older.map(\.id), [message.id])
     }
 
+    /// `count` sinyal gelirse true; `timeout` içinde gelmezse false (asılı kalmaz). Akış göndermeden önce dinlenir.
+    func expectSignals(_ stream: AsyncStream<Void>, count: Int, within timeout: Duration = .seconds(2)) -> Task<Bool, Never> {
+        let consumer = Task {
+            var received = 0
+            for await _ in stream {
+                received += 1
+                if received >= count { return true }
+            }
+            return false
+        }
+        Task {
+            try? await Task.sleep(for: timeout)
+            consumer.cancel()
+        }
+        return consumer
+    }
+
     func testChatUpdatesYieldOnNewMessage() async throws {
         let conversationId = try await connectWithAyse()
-        var iterator = backend.updates(conversationId: conversationId).makeAsyncIterator()
+        let signals = expectSignals(backend.updates(conversationId: conversationId), count: 1)
         _ = try await backend.sendMessage(conversationId: conversationId, body: "Merhaba")
-        let signal: Void? = await iterator.next()
-        XCTAssertNotNil(signal)
+        let received = await signals.value
+        XCTAssertTrue(received, "kendi mesajında sinyal gelmedi")
+    }
+
+    func testChatUpdatesSignalAgainWhenCannedReplyIsDue() async throws {
+        let conversationId = try await connectWithAyse()
+        await backend.setReplySignalDelay(.milliseconds(50))
+        let signals = expectSignals(backend.updates(conversationId: conversationId), count: 2)
+        _ = try await backend.sendMessage(conversationId: conversationId, body: "Merhaba")
+        let received = await signals.value
+        XCTAssertTrue(received, "hazır cevap için gecikmeli ikinci sinyal gelmedi")
     }
 
     func testNotMemberCannotSend() async throws {

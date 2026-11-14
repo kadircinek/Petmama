@@ -18,6 +18,8 @@ public struct SpotFilter: Hashable, Codable, Sendable {
     public var maxDistanceKm: Double
     public var onlyFollowed: Bool
     public var sort: Sort
+    /// Haritada buluşma pinleri gösterilsin mi (oturum açıksa).
+    public var showsMeetups: Bool
 
     public init(
         species: Set<AnimalSpecies> = [],
@@ -26,7 +28,8 @@ public struct SpotFilter: Hashable, Codable, Sendable {
         needTypes: Set<NeedType> = [],
         maxDistanceKm: Double = 3,
         onlyFollowed: Bool = false,
-        sort: Sort = .nearest
+        sort: Sort = .nearest,
+        showsMeetups: Bool = true
     ) {
         self.species = species
         self.statuses = statuses
@@ -35,6 +38,22 @@ public struct SpotFilter: Hashable, Codable, Sendable {
         self.maxDistanceKm = min(max(maxDistanceKm, 1), 10)
         self.onlyFollowed = onlyFollowed
         self.sort = sort
+        self.showsMeetups = showsMeetups
+    }
+
+    /// Eski kayıtlı filtrelerde `showsMeetups` yoktur; varsayılan açık.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            species: try c.decode(Set<AnimalSpecies>.self, forKey: .species),
+            statuses: try c.decode(Set<SpotStatus>.self, forKey: .statuses),
+            spotTypes: try c.decode(Set<SpotType>.self, forKey: .spotTypes),
+            needTypes: try c.decode(Set<NeedType>.self, forKey: .needTypes),
+            maxDistanceKm: try c.decode(Double.self, forKey: .maxDistanceKm),
+            onlyFollowed: try c.decode(Bool.self, forKey: .onlyFollowed),
+            sort: try c.decode(Sort.self, forKey: .sort),
+            showsMeetups: try c.decodeIfPresent(Bool.self, forKey: .showsMeetups) ?? true
+        )
     }
 
     public static let `default` = SpotFilter()
@@ -50,6 +69,7 @@ public struct SpotFilter: Hashable, Codable, Sendable {
         if !needTypes.isEmpty { count += 1 }
         if maxDistanceKm != SpotFilter.default.maxDistanceKm { count += 1 }
         if onlyFollowed { count += 1 }
+        if !showsMeetups { count += 1 }
         return count
     }
 

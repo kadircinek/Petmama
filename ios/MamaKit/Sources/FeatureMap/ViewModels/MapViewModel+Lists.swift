@@ -22,7 +22,9 @@ extension MapViewModel {
 
     public func applyFilter(_ newFilter: SpotFilter) async {
         let radiusChanged = newFilter.maxDistanceKm != filter.maxDistanceKm
+        let meetupsChanged = newFilter.showsMeetups != filter.showsMeetups
         filter = newFilter
+        if meetupsChanged { await loadMeetups() }
         if newFilter.onlyFollowed { await loadFollowed() }
         recluster()
         if radiusChanged, mode != .map { await loadCurrentMode() }

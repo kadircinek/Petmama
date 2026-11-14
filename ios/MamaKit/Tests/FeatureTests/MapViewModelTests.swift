@@ -219,4 +219,44 @@ final class MapViewModelTests: XCTestCase {
         let types = Set(model.filteredNeeds.map(\.type))
         XCTAssertEqual(types, [.shelter])
     }
+
+    // MARK: - Buluşma pinleri
+
+    func testMeetupsLoadWhenSignedIn() async {
+        let (model, _) = makeModel()
+        model.setVisibleBounds(wideBounds)
+        await model.loadRegion()
+        XCTAssertEqual(model.meetups.count, 2)
+    }
+
+    func testMeetupsHiddenWhenFilterOff() async {
+        let (model, _) = makeModel()
+        model.setVisibleBounds(wideBounds)
+        await model.loadRegion()
+        var filter = SpotFilter.default
+        filter.showsMeetups = false
+        await model.applyFilter(filter)
+        XCTAssertEqual(model.meetups, [])
+        XCTAssertEqual(filter.activeCount, 1)
+        await model.applyFilter(.default)
+        XCTAssertEqual(model.meetups.count, 2)
+    }
+
+    func testMeetupsEmptyWhenSignedOutAndSpotsStillLoad() async {
+        let (model, _) = makeModel(signedIn: false)
+        model.setVisibleBounds(wideBounds)
+        await model.loadRegion()
+        XCTAssertEqual(model.meetups, [])
+        XCTAssertNil(model.error)
+        XCTAssertFalse(model.mapSpots.isEmpty)
+    }
+
+    func testSpotFilterDecodesLegacyJSONWithMeetupsShown() throws {
+        let legacy = try JSONEncoder().encode(SpotFilter.default)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: legacy) as? [String: Any])
+        object.removeValue(forKey: "showsMeetups")
+        let data = try JSONSerialization.data(withJSONObject: object)
+        let decoded = try JSONDecoder().decode(SpotFilter.self, from: data)
+        XCTAssertTrue(decoded.showsMeetups)
+    }
 }

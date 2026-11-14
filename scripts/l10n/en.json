@@ -866,5 +866,7 @@
   "Rahatsız eden bir mesaja uzun basıp \"Raporla\" ya da \"Engelle\"yi seç; bire bir sohbette engelleme sağ üstteki menüde de var.": "Long-press a disturbing message and choose \"Report\" or \"Block\"; in one-to-one chats, blocking is also in the top-right menu.",
   "İstek geri çekilsin mi?": "Withdraw this request?",
   "İsteği geri çek": "Withdraw request",
-  "İsteğin geri çekildi.": "Your request was withdrawn."
+  "İsteğin geri çekildi.": "Your request was withdrawn.",
+  "Buluşma ayrıntısını açar": "Opens meetup details",
+  "Buluşma: %@, %@": "Meetup: %@, %@"
 }

@@ -3113,6 +3113,23 @@
         }
       }
     },
+    "Buluşma ayrıntısını açar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buluşma ayrıntısını açar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens meetup details"
+          }
+        }
+      }
+    },
     "Buluşma aç": {
       "extractionState": "manual",
       "localizations": {
@@ -3245,6 +3262,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Map for choosing the meeting point"
+          }
+        }
+      }
+    },
+    "Buluşma: %@, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buluşma: %@, %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meetup: %@, %@"
           }
         }
       }

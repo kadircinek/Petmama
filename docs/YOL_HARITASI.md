@@ -57,6 +57,17 @@ ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar hari
 | 3.5 | USD/TRY kuru sabit config | Edge function ya da günlük cron ile güncelle |
 | 3.6 | Rozetler, bağış izi ekranı ("yakında" yer tutucuları) | `ProfileTabScreen.swift:122`, `DonationTraceViewModel.swift:11` |
 
+### Tanışma — takip edilecekler (son incelemeden ertelenenler)
+
+- Gerçek cihazda elle kontrol: Hayvanseverler görünürlük anahtarı (simülatörde dokunuşa yanıt vermedi), Apple ile hesap silme onayı, Realtime sohbet.
+- Konum hücresi istemciden serbestçe değiştirilebiliyor: birinin bandını farklı noktalardan sorgulamayı zorlaştırmak için hücre değişikliğine hız sınırı (ör. saatte bir) düşünülmeli. Hassasiyet tabanı (~1 km) korunuyor.
+- Açık sohbet her yenilemede `my_conversations` çağırıyor (200 satır sınırı; çok eski sohbet yanlışlıkla gizli sayılabilir) → tek sohbet özeti RPC'si.
+- Realtime kopunca sohbet kalıcı olarak 5 sn yenilemeye geçiyor; yeniden abone olma yok.
+- Harita her kamera hareketinde buluşmaları yeniden istiyor; debounce/merkez kontrolü.
+- Bağlantı kaldırılıp yeniden kabul edilince eski sohbet geçmişi geri geliyor (spec'e uygun); arayüzde belirtilebilir.
+- Noktadan açılan buluşmada "evine çok yakın" uyarısı yanıltıcı olabilir; sohbet yığını tekrar tekrar büyüyebilir; bazı ekranlar her sheet kapanışında yeniden yükleniyor.
+- Moderatörün bekleyen sohbet mesajlarını inceleyebileceği bir yol yok (Faz 3.1 moderasyon paneliyle birlikte).
+
 ## 5. Faz 4 — Yayın hazırlığı
 
 - [ ] `DEVELOPMENT_TEAM` (`project.yml:17`), sürüm 0.1.0 → 1.0.0

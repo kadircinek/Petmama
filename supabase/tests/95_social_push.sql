@@ -438,6 +438,73 @@ end
 $$;
 
 -- ---------------------------------------------------------------------------
+-- 5b) can_listen_conversation: kanal dinleme yetkisi
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  lat float8 := tests.base_lat();
+  lng float8 := tests.base_lng();
+  org uuid := tests.make_user('Kanal Duz');
+  a   uuid := tests.make_user('Kanal Uye');
+  rm  uuid := tests.make_user('Kanal Cikarilan');
+  out uuid := tests.make_user('Kanal Disari');
+  p   uuid := tests.make_user('Kanal P');
+  q   uuid := tests.make_user('Kanal Q');
+  u   uuid;
+  j   jsonb;
+  mc  uuid;
+  m   uuid;
+  dc  uuid;
+begin
+  foreach u in array array[org, a, rm, out, p, q] loop
+    perform tests.login(u); perform give_social_consent();
+  end loop;
+  perform tests.login(org);
+  j := create_meetup('Kanal buluşması', '', now() + interval '3 hours', 120, 'Moda', lat, lng);
+  m := (j->>'meetup_id')::uuid; mc := (j->>'conversation_id')::uuid;
+  foreach u in array array[a, rm] loop
+    perform tests.login(u); perform join_meetup(m);
+  end loop;
+  perform tests.login(org); perform remove_meetup_participant(m, rm);
+  perform tests.admin();
+  dc := tests.connect_pair(p, q);
+
+  perform tests.login(a);
+  perform tests.eq(can_listen_conversation('conversation:' || mc), true, 'member may listen');
+  perform tests.login(org);
+  perform tests.eq(can_listen_conversation('conversation:' || mc), true, 'organizer may listen');
+  perform tests.login(out);
+  perform tests.eq(can_listen_conversation('conversation:' || mc), false, 'non-member may not listen');
+  perform tests.login(rm);
+  perform tests.eq(can_listen_conversation('conversation:' || mc), false, 'removed participant may not listen');
+  perform tests.login(a);
+  perform tests.eq(can_listen_conversation('conversation:xyz'), false, 'malformed uuid → false');
+  perform tests.eq(can_listen_conversation('foo:' || mc), false, 'wrong prefix → false');
+  perform tests.eq(can_listen_conversation('conversation:' || mc || 'x'), false, 'trailing junk → false');
+  perform tests.eq(can_listen_conversation(null), false, 'null topic → false');
+  perform tests.eq(can_listen_conversation('conversation:' || gen_random_uuid()), false, 'unknown conversation → false');
+
+  perform tests.login(p);
+  perform tests.eq(can_listen_conversation('conversation:' || dc), true, 'direct member may listen');
+  perform tests.admin();
+  insert into blocks (user_id, blocked_user_id) values (q, p);
+  perform tests.login(p);
+  perform tests.eq(can_listen_conversation('conversation:' || dc), false, 'blocked direct chat: blocked side may not listen');
+  perform tests.login(q);
+  perform tests.eq(can_listen_conversation('conversation:' || dc), false, 'blocked direct chat: blocker may not listen');
+
+  perform tests.anon();
+  begin
+    perform can_listen_conversation('conversation:' || mc);
+    raise exception 'FAIL: anon can call can_listen_conversation';
+  exception when insufficient_privilege then
+    perform tests.check(true, 'anon cannot execute can_listen_conversation');
+  end;
+  perform tests.admin();
+end
+$$;
+
+-- ---------------------------------------------------------------------------
 -- 6) Realtime: realtime.send yoksa (yerel imaj) tetikleyici hiçbir şey yapmaz; varsa politika ve tetikleyici kurulur
 -- ---------------------------------------------------------------------------
 do $$

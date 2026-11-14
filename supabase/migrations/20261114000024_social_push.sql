@@ -365,13 +365,47 @@ set search_path = public, extensions
 as $$
 begin
   if new.moderation_state = 'approved' then
-    execute 'select realtime.send($1, $2, $3, $4)'
-      using jsonb_build_object('conversation_id', new.conversation_id), 'message',
-            'conversation:' || new.conversation_id::text, true;
+    begin
+      execute 'select realtime.send($1, $2, $3, $4)'
+        using jsonb_build_object('conversation_id', new.conversation_id), 'message',
+              'conversation:' || new.conversation_id::text, true;
+    exception when others then
+      -- yayın hatası mesajın kaydını asla geri almasın
+      raise warning 'chat realtime broadcast failed: %', sqlerrm;
+    end;
   end if;
   return null;
 end
 $$;
+
+-- Kanal dinleme yetkisi: 'conversation:<uuid>' konusu, çağıranın görebildiği bir sohbete aitse true.
+-- security definer: conversation_members'a doğrudan erişim yok (RLS açık, yetki yok); politika bu yardımcıyı çağırır.
+-- Hatalı konu (önek/uuid biçimi, null) istisna değil false döner. realtime şemasına bağlı değil → koşulsuz kurulur.
+create function public.can_listen_conversation(p_topic text)
+returns boolean
+language plpgsql stable security definer
+set search_path = public, extensions
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_id  uuid;
+  v_c   public.conversations;
+begin
+  if v_uid is null or p_topic is null
+     or p_topic !~ '^conversation:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' then
+    return false;
+  end if;
+  v_id := substr(p_topic, 14)::uuid;
+  select * into v_c from public.conversations c where c.id = v_id;
+  if not found then
+    return false;
+  end if;
+  return private.conversation_visible(v_c, v_uid);
+end
+$$;
+
+revoke all on function public.can_listen_conversation(text) from public, anon, authenticated;
+grant execute on function public.can_listen_conversation(text) to authenticated;
 
 do $$
 begin
@@ -384,11 +418,7 @@ begin
           for select to authenticated
           using (
             realtime.messages.extension = 'broadcast'
-            and exists (
-              select 1 from public.conversation_members cm
-              where cm.user_id = (select auth.uid())
-                and 'conversation:' || cm.conversation_id::text = (select realtime.topic())
-            )
+            and public.can_listen_conversation((select realtime.topic()))
           )
       $p$;
     end if;

@@ -44,6 +44,15 @@ final class SocialConsentAndMeetupTests: XCTestCase {
         XCTAssertEqual(before, after)
     }
 
+    func testMeetupPointNearDeviceAsksForConfirmation() async throws {
+        let env = try await makeSocialEnvironment()
+        let model = CreateMeetupViewModel(services: env.services, coordinate: .modaKadikoy)
+        XCTAssertTrue(model.isNearDevice(.modaKadikoy))
+        XCTAssertTrue(model.isNearDevice(GeoMath.offset(.modaKadikoy, north: 40, east: 0)))
+        XCTAssertFalse(model.isNearDevice(GeoMath.offset(.modaKadikoy, north: 80, east: 0)))
+        XCTAssertFalse(model.isNearDevice(nil))
+    }
+
     func testValidMeetupIsCreated() async throws {
         let env = try await makeSocialEnvironment()
         let model = CreateMeetupViewModel(services: env.services)
@@ -158,6 +167,25 @@ final class SocialLoversTests: XCTestCase {
         }
     }
 
+    func testPendingRequestCanBeWithdrawn() async throws {
+        let env = try await makeSocialEnvironment()
+        let edit = SocialProfileEditViewModel(services: env.services)
+        await edit.load()
+        edit.isVisible = true
+        _ = await edit.save(at: .modaKadikoy)
+        // Saat ilerlemez: senaryolu kabul gelmeden istek beklemede kalır.
+        let model = AnimalLoversViewModel(services: env.services, sleep: { _ in })
+        await model.load(at: .modaKadikoy)
+        guard case .sent = await model.sendRequest(to: DemoData.ayseId, note: nil) else { return XCTFail("sent bekleniyordu") }
+        guard case .outgoingPending(let requestId) = model.lovers.first(where: { $0.id == DemoData.ayseId })?.connection else {
+            return XCTFail("beklemede görünmeli")
+        }
+        let withdrawn = await model.withdraw(requestId: requestId)
+        XCTAssertTrue(withdrawn)
+        XCTAssertEqual(model.lovers.first { $0.id == DemoData.ayseId }?.connection, ConnectionState.none)
+        XCTAssertNil(model.error)
+    }
+
     func testIncomingRequestCanBeAccepted() async throws {
         let env = try await makeSocialEnvironment()
         let edit = SocialProfileEditViewModel(services: env.services)
@@ -240,6 +268,19 @@ final class SocialChatTests: XCTestCase {
         await model.start()
         XCTAssertEqual(model.messages.count, 2)
         XCTAssertEqual(model.messages.last?.authorId, DemoData.ayseId)
+    }
+
+    func testRestartDropsMessagesOfBlockedMember() async throws {
+        let env = try await makeSocialEnvironment()
+        _ = try await env.backend.joinMeetup(id: DemoData.id(8, 1))
+        let model = ChatViewModel(services: env.services, conversationId: DemoData.id(9, 1))
+        await model.start()
+        defer { model.stop() }
+        XCTAssertTrue(model.messages.contains { $0.authorId == DemoData.emreId })
+        try await env.services.moderation.block(userId: DemoData.emreId)
+        await model.restart()
+        XCTAssertFalse(model.messages.isEmpty)
+        XCTAssertFalse(model.messages.contains { $0.authorId == DemoData.emreId })
     }
 
     func testLiveSignalRefreshesMessages() async throws {

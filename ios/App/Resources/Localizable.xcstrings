@@ -439,7 +439,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld people"
+            "value": "Participants: %lld"
           }
         }
       }
@@ -507,7 +507,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld unread messages"
+            "value": "Unread messages: %lld"
           }
         }
       }
@@ -524,7 +524,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld shared interests"
+            "value": "Shared interests: %lld"
           }
         }
       }
@@ -575,7 +575,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld introduction requests are waiting for you"
+            "value": "Introduction requests waiting: %lld"
           }
         }
       }
@@ -626,7 +626,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld/%lld people"
+            "value": "Participants: %lld/%lld"
           }
         }
       }
@@ -678,6 +678,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Under 1 km"
+          }
+        }
+      }
+    },
+    "1 saat": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 saat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 hour"
           }
         }
       }
@@ -2280,6 +2297,23 @@
         }
       }
     },
+    "Birbirinizin mesajlarını görmezsiniz ve listelerde karşılaşmazsınız. Engeli Ayarlar'dan kaldırabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birbirinizin mesajlarını görmezsiniz ve listelerde karşılaşmazsınız. Engeli Ayarlar'dan kaldırabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You won't see each other's messages or meet in lists. You can remove the block in Settings."
+          }
+        }
+      }
+    },
     "Birden fazla seçebilirsin.": {
       "extractionState": "manual",
       "localizations": {
@@ -3147,6 +3181,23 @@
         }
       }
     },
+    "Buluşma noktası evine çok yakın görünüyor. Herkese açık bir yer seçtiğinden emin misin?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buluşma noktası evine çok yakın görünüyor. Herkese açık bir yer seçtiğinden emin misin?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meeting point looks very close to your home. Are you sure you chose a public place?"
+          }
+        }
+      }
+    },
     "Buluşma noktası haritası": {
       "extractionState": "manual",
       "localizations": {
@@ -3279,6 +3330,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Meetups take place in public places. Don't share your home address; report anything that makes you uncomfortable."
+          }
+        }
+      }
+    },
+    "Buluşmalar ve tanışma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buluşmalar ve tanışma"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meetups and introductions"
           }
         }
       }
@@ -3500,6 +3568,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "You need to sign in to do this."
+          }
+        }
+      }
+    },
+    "Burada buluşma aç": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Burada buluşma aç"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start a meetup here"
           }
         }
       }
@@ -4673,6 +4758,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yes, this spot"
+          }
+        }
+      }
+    },
+    "Evet, burası herkese açık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evet, burası herkese açık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes, this is a public place"
           }
         }
       }
@@ -6819,6 +6921,23 @@
         }
       }
     },
+    "Karşı tarafa bildirim gitmez. İstersen daha sonra yeniden istek gönderebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karşı tarafa bildirim gitmez. İstersen daha sonra yeniden istek gönderebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The other person isn't notified. You can send a new request later if you like."
+          }
+        }
+      }
+    },
     "Katıl": {
       "extractionState": "manual",
       "localizations": {
@@ -7108,6 +7227,23 @@
         }
       }
     },
+    "Kişi engellendi; mesajlarını artık görmeyeceksin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kişi engellendi; mesajlarını artık görmeyeceksin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person blocked; you won't see their messages anymore."
+          }
+        }
+      }
+    },
     "Kişi sınırı": {
       "extractionState": "manual",
       "localizations": {
@@ -7172,6 +7308,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Learn whether your personal data is being processed and request information"
+          }
+        }
+      }
+    },
+    "Komşu besleyicilerle bu noktada mama turu ya da bakım günü planla.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Komşu besleyicilerle bu noktada mama turu ya da bakım günü planla."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan a feeding round or care day at this spot with fellow feeders."
           }
         }
       }
@@ -8158,23 +8311,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neighborhood guardian"
-          }
-        }
-      }
-    },
-    "Mahalle ve tanışma bildirimleri": {
-      "extractionState": "manual",
-      "localizations": {
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mahalle ve tanışma bildirimleri"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neighbourhood and meetup notifications"
           }
         }
       }
@@ -9369,6 +9505,23 @@
         }
       }
     },
+    "Noktayı değiştir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noktayı değiştir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change the point"
+          }
+        }
+      }
+    },
     "Noktayı ekle": {
       "extractionState": "manual",
       "localizations": {
@@ -10032,19 +10185,19 @@
         }
       }
     },
-    "Rahatsız eden bir mesaja uzun basıp \"Raporla\"yı seç; kişiyi sohbetin menüsünden engelleyebilirsin.": {
+    "Rahatsız eden bir mesaja uzun basıp \"Raporla\" ya da \"Engelle\"yi seç; bire bir sohbette engelleme sağ üstteki menüde de var.": {
       "extractionState": "manual",
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rahatsız eden bir mesaja uzun basıp \"Raporla\"yı seç; kişiyi sohbetin menüsünden engelleyebilirsin."
+            "value": "Rahatsız eden bir mesaja uzun basıp \"Raporla\" ya da \"Engelle\"yi seç; bire bir sohbette engelleme sağ üstteki menüde de var."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Long-press a disturbing message and choose \"Report\"; you can block the person from the chat menu."
+            "value": "Long-press a disturbing message and choose \"Report\" or \"Block\"; in one-to-one chats, blocking is also in the top-right menu."
           }
         }
       }
@@ -10741,7 +10894,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fed %lld times in the last 30 days"
+            "value": "Feedings in the last 30 days: %lld"
           }
         }
       }
@@ -14197,6 +14350,23 @@
         }
       }
     },
+    "İstek geri çekilsin mi?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İstek geri çekilsin mi?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Withdraw this request?"
+          }
+        }
+      }
+    },
     "İstek gönder": {
       "extractionState": "manual",
       "localizations": {
@@ -14261,6 +14431,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Optional. If you link it to a spot, it also appears on the spot's page."
+          }
+        }
+      }
+    },
+    "İsteği geri çek": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İsteği geri çek"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Withdraw request"
+          }
+        }
+      }
+    },
+    "İsteğin geri çekildi.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İsteğin geri çekildi."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your request was withdrawn."
           }
         }
       }

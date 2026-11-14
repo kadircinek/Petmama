@@ -101,6 +101,8 @@ public final class NotificationsViewModel {
         if let needId = notification.needId { return .need(needId) }
         if let spotId = notification.spotId { return .spot(spotId) }
         if notification.kind == .donationDelivered { return .donationTrace }
+        if notification.kind == .connectionRequest { return .connectionRequests }
+        if notification.kind == .connectionAccepted { return .conversations }
         return nil
     }
 

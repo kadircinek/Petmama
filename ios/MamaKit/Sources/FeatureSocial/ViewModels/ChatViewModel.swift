@@ -47,6 +47,14 @@ public final class ChatViewModel {
         canLoadOlder = messages.count >= Self.pageSize
     }
 
+    /// Listeyi sıfırdan yükler: `start()` birleştirdiği için gizlenen (ör. engellenen kişinin) mesajları düşürmez.
+    public func restart() async {
+        stop()
+        messages = []
+        hasMarkedRead = false
+        await start()
+    }
+
     public func stop() {
         updatesTask?.cancel()
         updatesTask = nil

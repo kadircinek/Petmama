@@ -14,6 +14,9 @@ public struct ChatScreen: View {
     @State private var showsBlockDialog = false
     @State private var showsRemoveDialog = false
     @State private var isActing = false
+    /// Mesajın menüsünden engellenecek kişi.
+    @State private var authorPendingBlock: ChatMessage?
+    @State private var showsAuthorBlockDialog = false
     private let services: AppServices
 
     public init(conversationId: UUID, services: AppServices) {
@@ -35,6 +38,17 @@ public struct ChatScreen: View {
                 Button("Vazgeç", role: .cancel) {}
             } message: {
                 Text("Sohbetiniz kapanır ve birbirinizi listelerde görmezsiniz. Engeli Ayarlar'dan kaldırabilirsin.")
+            }
+            .confirmationDialog(
+                "Bu kişi engellensin mi?",
+                isPresented: $showsAuthorBlockDialog,
+                titleVisibility: .visible,
+                presenting: authorPendingBlock
+            ) { message in
+                Button("Engelle", role: .destructive) { blockAuthor(of: message) }
+                Button("Vazgeç", role: .cancel) {}
+            } message: { _ in
+                Text("Birbirinizin mesajlarını görmezsiniz ve listelerde karşılaşmazsınız. Engeli Ayarlar'dan kaldırabilirsin.")
             }
             .confirmationDialog("Bağlantı kaldırılsın mı?", isPresented: $showsRemoveDialog, titleVisibility: .visible) {
                 Button("Bağlantıyı kaldır", role: .destructive) { removeConnection() }
@@ -83,6 +97,12 @@ public struct ChatScreen: View {
                                     router.present(.report(.chatMessage, message.id), session: session)
                                 } label: {
                                     Label("Raporla", systemImage: "flag")
+                                }
+                                Button(role: .destructive) {
+                                    authorPendingBlock = message
+                                    showsAuthorBlockDialog = true
+                                } label: {
+                                    Label("Engelle", systemImage: "hand.raised.fill")
                                 }
                             }
                         }
@@ -209,7 +229,30 @@ public struct ChatScreen: View {
         guard let userId = model.summary?.otherUserId else { return }
         act {
             try await services.moderation.block(userId: userId)
-            router.showToast("Kişi engellendi.", style: .info)
+            router.showToast(String(localized: "Kişi engellendi."), style: .info)
+        }
+    }
+
+    /// Grup sohbetinde engellenenin mesajları gizlenir, sohbette kalınır; bire bir sohbet kapanır.
+    private func blockAuthor(of message: ChatMessage) {
+        guard !isActing else { return }
+        if model.summary?.kind == .direct {
+            act {
+                try await services.moderation.block(userId: message.authorId)
+                router.showToast(String(localized: "Kişi engellendi."), style: .info)
+            }
+            return
+        }
+        isActing = true
+        Task {
+            defer { isActing = false }
+            do {
+                try await services.moderation.block(userId: message.authorId)
+                router.showToast(String(localized: "Kişi engellendi; mesajlarını artık görmeyeceksin."), style: .info)
+                await model.restart()
+            } catch {
+                router.showToast(MamaError.classify(error).userMessage, style: .warning)
+            }
         }
     }
 
@@ -217,7 +260,7 @@ public struct ChatScreen: View {
         guard let userId = model.summary?.otherUserId else { return }
         act {
             try await services.social.removeConnection(userId: userId)
-            router.showToast("Bağlantı kaldırıldı.", style: .info)
+            router.showToast(String(localized: "Bağlantı kaldırıldı."), style: .info)
         }
     }
 

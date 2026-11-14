@@ -46,6 +46,14 @@ final class SocialBackendTests: XCTestCase {
 
     // MARK: - SocialPolicy
 
+    func testNearDeviceThreshold() {
+        let home = Coordinate.modaKadikoy
+        XCTAssertEqual(SocialPolicy.nearDeviceMeters, 50)
+        XCTAssertTrue(SocialPolicy.isNearDevice(point: home, device: home))
+        XCTAssertTrue(SocialPolicy.isNearDevice(point: GeoMath.offset(home, north: 49, east: 0), device: home))
+        XCTAssertFalse(SocialPolicy.isNearDevice(point: GeoMath.offset(home, north: 51, east: 0), device: home))
+    }
+
     func testDistanceBands() {
         XCTAssertEqual(SocialPolicy.band(meters: 0), .under1km)
         XCTAssertEqual(SocialPolicy.band(meters: 999), .under1km)

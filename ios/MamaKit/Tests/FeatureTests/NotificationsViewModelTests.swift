@@ -128,5 +128,9 @@ final class NotificationsViewModelTests: XCTestCase {
         let cancelled = AppNotification(kind: .meetupCancelled, title: "", body: "", spotId: spotId, meetupId: meetupId)
         XCTAssertEqual(NotificationsViewModel.route(for: chat), .conversation(conversationId))
         XCTAssertEqual(NotificationsViewModel.route(for: cancelled), .meetup(meetupId))
+        let request = AppNotification(kind: .connectionRequest, title: "", body: "")
+        let accepted = AppNotification(kind: .connectionAccepted, title: "", body: "")
+        XCTAssertEqual(NotificationsViewModel.route(for: request), .connectionRequests)
+        XCTAssertEqual(NotificationsViewModel.route(for: accepted), .conversations)
     }
 }

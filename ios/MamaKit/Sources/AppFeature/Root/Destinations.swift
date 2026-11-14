@@ -99,6 +99,8 @@ struct SheetDestination: View {
 struct TabStack<Root: View>: View {
     let tab: AppTab
     let services: AppServices
+    /// Kök ekranın altında `MamaTabBar` için bırakılan boşluk (itilen ekranlarda bar gizlidir).
+    let bottomInset: CGFloat
     @ViewBuilder let root: () -> Root
     @Environment(AppRouter.self) private var router
 
@@ -108,6 +110,9 @@ struct TabStack<Root: View>: View {
             set: { router.setPath($0, for: tab) }
         )) {
             root()
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    Color.clear.frame(height: bottomInset)
+                }
                 .navigationDestination(for: AppRoute.self) { route in
                     RouteDestination(route: route, services: services)
                 }

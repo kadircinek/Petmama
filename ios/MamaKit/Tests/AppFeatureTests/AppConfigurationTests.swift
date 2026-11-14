@@ -70,6 +70,14 @@ final class AppConfigurationTests: XCTestCase {
         let meetupTarget = PushPayload.route(from: ["meetup_id": meetup.uuidString, "spot_id": spot.uuidString])
         XCTAssertEqual(meetupTarget?.route, .meetup(meetup))
         XCTAssertEqual(meetupTarget?.tab, .community)
+        // Kimlik yoksa türe göre: bağlantı istekleri / sohbetler (Profil).
+        let request = PushPayload.route(from: ["kind": "connection_request"])
+        XCTAssertEqual(request?.route, .connectionRequests)
+        XCTAssertEqual(request?.tab, .profile)
+        let accepted = PushPayload.route(from: ["kind": "connection_accepted"])
+        XCTAssertEqual(accepted?.route, .conversations)
+        XCTAssertEqual(accepted?.tab, .profile)
+        XCTAssertNil(PushPayload.route(from: ["kind": "thanks_fed"]))
     }
 }
 

@@ -362,7 +362,7 @@ public struct MeetupDetailScreen: View {
         switch outcome {
         case .joined:
             successFeedback += 1
-            router.showToast("Buluşmaya katıldın! Sohbette diğer besleyicilerle konuşabilirsin.")
+            router.showToast(String(localized: "Buluşmaya katıldın! Sohbette diğer besleyicilerle konuşabilirsin."))
         case .consentRequired:
             joinAfterConsent = true
             router.present(.socialConsent, session: session)
@@ -374,7 +374,7 @@ public struct MeetupDetailScreen: View {
     private func leave() {
         Task {
             if await model.leave() {
-                router.showToast("Buluşmadan ayrıldın.", style: .info)
+                router.showToast(String(localized: "Buluşmadan ayrıldın."), style: .info)
             }
         }
     }
@@ -382,7 +382,7 @@ public struct MeetupDetailScreen: View {
     private func remove(_ participant: MeetupParticipant) {
         Task {
             if await model.remove(participant.id) {
-                router.showToast("Kişi buluşmadan çıkarıldı.", style: .info)
+                router.showToast(String(localized: "Kişi buluşmadan çıkarıldı."), style: .info)
             }
         }
     }
@@ -390,7 +390,7 @@ public struct MeetupDetailScreen: View {
     private func cancel() {
         Task {
             if await model.cancel() {
-                router.showToast("Buluşma iptal edildi. Katılanlara haber verdik.", style: .info)
+                router.showToast(String(localized: "Buluşma iptal edildi. Katılanlara haber verdik."), style: .info)
             }
         }
     }

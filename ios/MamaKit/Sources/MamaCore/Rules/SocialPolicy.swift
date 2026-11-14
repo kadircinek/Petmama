@@ -44,6 +44,14 @@ public enum SocialPolicy {
         return nil
     }
 
+    /// Buluşma noktası cihaz konumuna bu kadar yakınsa (ör. ev), göndermeden önce onay istenir.
+    public static let nearDeviceMeters: Double = 50
+
+    /// Seçilen buluşma noktası cihazın bulunduğu yere (büyük olasılıkla ev) çok mu yakın?
+    public static func isNearDevice(point: Coordinate, device: Coordinate) -> Bool {
+        GeoMath.distance(point, device) <= nearDeviceMeters
+    }
+
     /// Kaba konum: 2 ondalığa yuvarlanır (≈1,1 km), sunucudaki `round(lat, 2)` ile aynı.
     public static func roundedCell(_ c: Coordinate) -> Coordinate {
         Coordinate(latitude: (c.latitude * 100).rounded() / 100, longitude: (c.longitude * 100).rounded() / 100)

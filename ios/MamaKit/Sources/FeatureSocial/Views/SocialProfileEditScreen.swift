@@ -99,9 +99,9 @@ public struct SocialProfileEditScreen: View {
         if coordinate == nil, model.isVisible { coordinate = await location.refresh() }
         guard let outcome = await model.save(at: coordinate), outcome == .saved else { return }
         if model.isVisible {
-            router.showToast("Profilin kaydedildi; artık hayvanseverler seni görebilir.")
+            router.showToast(String(localized: "Profilin kaydedildi; artık hayvanseverler seni görebilir."))
         } else {
-            router.showToast("Profilin kaydedildi.")
+            router.showToast(String(localized: "Profilin kaydedildi."))
         }
         dismiss()
     }

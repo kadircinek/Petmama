@@ -38,6 +38,12 @@ public final class CreateMeetupViewModel {
         SocialPolicy.validate(draft, now: services.now()).map(SocialMessages.message(for:))
     }
 
+    /// Nokta cihaz konumuna 50 m'den yakınsa `true`: arayüz "evine çok yakın" onayı ister. Konum yoksa `false`.
+    public func isNearDevice(_ device: Coordinate?) -> Bool {
+        guard let device else { return false }
+        return SocialPolicy.isNearDevice(point: coordinate, device: device)
+    }
+
     public var canSubmit: Bool { validationIssue == nil && !isSubmitting }
 
     /// Doğrulama geçmezse sunucuya gidilmez ve `nil` döner.

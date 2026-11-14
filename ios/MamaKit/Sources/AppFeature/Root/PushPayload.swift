@@ -21,6 +21,12 @@ public enum PushPayload {
         if let raw = userInfo["spot_id"] as? String, let id = UUID(uuidString: raw) {
             return (.spot(id), .map)
         }
+        // Kimliği olmayan Tanışma bildirimleri türe göre açılır.
+        switch userInfo["kind"] as? String {
+        case NotificationKind.connectionRequest.rawValue: return (.connectionRequests, .profile)
+        case NotificationKind.connectionAccepted.rawValue: return (.conversations, .profile)
+        default: break
+        }
         return nil
     }
 

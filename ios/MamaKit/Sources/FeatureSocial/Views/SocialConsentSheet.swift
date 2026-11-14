@@ -36,7 +36,7 @@ public struct SocialConsentSheet: View {
     }
 
     private func consented() {
-        router.showToast("Hoş geldin! Artık buluşmalara katılabilir, hayvanseverlerle tanışabilirsin.")
+        router.showToast(String(localized: "Hoş geldin! Artık buluşmalara katılabilir, hayvanseverlerle tanışabilirsin."))
         dismiss()
     }
 
@@ -105,7 +105,7 @@ struct SocialConsentContent: View {
                 .accessibilityAddTraits(.isHeader)
             tip("person.3.fill", String(localized: "Buluşmaları park girişi, iskele ya da meydan gibi herkese açık yerlerde yap."))
             tip("house.slash.fill", String(localized: "Ev adresini, telefonunu ya da tam konumunu sohbette paylaşma."))
-            tip("exclamationmark.bubble.fill", String(localized: "Rahatsız eden bir mesaja uzun basıp \"Raporla\"yı seç; kişiyi sohbetin menüsünden engelleyebilirsin."))
+            tip("exclamationmark.bubble.fill", String(localized: "Rahatsız eden bir mesaja uzun basıp \"Raporla\" ya da \"Engelle\"yi seç; bire bir sohbette engelleme sağ üstteki menüde de var."))
             tip("location.slash.fill", String(localized: "Hayvanseverler'de kesin konumun hiç görünmez; yalnızca yaklaşık mesafe aralığı gösterilir."))
         }
         .frame(maxWidth: .infinity, alignment: .leading)

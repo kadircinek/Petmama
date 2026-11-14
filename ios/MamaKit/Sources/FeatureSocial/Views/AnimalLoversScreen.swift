@@ -14,6 +14,8 @@ public struct AnimalLoversScreen: View {
     @State private var requestTarget: AnimalLover?
     @State private var sendingId: UUID?
     @State private var respondingId: UUID?
+    @State private var withdrawRequestId: UUID?
+    @State private var showsWithdrawDialog = false
     private let services: AppServices
 
     public init(services: AppServices) {
@@ -51,6 +53,12 @@ public struct AnimalLoversScreen: View {
             }
             .sheet(isPresented: $showsProfileEdit, onDismiss: { Task { await reload() } }) {
                 SocialProfileEditScreen(services: services)
+            }
+            .confirmationDialog("İstek geri çekilsin mi?", isPresented: $showsWithdrawDialog, titleVisibility: .visible) {
+                Button("İsteği geri çek", role: .destructive) { withdraw() }
+                Button("Vazgeç", role: .cancel) {}
+            } message: {
+                Text("Karşı tarafa bildirim gitmez. İstersen daha sonra yeniden istek gönderebilirsin.")
             }
             .sheet(item: $requestTarget) { lover in
                 ConnectionNoteSheet(lover: lover) { note in
@@ -175,6 +183,10 @@ public struct AnimalLoversScreen: View {
                     isSending: sendingId == lover.id,
                     isDisabled: sendingId != nil || respondingId != nil,
                     onRequest: { requestTarget = lover },
+                    onWithdraw: { requestId in
+                        withdrawRequestId = requestId
+                        showsWithdrawDialog = true
+                    },
                     onRespond: { requestId, accept in respond(requestId, accept: accept) },
                     onOpenChat: { router.push(.conversation($0)) }
                 )
@@ -213,6 +225,16 @@ public struct AnimalLoversScreen: View {
             let outcome = await model.sendRequest(to: lover.id, note: note)
             sendingId = nil
             if case .consentRequired = outcome { router.present(.socialConsent, session: session) }
+        }
+    }
+
+    private func withdraw() {
+        guard let requestId = withdrawRequestId else { return }
+        withdrawRequestId = nil
+        Task {
+            if await model.withdraw(requestId: requestId) {
+                router.showToast(String(localized: "İsteğin geri çekildi."), style: .info)
+            }
         }
     }
 

@@ -11,6 +11,7 @@ struct AnimalLoverCard: View {
     let isSending: Bool
     let isDisabled: Bool
     let onRequest: () -> Void
+    let onWithdraw: (_ requestId: UUID) -> Void
     let onRespond: (_ requestId: UUID, _ accept: Bool) -> Void
     let onOpenChat: (_ conversationId: UUID) -> Void
 
@@ -78,13 +79,19 @@ struct AnimalLoverCard: View {
             }
             .buttonStyle(.mamaPrimary(systemImage: "hand.wave.fill"))
             .disabled(isSending || isDisabled)
-        case .outgoingPending:
-            HStack(spacing: 8) {
-                if isSending {
-                    // Demo'da senaryolu kabul birkaç saniye sürer; bu sürede ilerleme gösterilir.
-                    ProgressView()
+        case .outgoingPending(let requestId):
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    if isSending {
+                        // Demo'da senaryolu kabul birkaç saniye sürer; bu sürede ilerleme gösterilir.
+                        ProgressView()
+                    }
+                    TagChip(String(localized: "İstek gönderildi, yanıt bekleniyor"), systemImage: "hourglass", style: .neutral)
                 }
-                TagChip(String(localized: "İstek gönderildi, yanıt bekleniyor"), systemImage: "hourglass", style: .neutral)
+                // Gönderim beklenirken de geri çekilebilir (demo kabulü gelmeden önce).
+                Button { onWithdraw(requestId) } label: { Text("İsteği geri çek") }
+                    .buttonStyle(.mamaSecondary(systemImage: "arrow.uturn.backward", fullWidth: false))
+                    .disabled(isDisabled && !isSending)
             }
         case .incomingPending(let requestId):
             VStack(alignment: .leading, spacing: 8) {

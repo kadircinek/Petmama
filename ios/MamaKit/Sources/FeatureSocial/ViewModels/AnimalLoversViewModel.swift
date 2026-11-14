@@ -86,6 +86,21 @@ public final class AnimalLoversViewModel {
         }
     }
 
+    /// Bekleyen (gönderdiğim) isteği geri çeker. `true` = geri çekildi.
+    @discardableResult
+    public func withdraw(requestId: UUID) async -> Bool {
+        message = nil
+        error = nil
+        do {
+            try await services.social.withdrawConnectionRequest(id: requestId)
+            try await reloadLists()
+            return true
+        } catch {
+            self.error = MamaError.classify(error)
+            return false
+        }
+    }
+
     /// Görünürse ve kaba konum hücresi değiştiyse (≈1 km) sunucudaki konumu tazeler.
     private func refreshLocation(_ coordinate: Coordinate?) async throws {
         guard let profile, profile.isVisible, let coordinate else { return }

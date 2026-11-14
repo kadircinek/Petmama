@@ -68,7 +68,7 @@ public struct ConnectionRequestsScreen: View {
             let conversationId = await model.respond(request, accept: accept)
             respondingId = nil
             if let conversationId {
-                router.showToast("Bağlantı kuruldu! Artık yazışabilirsiniz.")
+                router.showToast(String(localized: "Bağlantı kuruldu! Artık yazışabilirsiniz."))
                 router.push(.conversation(conversationId))
             }
         }

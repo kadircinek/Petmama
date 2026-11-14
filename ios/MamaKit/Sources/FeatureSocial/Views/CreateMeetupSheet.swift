@@ -11,6 +11,9 @@ public struct CreateMeetupSheet: View {
     @State private var step: Step = .checking
     @State private var position: MapCameraPosition = .automatic
     @State private var showsDiscardDialog = false
+    @State private var showsNearHomeDialog = false
+    /// "Evet, burası herkese açık" denildi; nokta değişince sıfırlanır.
+    @State private var nearHomeConfirmed = false
     @Environment(AppRouter.self) private var router
     @Environment(LocationStore.self) private var location
     @Environment(\.dismiss) private var dismiss
@@ -58,6 +61,19 @@ public struct CreateMeetupSheet: View {
                 }
             }
             .task { await prepare() }
+            .confirmationDialog(
+                "Buluşma noktası evine çok yakın görünüyor. Herkese açık bir yer seçtiğinden emin misin?",
+                isPresented: $showsNearHomeDialog,
+                titleVisibility: .visible
+            ) {
+                Button("Evet, burası herkese açık") {
+                    nearHomeConfirmed = true
+                    Task { await submit() }
+                }
+                // Rolsüz: iOS 26 açılır kutusunda iptal rolündeki buton gizlenir; seçenek görünür kalsın.
+                Button("Noktayı değiştir") {}
+            }
+            .onChange(of: model.coordinate) { _, _ in nearHomeConfirmed = false }
             .confirmationDialog("Taslak silinsin mi?", isPresented: $showsDiscardDialog, titleVisibility: .visible) {
                 Button("Taslağı sil", role: .destructive) { dismiss() }
                 Button("Yazmaya devam et", role: .cancel) {}
@@ -174,7 +190,12 @@ public struct CreateMeetupSheet: View {
 
     private var submitButton: some View {
         Button {
-            Task { await submit() }
+            // Varsayılan nokta cihazın konumu (çoğu zaman ev): 50 m içindeyse önce onay iste.
+            if model.validationIssue == nil, !nearHomeConfirmed, model.isNearDevice(location.coordinate) {
+                showsNearHomeDialog = true
+            } else {
+                Task { await submit() }
+            }
         } label: {
             if model.isSubmitting {
                 Text("Paylaşılıyor…")
@@ -203,6 +224,7 @@ public struct CreateMeetupSheet: View {
     static func durationLabel(_ minutes: Int) -> String {
         if minutes < 60 { return String(localized: "\(minutes) dk") }
         let hours = minutes / 60
+        if minutes == 60 { return String(localized: "1 saat") }
         if minutes % 60 == 0 { return String(localized: "\(hours) saat") }
         return String(localized: "\(hours),5 saat")
     }
@@ -241,7 +263,7 @@ public struct CreateMeetupSheet: View {
         guard let outcome = await model.submit() else { return }
         switch outcome {
         case .created(let meetupId, _):
-            router.showToast("Buluşman paylaşıldı. Katılanlarla sohbette konuşabilirsin.")
+            router.showToast(String(localized: "Buluşman paylaşıldı. Katılanlarla sohbette konuşabilirsin."))
             router.communitySection = .meetups
             router.open(.meetup(meetupId), in: .community)
         case .consentRequired:

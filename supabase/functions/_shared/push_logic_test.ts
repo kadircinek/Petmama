@@ -41,6 +41,8 @@ function row(over: Partial<PushRow> = {}): PushRow {
     spot_id: "s1",
     need_id: null,
     post_id: null,
+    meetup_id: null,
+    conversation_id: null,
     created_at: `2026-11-04T10:00:${String(seq % 60).padStart(2, "0")}.000Z`,
     quiet_start: 22,
     quiet_end: 7,
@@ -308,4 +310,34 @@ Deno.test("decidePushes: sandbox-only device still gets the push", () => {
   const noon = at("2026-11-04T09:00:00Z");
   const r = row({ tokens: [], sandbox_tokens: ["dev-1"] });
   assertEquals(decidePushes([r], noon).get(r.id), "send");
+});
+
+Deno.test("buildApnsPayload / headers: social kinds carry meetup_id and conversation_id", () => {
+  const chat = row({ kind: "chat_message", spot_id: null, conversation_id: "conv-1" });
+  const p = buildApnsPayload(chat) as Record<string, unknown> & { aps: { "thread-id": string } };
+  assertEquals(p.conversation_id, "conv-1");
+  assertEquals(p.meetup_id, null);
+  assertEquals(p.aps["thread-id"], "conv-1");
+  assertEquals(buildApnsHeaders("jwt", "b", chat, 0)["apns-collapse-id"], "chat_message:conv-1");
+
+  const meetup = row({ kind: "meetup_reminder", spot_id: null, meetup_id: "m-1" });
+  const mp = buildApnsPayload(meetup) as Record<string, unknown> & { aps: { "thread-id": string } };
+  assertEquals(mp.meetup_id, "m-1");
+  assertEquals(mp.conversation_id, null);
+  assertEquals(mp.aps["thread-id"], "meetup_reminder");
+  assertEquals(buildApnsHeaders("jwt", "b", meetup, 0)["apns-collapse-id"], "meetup_reminder:m-1");
+});
+
+Deno.test("decidePushes: social kinds ignore the need_food daily cap but obey quiet hours", () => {
+  const noon = at("2026-11-04T09:00:00Z");
+  const night = at("2026-11-04T21:30:00Z"); // 00:30 İstanbul
+  const kinds = ["meetup_joined", "meetup_cancelled", "meetup_reminder", "connection_request",
+    "connection_accepted", "chat_message"] as const;
+  const rows = kinds.map((kind) => row({ kind, need_food_pushed_today: NEED_FOOD_DAILY_CAP + 5 }));
+  for (const d of decidePushes(rows, noon).values()) assertEquals(d, "send");
+  for (const d of decidePushes(rows, night).values()) assertEquals(d, "quiet_hours");
+  // sosyal gönderimler need_food sayacını tüketmez
+  const social = row({ user_id: "u9", kind: "chat_message" });
+  const food = row({ user_id: "u9", need_food_pushed_today: NEED_FOOD_DAILY_CAP - 1 });
+  assertEquals(decidePushes([social, food], noon).get(food.id), "send");
 });

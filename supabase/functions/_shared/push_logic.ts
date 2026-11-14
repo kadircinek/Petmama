@@ -4,7 +4,7 @@
 //  * Sessiz saat: kullanıcının quiet_start–quiet_end aralığı, Europe/Istanbul saatine göre.
 //    quiet_start == quiet_end → sessiz saat kapalı. Aralık gece yarısını aşabilir (22–7).
 //  * need_food_nearby için İstanbul günü başına en fazla 3 push. Limit YALNIZCA bu tür içindir;
-//    Mahalle bildirimleri (community_comment, cover_volunteered) sessiz saate uyar ama limite takılmaz.
+//    Mahalle ve sosyal (buluşma, bağlantı, sohbet) bildirimleri sessiz saate uyar ama limite takılmaz.
 //  * Uygulanmayan (sessiz saat / limit / token yok) bildirimler ERTELENMEZ; uygulama içinde kalır,
 //    push_status ile işaretlenir.
 
@@ -21,7 +21,13 @@ export type NotificationKind =
   | "thanks_fed"
   | "donation_delivered"
   | "community_comment"
-  | "cover_volunteered";
+  | "cover_volunteered"
+  | "meetup_joined"
+  | "meetup_cancelled"
+  | "meetup_reminder"
+  | "connection_request"
+  | "connection_accepted"
+  | "chat_message";
 
 /** `push_claim_batch` RPC'sinin döndürdüğü satır. */
 export interface PushRow {
@@ -34,6 +40,10 @@ export interface PushRow {
   need_id: string | null;
   /** Mahalle bildirimlerinde (community_comment, cover_volunteered) dolu; uygulama paylaşımı açar. */
   post_id: string | null;
+  /** Buluşma bildirimlerinde (meetup_joined/cancelled/reminder) dolu. */
+  meetup_id: string | null;
+  /** chat_message bildirimlerinde dolu; uygulama sohbeti açar. */
+  conversation_id: string | null;
   created_at: string;
   quiet_start: number;
   quiet_end: number;
@@ -166,14 +176,16 @@ export function buildApnsPayload(row: PushRow): Record<string, unknown> {
     aps: {
       alert: { title: row.title, body: row.body },
       sound: "default",
-      // Bildirim Merkezi'nde gruplama: paylaşım > nokta > tür
-      "thread-id": row.post_id ?? row.spot_id ?? row.kind,
+      // Bildirim Merkezi'nde gruplama: sohbet > paylaşım > nokta > tür
+      "thread-id": row.conversation_id ?? row.post_id ?? row.spot_id ?? row.kind,
     },
     kind: row.kind,
     notification_id: row.id,
     spot_id: row.spot_id,
     need_id: row.need_id,
     post_id: row.post_id ?? null,
+    meetup_id: row.meetup_id ?? null,
+    conversation_id: row.conversation_id ?? null,
   };
 }
 
@@ -193,7 +205,7 @@ export function buildApnsHeaders(
     "content-type": "application/json",
   };
   // aynı paylaşım / nokta için art arda gelen bildirimler kilit ekranında tek bildirimde birleşir (≤ 64 bayt)
-  const subject = row.post_id ?? row.spot_id;
+  const subject = row.conversation_id ?? row.post_id ?? row.meetup_id ?? row.spot_id;
   if (subject) headers["apns-collapse-id"] = `${row.kind}:${subject}`;
   return headers;
 }

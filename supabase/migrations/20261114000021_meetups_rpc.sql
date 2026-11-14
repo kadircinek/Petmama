@@ -1,7 +1,7 @@
 -- Mama Haritası — 0021: Buluşma RPC'leri (spec §5.1, §6)
 --
 -- Mahalle RPC'leriyle aynı kurallar: `security definer`, ilk iş `private.require_uid()`, anon'a kapalı,
--- iş kuralı sonuçları jsonb `status` (+ `reason`). Bildirimler bu dosyada YOK (0022+).
+-- iş kuralı sonuçları jsonb `status` (+ `reason`). Bildirimler bu dosyada YOK (0024, AFTER trigger'larla).
 --
 -- * Doğrulama, tablo CHECK'lerine düşmeden önce `{status:'invalid', reason}` olarak döner.
 -- * Okuma RPC'leri (meetups_near, meetup_detail) sosyal onay istemez; yazma RPC'leri ister.

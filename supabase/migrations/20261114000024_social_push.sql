@@ -165,7 +165,7 @@ $$;
 
 -- ---------------------------------------------------------------------------
 -- connection_request → alıcıya (yeni istek ya da kaldırılmış/reddedilmiş bağlantının yeniden istenmesi);
--- connection_accepted → isteği ilk atana (kabul ve otomatik kabul)
+-- connection_accepted → isteği ilk atana (kabul ve otomatik kabul), bire bir sohbetin kimliğiyle (dokununca sohbet açılır)
 -- ---------------------------------------------------------------------------
 create function private.notify_connection()
 returns trigger
@@ -173,16 +173,22 @@ language plpgsql
 security definer
 set search_path = public, extensions
 as $$
+declare
+  v_conv uuid;
 begin
   if new.status = 'pending' and (tg_op = 'INSERT' or old.status <> 'pending') then
     perform private.notify_social(
       new.addressee_id, new.requester_id, 'connection_request', 'Yeni bağlantı isteği',
       format('%s seninle hayvanseverler olarak bağlantı kurmak istiyor.', private.display_name_of(new.requester_id)));
   elsif tg_op = 'UPDATE' and old.status = 'pending' and new.status = 'accepted' then
-    -- otomatik kabulde kabul eden, karşı tarafın bekleyen isteğini yanıtlayan kişidir; satırdaki requester ilk atandır
+    -- otomatik kabulde kabul eden, karşı tarafın bekleyen isteğini yanıtlayan kişidir; satırdaki requester ilk atandır.
+    -- Tetikleyici, RPC sohbeti açmadan önce (UPDATE deyiminin sonunda) çalışır: sohbet burada açılır; RPC'nin
+    -- hemen ardından yaptığı private.open_direct_conversation çağrısı aynı satırı bulur (idempotent).
+    v_conv := private.open_direct_conversation(new.id, new.requester_id, new.addressee_id);
     perform private.notify_social(
       old.requester_id, old.addressee_id, 'connection_accepted', 'Bağlantı isteğin kabul edildi',
-      format('%s isteğini kabul etti. Artık yazışabilirsiniz.', private.display_name_of(old.addressee_id)));
+      format('%s isteğini kabul etti. Artık yazışabilirsiniz.', private.display_name_of(old.addressee_id)),
+      null, v_conv);
   end if;
   return null;
 end

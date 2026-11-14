@@ -868,5 +868,8 @@
   "İsteği geri çek": "Withdraw request",
   "İsteğin geri çekildi.": "Your request was withdrawn.",
   "Buluşma ayrıntısını açar": "Opens meetup details",
-  "Buluşma: %@, %@": "Meetup: %@, %@"
+  "Buluşma: %@, %@": "Meetup: %@, %@",
+  "Silinmiş kullanıcı": "Deleted user",
+  "Bu sohbet artık sana kapalı.": "This chat is no longer available to you.",
+  "Sohbetten çık": "Leave chat"
 }

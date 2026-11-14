@@ -15,6 +15,8 @@ public final class ChatViewModel {
     /// Tür, karşı taraf ve bağlı buluşma (başlık menüsü için); yüklenemezse `nil`.
     public private(set) var summary: ConversationSummary?
     public private(set) var isReadOnly = false
+    /// Sohbet artık listede yok (engel, bağlantı kaldırıldı, buluşmadan çıkarıldı): mesajlar temizlenir, ekran kapanmalı.
+    public private(set) var isHidden = false
     public private(set) var isSending = false
     public private(set) var canLoadOlder = false
     public private(set) var message: String?
@@ -39,12 +41,19 @@ public final class ChatViewModel {
         updatesTask = Task { [weak self] in
             for await _ in stream {
                 guard let self, !Task.isCancelled else { break }
-                await self.refreshNewest()
+                await self.refresh()
             }
         }
+        await refresh()
+        canLoadOlder = !isHidden && messages.count >= Self.pageSize
+    }
+
+    /// Sohbet özetini (salt okunur / gizlendi) yeniden denetler, görünürse en yeni sayfayı çeker. Her canlı sinyalde çalışır:
+    /// açık sohbet engel, bağlantı kaldırma ya da buluşma iptalini bir sonraki yenilemede fark eder.
+    public func refresh() async {
         await loadSummary()
+        guard !isHidden else { return }
         await refreshNewest()
-        canLoadOlder = messages.count >= Self.pageSize
     }
 
     /// Listeyi sıfırdan yükler: `start()` birleştirdiği için gizlenen (ör. engellenen kişinin) mesajları düşürmez.
@@ -95,9 +104,20 @@ public final class ChatViewModel {
     }
 
     private func loadSummary() async {
-        guard let summary = try? await services.social.conversations().first(where: { $0.id == conversationId }) else { return }
+        // Ağ hatasında durum korunur; yalnızca başarılı listede yoksa gizlenmiş sayılır.
+        guard let list = try? await services.social.conversations() else { return }
+        guard let summary = list.first(where: { $0.id == conversationId }) else {
+            isHidden = true
+            isReadOnly = true
+            summary = nil
+            messages = []
+            canLoadOlder = false
+            draft = ""
+            return
+        }
+        isHidden = false
         self.summary = summary
-        title = summary.title
+        title = summary.displayTitle
         isReadOnly = summary.isReadOnly
     }
 

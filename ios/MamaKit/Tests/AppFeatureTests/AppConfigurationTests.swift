@@ -79,6 +79,36 @@ final class AppConfigurationTests: XCTestCase {
         XCTAssertEqual(accepted?.tab, .profile)
         XCTAssertNil(PushPayload.route(from: ["kind": "thanks_fed"]))
     }
+
+    /// Gerçekçi APNs userInfo (aps sözlüğü + push_logic.ts alanları) → çıkarım → yönlendirme.
+    func testPushStringFieldsExtractionFromAPNsUserInfo() {
+        let conversation = UUID()
+        let meetup = UUID()
+        let aps: [String: Any] = ["alert": ["title": "Yeni mesaj", "body": "Ayşe"], "sound": "default", "badge": 3]
+        let chatInfo: [AnyHashable: Any] = [
+            "aps": aps, "kind": "chat_message", "conversation_id": conversation.uuidString,
+            "meetup_id": meetup.uuidString, "notification_id": UUID().uuidString, "count": 2,
+        ]
+        let chatFields = PushPayload.stringFields(from: chatInfo)
+        XCTAssertEqual(chatFields["conversation_id"], conversation.uuidString)
+        XCTAssertEqual(chatFields["meetup_id"], meetup.uuidString)
+        XCTAssertEqual(chatFields["kind"], "chat_message")
+        XCTAssertNil(chatFields["aps"])
+        XCTAssertNil(chatFields["count"])
+        XCTAssertEqual(PushPayload.route(from: chatFields)?.route, .conversation(conversation))
+
+        let meetupInfo: [AnyHashable: Any] = ["aps": aps, "kind": "meetup_updated", "meetup_id": meetup.uuidString]
+        XCTAssertEqual(PushPayload.route(from: PushPayload.stringFields(from: meetupInfo))?.route, .meetup(meetup))
+
+        let requestInfo: [AnyHashable: Any] = ["aps": aps, "kind": "connection_request"]
+        let request = PushPayload.route(from: PushPayload.stringFields(from: requestInfo))
+        XCTAssertEqual(request?.route, .connectionRequests)
+        XCTAssertEqual(request?.tab, .profile)
+
+        let spot = UUID()
+        let legacy: [AnyHashable: Any] = ["aps": aps, "spot_id": spot.uuidString, "need_id": "x", "post_id": "y"]
+        XCTAssertEqual(PushPayload.stringFields(from: legacy)["spot_id"], spot.uuidString)
+    }
 }
 
 @MainActor

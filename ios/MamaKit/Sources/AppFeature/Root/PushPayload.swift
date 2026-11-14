@@ -30,6 +30,17 @@ public enum PushPayload {
         return nil
     }
 
+    /// APNs `userInfo` içindeki üst düzey dizgi alanları (`aps` gibi sözlükler ve sayılar atlanır).
+    /// `userInfo` Sendable olmadığı için temsilci bunu ana aktöre taşımadan önce kullanır.
+    public static func stringFields(from userInfo: [AnyHashable: Any]) -> [String: String] {
+        var fields: [String: String] = [:]
+        for (key, value) in userInfo {
+            guard let key = key as? String, let value = value as? String else { continue }
+            fields[key] = value
+        }
+        return fields
+    }
+
     private static func uuid(_ value: Any?) -> UUID? {
         (value as? String).flatMap(UUID.init(uuidString:))
     }

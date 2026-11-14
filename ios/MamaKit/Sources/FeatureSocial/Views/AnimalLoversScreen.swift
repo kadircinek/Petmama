@@ -271,7 +271,7 @@ struct ConnectionNoteSheet: View {
                     .lineLimit(3...6)
                     .font(MamaFont.body)
                     .socialFieldBackground()
-                CharacterCounter(count: trimmed.count, limit: SocialPolicy.maxNote)
+                CharacterCounter(count: SocialPolicy.length(trimmed), limit: SocialPolicy.maxNote)
                 Button {
                     onSend(trimmed.isEmpty ? nil : trimmed)
                     dismiss()
@@ -279,7 +279,7 @@ struct ConnectionNoteSheet: View {
                     Text("İstek gönder")
                 }
                 .buttonStyle(.mamaPrimary(systemImage: "hand.wave.fill"))
-                .disabled(trimmed.count > SocialPolicy.maxNote)
+                .disabled(SocialPolicy.length(trimmed) > SocialPolicy.maxNote)
                 Spacer(minLength: 0)
             }
             .padding(MamaMetrics.screenPadding)

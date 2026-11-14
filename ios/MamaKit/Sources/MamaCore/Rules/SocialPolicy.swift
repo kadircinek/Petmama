@@ -59,14 +59,32 @@ public enum SocialPolicy {
 
     /// İstemci tarafı ön doğrulama, sunucudaki sırayla (nokta görünürlüğü yalnızca sunucuda denetlenir).
     public static func validate(_ draft: MeetupDraft, now: Date) -> MeetupInvalidReason? {
-        if !titleLength.contains(trimmed(draft.title).count) { return .titleLength }
-        if trimmed(draft.description).count > maxDescription { return .descriptionTooLong }
-        if !placeNameLength.contains(trimmed(draft.placeName).count) { return .placeNameLength }
+        if !titleLength.contains(length(trimmed(draft.title))) { return .titleLength }
+        if length(trimmed(draft.description)) > maxDescription { return .descriptionTooLong }
+        if !placeNameLength.contains(length(trimmed(draft.placeName))) { return .placeNameLength }
         if draft.startsAt < now.addingTimeInterval(minLeadTime) { return .startTooSoon }
         if draft.startsAt > now.addingTimeInterval(TimeInterval(maxLeadDays) * 86_400) { return .startTooLate }
         if !durationMinutes.contains(draft.durationMinutes) { return .durationRange }
         if let value = draft.capacity, !capacity.contains(value) { return .capacityRange }
         return nil
+    }
+
+    /// Metin uzunluğu, sunucudaki `char_length` gibi Unicode kod noktası sayısı (grafem değil: 🐈‍⬛ = 3).
+    public static func length(_ text: String) -> Int {
+        text.unicodeScalars.count
+    }
+
+    /// En fazla `maxLength` kod noktası; grafemler bölünmez.
+    public static func prefix(_ text: String, maxLength: Int) -> String {
+        var result = ""
+        var used = 0
+        for character in text {
+            let size = character.unicodeScalars.count
+            if used + size > maxLength { break }
+            result.append(character)
+            used += size
+        }
+        return result
     }
 
     static func trimmed(_ text: String) -> String {

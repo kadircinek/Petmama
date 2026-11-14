@@ -217,13 +217,23 @@ begin
   perform tests.admin();
   delete from blocks where user_id = org;
 
-  -- katılımcı listesinde engelli yok
+  -- katılımcı listesinde engelli yok (iki katılımcı arasında)
+  perform tests.login(b);
+  perform tests.eq(join_meetup(m1)->>'status', 'joined', 'B joins m1');
   perform tests.admin();
-  insert into blocks (user_id, blocked_user_id) values (a, org);
+  insert into blocks (user_id, blocked_user_id) values (a, b);
   perform tests.login(a);
-  perform tests.eq((select count(*)::int from meetup_participants(m1)), 1, 'blocked pair hidden from participant list (only self)');
+  perform tests.eq((select count(*)::int from meetup_participants(m1)), 2, 'blocked pair hidden from participant list (self + organizer)');
+  perform tests.check(not exists (select 1 from meetup_participants(m1) where user_id = b), 'blocked participant not listed');
   perform tests.admin();
   delete from blocks where user_id = a;
+  -- katılımcı düzenleyeni engellerse buluşmadan ayrılır (0023 apply_block_to_social)
+  insert into blocks (user_id, blocked_user_id) values (a, org);
+  perform tests.eq((select count(*)::int from meetup_participants mp where mp.meetup_id = m1 and mp.user_id = a), 0,
+                   'participant blocking organizer leaves the meetup');
+  delete from blocks where user_id = a;
+  perform tests.login(a);
+  perform tests.eq(join_meetup(m1)->>'status', 'joined', 'A rejoins after unblock');
 
   -- iptal
   perform tests.login(a);

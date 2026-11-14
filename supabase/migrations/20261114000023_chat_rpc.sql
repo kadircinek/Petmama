@@ -60,8 +60,8 @@ as $$
               and (select count(*) from public.conversation_members cm where cm.conversation_id = p_c.id) < 2))
 $$;
 
--- Sohbet salt okunur mu? closed_at; buluşmada iptal veya bitişten 24 saat sonrası; bire bir'de 2'den az üye,
--- bağlantı kabul edilmiş değil ya da taraflar arasında engel.
+-- Sohbet salt okunur mu? closed_at; buluşmada iptal, buluşma yok ya da bitişten 24 saat sonrası; bire bir'de
+-- 2'den az üye, bağlantı satırı yok (hesap silindi), bağlantı kabul edilmiş değil ya da taraflar arasında engel.
 create function private.conversation_read_only(p_c public.conversations, p_uid uuid)
 returns boolean
 language sql stable
@@ -271,9 +271,11 @@ $$;
 
 -- ---------------------------------------------------------------------------
 -- Engelleme kancası: blocks insert → aradaki bekleyen istek silinir; bağlantı `removed` + bire bir sohbet kapanır;
--- engelleyen düzenleyense engellenen onun buluşmalarından çıkarılır (`removed`, sohbet üyeliği silinir).
--- Diğer durumlarda (ortak buluşmada iki katılımcı, ya da engellenen düzenleyen) ikisi de kalır; mesajlar
--- birbirine görünmez (private.chat_message_visible).
+-- engelleyen düzenleyense engellenen onun buluşmalarından çıkarılır (`removed`, sohbet üyeliği silinir);
+-- engellenen düzenleyense engelleyen onun buluşmalarından `leave_meetup` gibi ayrılır (katılım satırı ve sohbet
+-- üyeliği silinir; buluşma artık ona gizli olduğundan "Ayrıl" göremez, grup sohbeti ve bildirimleri sürmesin).
+-- Ortak buluşmadaki iki katılımcı arasında ikisi de kalır; mesajlar birbirine görünmez
+-- (private.chat_message_visible).
 -- ---------------------------------------------------------------------------
 create function private.apply_block_to_social()
 returns trigger
@@ -307,6 +309,16 @@ begin
    using public.conversations cv, public.meetups m
    where cv.id = cm.conversation_id and cv.meetup_id = m.id
      and m.organizer_id = new.user_id and cm.user_id = new.blocked_user_id;
+
+  delete from public.meetup_participants mp
+   using public.meetups m
+   where m.id = mp.meetup_id and m.organizer_id = new.blocked_user_id
+     and mp.user_id = new.user_id and mp.status = 'joined';
+
+  delete from public.conversation_members cm
+   using public.conversations cv, public.meetups m
+   where cv.id = cm.conversation_id and cv.meetup_id = m.id
+     and m.organizer_id = new.blocked_user_id and cm.user_id = new.user_id;
 
   return null;
 end

@@ -18,7 +18,7 @@ public final class SocialProfileEditViewModel {
         self.services = services
     }
 
-    public var aboutRemaining: Int { SocialPolicy.maxAbout - about.count }
+    public var aboutRemaining: Int { SocialPolicy.maxAbout - SocialPolicy.length(about) }
 
     public func load() async {
         do {

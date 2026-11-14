@@ -334,6 +334,47 @@ final class SocialBackendTests: XCTestCase {
         XCTAssertFalse(ayseChats.contains { $0.id == conversationId })
     }
 
+    /// Katılımcı düzenleyeni engellerse buluşmadan `leave_meetup` gibi çıkar: buluşma ona gizlendiği için
+    /// "Ayrıl" düğmesini göremez; grup sohbeti listeden düşer.
+    func testParticipantBlockingOrganizerLeavesMeetup() async throws {
+        _ = try await backend.giveSocialConsent()
+        let meetupId = DemoData.id(8, 1)  // Ayşe düzenliyor
+        guard case .joined(let conversationId) = try await backend.joinMeetup(id: meetupId) else { return XCTFail() }
+
+        try await backend.block(userId: DemoData.ayseId)
+        let chats = try await backend.conversations()
+        XCTAssertFalse(chats.contains { $0.id == conversationId }, "grup sohbeti listeden düşer")
+        let send = try await backend.sendMessage(conversationId: conversationId, body: "Merhaba")
+        XCTAssertEqual(send, .notMember)
+
+        await backend.setCurrentUser(DemoData.ayseId)
+        let participants = try await backend.meetupParticipants(meetupId: meetupId)
+        XCTAssertFalse(participants.contains { $0.id == me }, "engelleyen katılımcı listede yok")
+        let detail = try await backend.meetup(id: meetupId, near: nil)
+        XCTAssertEqual(detail?.participantCount, 3, "Ayşe + Emre + Zeynep")
+    }
+
+    /// Uzunluklar Postgres `char_length` gibi kod noktasıyla sayılır (ZWJ'li emoji tek grafem, üç kod noktası).
+    func testLengthLimitsCountUnicodeScalars() async throws {
+        _ = try await backend.giveSocialConsent()
+        let blackCat = "\u{1F408}\u{200D}\u{2B1B}"  // 🐈‍⬛: 1 grafem, 3 kod noktası
+        XCTAssertEqual(blackCat.count, 1)
+        let over = String(repeating: blackCat, count: 27)              // 81 kod noktası
+        let atLimit = String(repeating: blackCat, count: 26) + "ab"    // 80 kod noktası
+        XCTAssertEqual(SocialPolicy.validate(draft(title: over), now: start), .titleLength)
+        XCTAssertNil(SocialPolicy.validate(draft(title: atLimit), now: start))
+        XCTAssertEqual(SocialPolicy.prefix(atLimit + blackCat, maxLength: 80), atLimit, "grafem bölünmez")
+        XCTAssertEqual(SocialPolicy.prefix("ab" + blackCat, maxLength: 4), "ab")
+        let rejected = try await backend.createMeetup(draft(title: over))
+        XCTAssertEqual(rejected, .invalid(.titleLength))
+        guard case .created = try await backend.createMeetup(draft(title: atLimit)) else { return XCTFail("sınırda geçerli") }
+
+        try await consentAndShow()
+        let note = String(repeating: blackCat, count: 67)  // 201 kod noktası
+        let tooLong = try await backend.sendConnectionRequest(to: DemoData.ayseId, note: note)
+        XCTAssertEqual(tooLong, .noteTooLong)
+    }
+
     func testCannedReplyArrivesAfterDelay() async throws {
         let conversationId = try await connectWithAyse()
         let empty = try await backend.sendMessage(conversationId: conversationId, body: "  ")

@@ -137,8 +137,9 @@ Aşağıdakiler benim kararlarım (onaya tabi):
    içerik cascade).
 4. **Demo modu:** `InMemoryBackend`'e sahte hayvanseverler ve hazır buluşmalar eklenir. Sahte kişiler isteği birkaç
    saniye sonra kabul eder ve kısa hazır cevaplar yazar. Böylece simülatörde iki taraflı akış denenebilir.
-5. **Ortak buluşmadaki iki kişi arasında engelleme:** engelleyen düzenleyense engellenen buluşmadan otomatik çıkarılır.
-   Değilse ikisi de buluşmada kalır ama birbirlerinin mesajlarını ve katılımcı listesinde birbirlerini görmez.
+5. **Ortak buluşmadaki iki kişi arasında engelleme:** engelleyen düzenleyense engellenen buluşmadan otomatik çıkarılır;
+   engellenen düzenleyense engelleyen buluşmadan ayrılır (buluşma ona gizlenir, sohbet ve bildirimler biter).
+   İki katılımcı arasındaysa ikisi de kalır ama birbirlerinin mesajlarını ve katılımcı listesinde birbirlerini görmez.
 6. **Bağlantı isteğinin yaşam döngüsü:** iki kişi arasında tek bağlantı kaydı (sırasız çift benzersiz).
    Karşı taraf zaten istek attıysa yeni istek **otomatik kabul** olur. Gönderen bekleyen isteğini geri çekebilir.
    Reddedilen istek gönderene "beklemede" görünür ve **30 gün sonra** sessizce düşer. O sürede aynı kişiye yeni istek

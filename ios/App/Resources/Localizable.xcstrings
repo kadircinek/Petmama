@@ -2960,6 +2960,23 @@
         }
       }
     },
+    "Bu sohbet artık sana kapalı.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu sohbet artık sana kapalı."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This chat is no longer available to you."
+          }
+        }
+      }
+    },
     "Bu sohbet artık yalnızca okunabiliyor. Mesajlar 30 gün sonra silinir.": {
       "extractionState": "manual",
       "localizations": {
@@ -10695,6 +10712,23 @@
         }
       }
     },
+    "Silinmiş kullanıcı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silinmiş kullanıcı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deleted user"
+          }
+        }
+      }
+    },
     "Silinmiş ya da incelemeye alınmış olabilir.": {
       "extractionState": "manual",
       "localizations": {
@@ -10810,6 +10844,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sign in to see your chats."
+          }
+        }
+      }
+    },
+    "Sohbetten çık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sohbetten çık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave chat"
           }
         }
       }

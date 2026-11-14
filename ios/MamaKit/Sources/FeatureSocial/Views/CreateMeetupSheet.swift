@@ -114,7 +114,7 @@ public struct CreateMeetupSheet: View {
             TextField(String(localized: "Ör. Moda Parkı mama turu"), text: $model.title)
                 .font(MamaFont.body)
                 .socialFieldBackground()
-            CharacterCounter(count: model.title.count, limit: SocialPolicy.titleLength.upperBound)
+            CharacterCounter(count: SocialPolicy.length(model.title), limit: SocialPolicy.titleLength.upperBound)
             TextField(
                 String(localized: "Açıklama (isteğe bağlı): ne getirelim, kimler katılabilir?"),
                 text: $model.description,
@@ -123,7 +123,7 @@ public struct CreateMeetupSheet: View {
             .lineLimit(3...8)
             .font(MamaFont.body)
             .socialFieldBackground()
-            CharacterCounter(count: model.description.count, limit: SocialPolicy.maxDescription)
+            CharacterCounter(count: SocialPolicy.length(model.description), limit: SocialPolicy.maxDescription)
         }
     }
 
@@ -238,7 +238,7 @@ public struct CreateMeetupSheet: View {
         if let spotId, let spot = try? await services.spots.spot(id: spotId) {
             center = spot.coordinate
             model.spotId = spotId
-            if model.placeName.isEmpty { model.placeName = String(spot.title.prefix(SocialPolicy.placeNameLength.upperBound)) }
+            if model.placeName.isEmpty { model.placeName = SocialPolicy.prefix(spot.title, maxLength: SocialPolicy.placeNameLength.upperBound) }
         }
         let coordinate = center ?? .modaKadikoy
         model.coordinate = coordinate

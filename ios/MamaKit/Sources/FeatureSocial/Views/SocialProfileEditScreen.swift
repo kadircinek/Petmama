@@ -78,7 +78,7 @@ public struct SocialProfileEditScreen: View {
                 .lineLimit(3...8)
                 .font(MamaFont.body)
                 .socialFieldBackground()
-            CharacterCounter(count: model.about.count, limit: SocialPolicy.maxAbout)
+            CharacterCounter(count: SocialPolicy.length(model.about), limit: SocialPolicy.maxAbout)
         }
     }
 

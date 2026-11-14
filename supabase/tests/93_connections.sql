@@ -155,6 +155,16 @@ begin
   perform tests.login(v);
   perform tests.eq((select connection_state from animal_lovers_near() where user_id = t[7]), 'none', 'state none after withdraw');
   perform tests.eq(send_connection_request(t[8])->>'status', 'limit_reached', 'withdraw does not free a slot → limit_reached');
+  -- sınırdayken karşı istek yine otomatik kabul edilir (gönderim sayılmaz)
+  perform tests.login(t[7]);
+  perform tests.eq(send_connection_request(v)->>'status', 'sent', 't7→v sent');
+  perform tests.login(v);
+  j := send_connection_request(t[7]);
+  perform tests.eq(j->>'status', 'auto_accepted', 'at daily limit: reciprocal request still auto_accepted');
+  perform tests.check(j->>'conversation_id' is not null, 'auto_accept at limit opens conversation');
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from connection_request_sends where user_id = v), 10, 'auto_accept not counted as send');
+  perform tests.login(v);
   -- sonraki adımlar için: gönderimleri geçmiş güne al (ertesi gün)
   perform tests.admin();
   update connection_request_sends set sent_at = now() - interval '2 days' where user_id = v;

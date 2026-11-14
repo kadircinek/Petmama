@@ -82,7 +82,7 @@ extension InMemoryBackend: SocialRepository {
         let me = try requireUser()
         guard hasConsented(me), var record = socialProfiles[me] else { return .consentRequired }
         let text = SocialPolicy.trimmed(about)
-        if text.count > SocialPolicy.maxAbout { return .aboutTooLong }
+        if SocialPolicy.length(text) > SocialPolicy.maxAbout { return .aboutTooLong }
         if ContentFilter.containsProfanity(text) { return .rejectedContent }
         if isVisible, coordinate == nil, record.cell == nil { return .locationRequired }
 
@@ -147,9 +147,9 @@ extension InMemoryBackend: SocialRepository {
         let title = SocialPolicy.trimmed(draft.title)
         let description = SocialPolicy.trimmed(draft.description)
         let place = SocialPolicy.trimmed(draft.placeName)
-        if !SocialPolicy.titleLength.contains(title.count) { return .invalid(.titleLength) }
-        if description.count > SocialPolicy.maxDescription { return .invalid(.descriptionTooLong) }
-        if !SocialPolicy.placeNameLength.contains(place.count) { return .invalid(.placeNameLength) }
+        if !SocialPolicy.titleLength.contains(SocialPolicy.length(title)) { return .invalid(.titleLength) }
+        if SocialPolicy.length(description) > SocialPolicy.maxDescription { return .invalid(.descriptionTooLong) }
+        if !SocialPolicy.placeNameLength.contains(SocialPolicy.length(place)) { return .invalid(.placeNameLength) }
         if [title, description, place].contains(where: ContentFilter.containsProfanity) { return .rejectedContent }
 
         let today = istanbulCalendar().startOfDay(for: now())
@@ -281,20 +281,20 @@ extension InMemoryBackend: SocialRepository {
             }
         }
         let text = SocialPolicy.trimmed(note ?? "")
-        if text.count > SocialPolicy.maxNote { return .noteTooLong }
+        if SocialPolicy.length(text) > SocialPolicy.maxNote { return .noteTooLong }
         if ContentFilter.containsProfanity(text) { return .rejectedContent }
 
-        let today = istanbulCalendar().startOfDay(for: now())
-        if (requestSends[me] ?? []).filter({ $0 >= today }).count >= SocialPolicy.dailyRequests {
-            return .limitReached(SocialPolicy.dailyRequests)
-        }
-
-        // Karşı taraf zaten istek atmışsa otomatik kabul (gönderim sayılmaz).
+        // Karşı taraf zaten istek atmışsa otomatik kabul (gönderim sayılmaz; günlük sınırdan önce).
         if let existing, existing.status == .pending, existing.requesterId == userId {
             connections[existing.id]?.status = .accepted
             connections[existing.id]?.respondedAt = now()
             let conversationId = openDirectConversation(connectionId: existing.id, me, userId, at: now())
             return .autoAccepted(conversationId: conversationId)
+        }
+
+        let today = istanbulCalendar().startOfDay(for: now())
+        if (requestSends[me] ?? []).filter({ $0 >= today }).count >= SocialPolicy.dailyRequests {
+            return .limitReached(SocialPolicy.dailyRequests)
         }
 
         let requestId: UUID
@@ -426,7 +426,7 @@ extension InMemoryBackend: SocialRepository {
 
         let text = SocialPolicy.trimmed(body)
         if text.isEmpty { return .bodyEmpty }
-        if text.count > SocialPolicy.maxMessage { return .bodyTooLong }
+        if SocialPolicy.length(text) > SocialPolicy.maxMessage { return .bodyTooLong }
         if ContentFilter.containsProfanity(text) { return .rejectedContent }
 
         let minuteAgo = now().addingTimeInterval(-60)
@@ -668,6 +668,14 @@ extension InMemoryBackend {
             }
             if let conversationId = meetupConversationId(meetup.id) {
                 conversationRecords[conversationId]?.members[blocked] = nil
+            }
+        }
+        // Engellenen düzenleyense engelleyen onun buluşmalarından `leaveMeetup` gibi ayrılır (buluşma artık ona
+        // gizli; "Ayrıl" göremez, grup sohbeti ve bildirimleri kalmasın). Yeniden katılabilir (engel kalkarsa).
+        for meetup in meetups.values where meetup.organizerId == blocked {
+            participantsByMeetup[meetup.id]?.removeAll { $0.userId == blocker && $0.status == .joined }
+            if let conversationId = meetupConversationId(meetup.id) {
+                conversationRecords[conversationId]?.members[blocker] = nil
             }
         }
     }

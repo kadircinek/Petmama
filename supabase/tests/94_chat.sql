@@ -250,6 +250,7 @@ declare
   org   uuid := tests.make_user('Buluşma sahibi');
   p     uuid := tests.make_user('Katilimci P');
   q     uuid := tests.make_user('Katilimci Q');
+  pr    uuid := tests.make_user('Katilimci R');
   lat   float8 := tests.base_lat();
   lng   float8 := tests.base_lng();
   u     uuid;
@@ -259,7 +260,7 @@ declare
   m1    uuid;
   mc    uuid;
 begin
-  foreach u in array array[ua, ub, uc, org, p, q] loop
+  foreach u in array array[ua, ub, uc, org, p, q, pr] loop
     perform tests.login(u); perform give_social_consent();
   end loop;
 
@@ -341,6 +342,39 @@ begin
   perform tests.check(not exists (select 1 from my_conversations() where conversation_id = mc), 'P no longer lists meetup chat');
   perform tests.eq(send_chat_message(mc, 'x')->>'status', 'not_member', 'removed P → not_member');
   perform tests.eq(join_meetup(m1)->>'status', 'not_found', 'P cannot rejoin');
+
+  -- katılımcı Q düzenleyeni engeller → Q buluşmadan leave_meetup gibi ayrılır (buluşma Q'ya gizli, "Ayrıl" yok);
+  -- grup sohbeti listeden düşer, diğer katılımcıların mesajları bildirim üretmez
+  perform tests.login(pr);
+  perform join_meetup(m1);
+  perform tests.login(q);
+  insert into blocks (blocked_user_id) values (org);
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from meetup_participants where meetup_id = m1 and user_id = q), 0,
+                   'participant blocks organizer → participant row gone (like leave)');
+  perform tests.eq((select count(*)::int from conversation_members where conversation_id = mc and user_id = q), 0,
+                   'participant blocks organizer → no longer member');
+  perform tests.eq((select status::text from meetup_participants where meetup_id = m1 and user_id = pr), 'joined',
+                   'other participant R unaffected');
+  perform tests.login(q);
+  perform tests.check(not exists (select 1 from my_conversations() where conversation_id = mc),
+                      'blocker no longer lists meetup chat');
+  perform tests.eq(send_chat_message(mc, 'x')->>'status', 'not_member', 'blocker → not_member');
+  perform tests.admin();
+  update notifications set read_at = now() where user_id = q and kind = 'chat_message';  -- önceki mesajlardan kalan
+  perform tests.login(pr);
+  perform tests.eq(send_chat_message(mc, 'Yarın görüşürüz')->>'status', 'sent', 'R sends after Q left');
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from notifications
+                     where user_id = q and kind = 'chat_message' and conversation_id = mc and read_at is null), 0,
+                   'blocker gets no chat_message notification afterwards');
+  perform tests.check(exists (select 1 from notifications
+                       where user_id = org and kind = 'chat_message' and conversation_id = mc),
+                      'sanity: organizer still notified');
+  -- engel kalkınca yeniden katılabilir (çıkarılmadı, ayrıldı)
+  perform tests.login(q);
+  delete from blocks where blocked_user_id = org;
+  perform tests.eq(join_meetup(m1)->>'status', 'joined', 'after unblock Q can rejoin');
 end
 $$;
 

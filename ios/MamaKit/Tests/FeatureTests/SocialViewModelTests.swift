@@ -299,6 +299,70 @@ final class SocialChatTests: XCTestCase {
         XCTAssertEqual(model.messages.count, 2)
     }
 
+    /// Açık sohbet, karşı taraf engelleyince bir sonraki yenilemede gizlenir: mesajlar temizlenir, gönderilemez.
+    func testOpenChatNoticesBlockOnRefresh() async throws {
+        let env = try await makeSocialEnvironment()
+        let conversationId = try await directConversation(env)
+        let model = ChatViewModel(services: env.services, conversationId: conversationId)
+        await model.start()
+        defer { model.stop() }
+        model.draft = "Merhaba!"
+        await model.send()
+        XCTAssertFalse(model.isHidden)
+        XCTAssertEqual(model.messages.count, 1)
+
+        await env.backend.setCurrentUser(DemoData.ayseId)
+        try await env.backend.block(userId: DemoData.meId)
+        await env.backend.setCurrentUser(DemoData.meId)
+        await model.refresh()
+        XCTAssertTrue(model.isHidden)
+        XCTAssertTrue(model.isReadOnly)
+        XCTAssertTrue(model.messages.isEmpty)
+        XCTAssertNil(model.summary, "başlık menüsü (engelle / kaldır) artık gösterilmez")
+        model.draft = "Orada mısın?"
+        XCTAssertFalse(model.canSend)
+    }
+
+    /// Buluşma iptal edilince açık grup sohbeti bir sonraki yenilemede salt okunur olur (gizlenmez).
+    func testOpenMeetupChatBecomesReadOnlyWhenCancelled() async throws {
+        let env = try await makeSocialEnvironment()
+        guard case .joined(let conversationId) = try await env.backend.joinMeetup(id: DemoData.id(8, 1)) else { return XCTFail() }
+        let model = ChatViewModel(services: env.services, conversationId: conversationId)
+        await model.start()
+        defer { model.stop() }
+        XCTAssertFalse(model.isReadOnly)
+
+        await env.backend.setCurrentUser(DemoData.ayseId)
+        _ = try await env.backend.cancelMeetup(id: DemoData.id(8, 1))
+        await env.backend.setCurrentUser(DemoData.meId)
+        await model.refresh()
+        XCTAssertTrue(model.isReadOnly)
+        XCTAssertFalse(model.isHidden)
+        XCTAssertFalse(model.messages.isEmpty)
+    }
+
+    /// Karşı taraf hesabını silerse sunucu başlığı ('Silinmiş kullanıcı') yerine yerelleştirilmiş metin gösterilir.
+    func testDeletedUserTitleIsLocalized() async throws {
+        let deleted = ConversationSummary(id: UUID(), kind: .direct, title: "Silinmiş kullanıcı", otherUserId: nil, isReadOnly: true)
+        XCTAssertEqual(deleted.displayTitle, String(localized: "Silinmiş kullanıcı"))
+        let named = ConversationSummary(id: UUID(), kind: .direct, title: "Ayşe", otherUserId: DemoData.ayseId)
+        XCTAssertEqual(named.displayTitle, "Ayşe")
+        let group = ConversationSummary(id: UUID(), kind: .meetup, title: "Moda Parkı mama turu")
+        XCTAssertEqual(group.displayTitle, "Moda Parkı mama turu")
+
+        let env = try await makeSocialEnvironment()
+        let conversationId = try await directConversation(env)
+        await env.backend.setCurrentUser(DemoData.ayseId)
+        try await env.backend.deleteAccount()
+        await env.backend.setCurrentUser(DemoData.meId)
+        let model = ChatViewModel(services: env.services, conversationId: conversationId)
+        await model.start()
+        defer { model.stop() }
+        XCTAssertEqual(model.title, String(localized: "Silinmiş kullanıcı"))
+        XCTAssertTrue(model.isReadOnly)
+        XCTAssertFalse(model.isHidden)
+    }
+
     func testReadOnlyConversationNeverSends() async throws {
         let env = try await makeSocialEnvironment()
         let draft = MeetupDraft(title: "Kısa buluşma", startsAt: env.clock.now.addingTimeInterval(7200), durationMinutes: 60,

@@ -243,12 +243,14 @@ begin
 
   -- B kabul → A'ya bildirim
   perform tests.login(b);
-  perform tests.eq(respond_connection((j->>'request_id')::uuid, true)->>'status', 'accepted', 'B accepts');
+  j := respond_connection((j->>'request_id')::uuid, true);
+  perform tests.eq(j->>'status', 'accepted', 'B accepts');
   perform tests.admin();
   perform tests.eq(tests.nc(a, 'connection_accepted'), 1, 'requester gets connection_accepted');
   perform tests.eq(tests.nc(b, 'connection_accepted'), 0, 'accepter gets none');
   select * into r from notifications where user_id = a and kind = 'connection_accepted';
   perform tests.eq(r.actor_id, b, 'connection_accepted actor = accepter');
+  perform tests.eq(r.conversation_id, (j->>'conversation_id')::uuid, 'connection_accepted carries the direct conversation');
 
   -- C → D, D reddeder: C'ye bildirim yok
   perform tests.login(c);
@@ -262,8 +264,11 @@ begin
   perform tests.login(e);
   perform tests.eq(send_connection_request(g)->>'status', 'sent', 'E→G sent');
   perform tests.login(g);
-  perform tests.eq(send_connection_request(e)->>'status', 'auto_accepted', 'G→E auto_accepted');
+  j := send_connection_request(e);
+  perform tests.eq(j->>'status', 'auto_accepted', 'G→E auto_accepted');
   perform tests.admin();
+  perform tests.eq((select conversation_id from notifications where user_id = e and kind = 'connection_accepted'),
+                   (j->>'conversation_id')::uuid, 'auto accept notification carries the conversation');
   perform tests.eq(tests.nc(g, 'connection_request'), 1, 'G got E''s request');
   perform tests.eq(tests.nc(e, 'connection_accepted'), 1, 'original requester E notified of auto accept');
   perform tests.eq(tests.nc(g, 'connection_accepted'), 0, 'auto-accepter G gets no accepted notice');

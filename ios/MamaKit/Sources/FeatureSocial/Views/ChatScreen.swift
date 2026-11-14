@@ -70,7 +70,7 @@ public struct ChatScreen: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    if model.messages.isEmpty {
+                    if model.messages.isEmpty && !model.isHidden {
                         Text("Henüz mesaj yok. Hangi noktada besliyorsunuz, nasıl yardımlaşabilirsiniz? İlk merhabayı sen yaz!")
                             .font(MamaFont.subheadline)
                             .foregroundStyle(MamaColor.textSecondary)
@@ -131,7 +131,18 @@ public struct ChatScreen: View {
             if let error = model.error {
                 BannerView(error.userMessage, style: error.isConnectivity ? .warning : .error)
             }
-            if model.isReadOnly {
+            if model.isHidden {
+                BannerView(
+                    String(localized: "Bu sohbet artık sana kapalı."),
+                    style: .info,
+                    systemImage: "lock.fill"
+                )
+                MamaTextButton(String(localized: "Sohbetten çık")) {
+                    model.stop()
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity)
+            } else if model.isReadOnly {
                 BannerView(
                     String(localized: "Bu sohbet artık yalnızca okunabiliyor. Mesajlar 30 gün sonra silinir."),
                     style: .info,
@@ -179,8 +190,8 @@ public struct ChatScreen: View {
             .disabled(!model.canSend)
             .accessibilityLabel(String(localized: "Gönder"))
         }
-        if model.draft.count > SocialPolicy.maxMessage - 100 {
-            CharacterCounter(count: model.draft.count, limit: SocialPolicy.maxMessage)
+        if SocialPolicy.length(model.draft) > SocialPolicy.maxMessage - 100 {
+            CharacterCounter(count: SocialPolicy.length(model.draft), limit: SocialPolicy.maxMessage)
         }
     }
 

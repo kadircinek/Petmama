@@ -76,7 +76,7 @@ private struct ConversationRow: View {
             avatar
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Text(verbatim: item.title)
+                    Text(verbatim: item.displayTitle)
                         .font(MamaFont.headline)
                         .foregroundStyle(MamaColor.textPrimary)
                         .lineLimit(1)
@@ -119,7 +119,7 @@ private struct ConversationRow: View {
     private var avatar: some View {
         switch item.kind {
         case .direct:
-            AvatarView(name: item.title, url: item.otherAvatarURL, size: 48)
+            AvatarView(name: item.displayTitle, url: item.otherAvatarURL, size: 48)
         case .meetup:
             Image(systemName: "person.3.fill")
                 .font(.system(size: 17, weight: .semibold))

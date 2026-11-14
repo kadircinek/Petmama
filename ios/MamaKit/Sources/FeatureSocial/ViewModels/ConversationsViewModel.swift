@@ -29,3 +29,11 @@ public final class ConversationsViewModel {
         }
     }
 }
+
+extension ConversationSummary {
+    /// Görünen başlık. Karşı tarafın hesabı silinmiş bire bir sohbette sunucunun Türkçe sabiti yerine yerelleştirilmiş metin.
+    public var displayTitle: String {
+        if kind == .direct, otherUserId == nil { return String(localized: "Silinmiş kullanıcı") }
+        return title
+    }
+}

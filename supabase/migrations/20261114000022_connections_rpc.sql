@@ -1,14 +1,14 @@
 -- Mama Haritası — 0022: Hayvanseverler ve bağlantı RPC'leri (spec §5.2, §6)
 --
 -- Mahalle/buluşma RPC'leriyle aynı kurallar: `security definer`, ilk iş `private.require_uid()`, anon'a kapalı,
--- iş kuralı sonuçları jsonb `status` (+ `reason`). Bildirimler bu dosyada YOK (0023+).
+-- iş kuralı sonuçları jsonb `status` (+ `reason`). Bildirimler bu dosyada YOK (0024, AFTER trigger'larla).
 --
 -- * `connections` iki kişi arasında tek satırdır (sırasız çift). Yaşam döngüsü:
 --     pending → accepted | declined;  accepted → removed;  pending → (geri çekilince satır silinir).
 -- * `declined` satır, `responded_at + 30 gün` sonra yok sayılır; `removed` satır hemen yok sayılır. Yeni istek
 --   aynı satırı sıfırlar (gönderen/alıcı, not, `created_at = now()`, statü `pending`) — çift tekilliği korunur.
 -- * Günlük istek limiti kalıcı `connection_request_sends` kayıtlarıyla sayılır: geri çekme ve satır sıfırlama
---   sayımı etkilemez (gönder-geri çek döngüsüyle limit aşılamaz). Otomatik kabul gönderim sayılmaz.
+--   sayımı etkilemez (gönder-geri çek döngüsüyle limit aşılamaz). Otomatik kabul gönderim sayılmaz, sınıra takılmaz.
 -- * Kabul (elle ya da karşı istekle otomatik) bire bir sohbet açar; kaldırılmış bağlantı yeniden kabul edilirse
 --   mevcut sohbet yeniden açılır (`connection_id` tekil).
 -- * Okuma RPC'leri sosyal onay yoksa boş döner; yazma RPC'leri `consent_required` ister.
@@ -245,16 +245,16 @@ begin
     return jsonb_build_object('status', 'rejected_content');
   end if;
 
-  if (select count(*) from public.connection_request_sends s
-       where s.user_id = v_uid and s.sent_at >= private.istanbul_day_start()) >= c_daily_limit then
-    return jsonb_build_object('status', 'limit_reached', 'limit', c_daily_limit);
-  end if;
-
-  -- karşı taraf zaten istek atmışsa: otomatik kabul
+  -- karşı taraf zaten istek atmışsa: otomatik kabul (gönderim sayılmaz; günlük sınırdan önce)
   if v_c.id is not null and v_c.status = 'pending' and v_c.requester_id = p_user_id then
     update public.connections set status = 'accepted', responded_at = now() where id = v_c.id;
     v_conv := private.open_direct_conversation(v_c.id, v_uid, p_user_id);
     return jsonb_build_object('status', 'auto_accepted', 'conversation_id', v_conv);
+  end if;
+
+  if (select count(*) from public.connection_request_sends s
+       where s.user_id = v_uid and s.sent_at >= private.istanbul_day_start()) >= c_daily_limit then
+    return jsonb_build_object('status', 'limit_reached', 'limit', c_daily_limit);
   end if;
 
   if v_stale then

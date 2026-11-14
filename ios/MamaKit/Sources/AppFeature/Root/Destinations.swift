@@ -42,6 +42,9 @@ struct RouteDestination: View {
             VetHelpScreen(needId: needId, services: services)
         case .privacy:
             PrivacyScreen(services: services)
+        case .meetup, .conversation, .conversations, .animalLovers, .connectionRequests:
+            // Geçici: Tanışma ekranları (görev 9) gelene kadar.
+            Text(verbatim: "…")
         }
     }
 }
@@ -76,6 +79,9 @@ struct SheetDestination: View {
             EditProfileSheet(services: services)
         case .createPost(let kind, let spotId):
             CreatePostSheet(kind: kind, spotId: spotId, services: services)
+        case .createMeetup, .socialConsent:
+            // Geçici: Tanışma ekranları (görev 9) gelene kadar.
+            Text(verbatim: "…")
         }
     }
 }

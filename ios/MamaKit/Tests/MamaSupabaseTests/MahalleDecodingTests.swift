@@ -472,10 +472,13 @@ final class MahalleDecodingTests: XCTestCase {
 
     func testEveryNotificationKindInContractDecodes() throws {
         let contractKinds = ["need_food_nearby", "followed_spot_changed", "guardian_spot_unfed", "need_resolved",
-                             "thanks_fed", "donation_delivered", "community_comment", "cover_volunteered"]
+                             "thanks_fed", "donation_delivered", "community_comment", "cover_volunteered",
+                             // Tanışma (0018)
+                             "meetup_joined", "meetup_cancelled", "meetup_reminder", "connection_request",
+                             "connection_accepted", "chat_message"]
         XCTAssertEqual(Set(NotificationKind.allCases.map(\.rawValue)), Set(contractKinds))
         let rows = contractKinds.enumerated().map { index, kind in
-            #"{"id": "11111111-2222-3333-4444-55555555550\#(index)", "kind": "\#(kind)", "title": "t", "body": "b", "created_at": "2026-11-10T06:00:00Z"}"#
+            #"{"id": "11111111-2222-3333-4444-\#(String(format: "%012d", index))", "kind": "\#(kind)", "title": "t", "body": "b", "created_at": "2026-11-10T06:00:00Z"}"#
         }
         let decoded = try SupabaseDecoding.notifications(from: data("[\(rows.joined(separator: ","))]"))
         XCTAssertEqual(decoded.map(\.kind.rawValue), contractKinds)
@@ -541,7 +544,7 @@ final class MahalleDecodingTests: XCTestCase {
         XCTAssertEqual(ReportTarget.post.rawValue, "post")
         XCTAssertEqual(ReportTarget.comment.rawValue, "comment")
         XCTAssertEqual(Set(ReportTarget.allCases.map(\.rawValue)),
-                       ["spot", "animal", "need", "checkin", "photo", "user", "post", "comment"])
+                       ["spot", "animal", "need", "checkin", "photo", "user", "post", "comment", "meetup", "chat_message"])
     }
 }
 

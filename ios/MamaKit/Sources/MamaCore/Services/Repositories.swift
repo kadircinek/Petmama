@@ -140,3 +140,44 @@ public protocol PendingCheckInStore: Sendable {
     func load() async -> [CheckInDraft]
     func save(_ drafts: [CheckInDraft]) async
 }
+
+/// Tanışma: sosyal onay/profil, buluşmalar, Hayvanseverler bağlantıları ve sohbet. Tümü giriş gerektirir.
+/// Sosyal onay yoksa yazmalar `consentRequired` döner; okumalar (buluşma listesi/detayı hariç) boş döner.
+public protocol SocialRepository: Sendable {
+    /// Onay satırı yoksa `nil`.
+    func socialProfile() async throws -> SocialProfile?
+    /// 18+ ve koşullar onayı (idempotent).
+    func giveSocialConsent() async throws -> SocialProfile
+    /// Görünür olmak için kaba konum gerekir (verilmezse önceki konum kullanılır).
+    func updateSocialProfile(isVisible: Bool, about: String, interests: [SocialInterest], at coordinate: Coordinate?) async throws -> SocialProfileOutcome
+
+    /// Yakındaki aktif, bitmemiş buluşmalar; yakından uzağa.
+    func meetups(near center: Coordinate, radiusMeters: Int) async throws -> [Meetup]
+    /// İptal edilmiş olsa da döner; düzenleyenle engel varsa `nil`.
+    func meetup(id: UUID, near center: Coordinate?) async throws -> Meetup?
+    /// Yalnızca katılanlar görür; diğerlerine boş.
+    func meetupParticipants(meetupId: UUID) async throws -> [MeetupParticipant]
+    func createMeetup(_ draft: MeetupDraft) async throws -> CreateMeetupOutcome
+    func joinMeetup(id: UUID) async throws -> JoinMeetupOutcome
+    /// `false` = düzenleyen ayrılamaz (iptal eder).
+    func leaveMeetup(id: UUID) async throws -> Bool
+    /// Yalnızca düzenleyen; çıkarılan tekrar katılamaz.
+    func removeParticipant(meetupId: UUID, userId: UUID) async throws -> Bool
+    /// Yalnızca düzenleyen, bitmemiş buluşma.
+    func cancelMeetup(id: UUID) async throws -> Bool
+
+    /// ≤10 km içindeki görünür hayvanseverler (izleyici görünür ve konumlu olmalı).
+    func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover]
+    func sendConnectionRequest(to userId: UUID, note: String?) async throws -> SendRequestOutcome
+    /// Kabulde bire bir sohbetin kimliği; reddedince ya da istek yoksa `nil`.
+    func respondToConnection(requestId: UUID, accept: Bool) async throws -> UUID?
+    func withdrawConnectionRequest(id: UUID) async throws
+    func removeConnection(userId: UUID) async throws
+    func incomingConnectionRequests() async throws -> [ConnectionRequest]
+
+    func conversations() async throws -> [ConversationSummary]
+    /// Eskiden yeniye; `before` ile daha eskiler sayfalanır.
+    func messages(conversationId: UUID, before: Date?, limit: Int) async throws -> [ChatMessage]
+    func sendMessage(conversationId: UUID, body: String) async throws -> SendMessageOutcome
+    func markConversationRead(id: UUID) async throws
+}

@@ -310,6 +310,12 @@ extension NotificationKind {
         case .donationDelivered: return "gift.fill"
         case .communityComment: return "text.bubble.fill"
         case .coverVolunteered: return "hand.raised.fill"
+        case .meetupJoined: return "person.2.fill"
+        case .meetupCancelled: return "calendar.badge.minus"
+        case .meetupReminder: return "calendar.badge.clock"
+        case .connectionRequest: return "person.badge.plus"
+        case .connectionAccepted: return "person.crop.circle.badge.checkmark"
+        case .chatMessage: return "bubble.left.and.bubble.right.fill"
         }
     }
 
@@ -319,6 +325,9 @@ extension NotificationKind {
         case .followedSpotChanged: return MamaColor.textSecondary
         case .needResolved, .thanksFed, .donationDelivered, .coverVolunteered: return MamaColor.statusFed
         case .communityComment: return MamaColor.textSecondary
+        case .meetupJoined, .connectionAccepted: return MamaColor.statusFed
+        case .meetupCancelled: return MamaColor.statusNeeds
+        case .meetupReminder, .connectionRequest, .chatMessage: return MamaColor.textSecondary
         }
     }
 }

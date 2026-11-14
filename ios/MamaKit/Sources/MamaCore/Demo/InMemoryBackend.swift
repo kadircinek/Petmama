@@ -39,6 +39,20 @@ public actor InMemoryBackend {
     var reportersByTarget: [String: Set<UUID>] = [:]
     var mediaDirectory: URL
 
+    // Tanışma. Türetilmiş alanlar (katılımcı sayısı, rol, okunmamış…) okuma anında hesaplanır.
+    var socialProfiles: [UUID: SocialProfileRecord] = [:]
+    var meetups: [UUID: Meetup] = [:]
+    var participantsByMeetup: [UUID: [ParticipantRecord]] = [:]
+    var connections: [UUID: ConnectionRecord] = [:]
+    /// Günlük istek sınırı: geri çekme sayımı düşürmez (sunucudaki `connection_request_sends`).
+    var requestSends: [UUID: [Date]] = [:]
+    var conversationRecords: [UUID: ConversationRecord] = [:]
+    var chatMessages: [UUID: [ChatMessage]] = [:]
+    /// Senaryolu demo kullanıcıları: isteği `demoResponseDelay` sonra kabul eder, bire bir sohbette cevap yazar.
+    let scriptedSocialUsers: Set<UUID>
+    var cannedReplyIndex = 0
+    let chatHub = ChatUpdateHub()
+
     let now: @Sendable () -> Date
 
     struct AnimalSpotKey: Hashable { let a: UUID; let b: UUID }
@@ -72,6 +86,33 @@ public actor InMemoryBackend {
         }
         for entry in seed.paws { paws[entry.postId] = Set(entry.userIds) }
         for entry in seed.volunteers { coverVolunteers[entry.postId] = entry.userIds }
+        self.scriptedSocialUsers = Set(seed.socialProfiles.map(\.userId))
+        // Tanışma
+        for entry in seed.socialProfiles {
+            socialProfiles[entry.userId] = SocialProfileRecord(
+                isVisible: true, about: entry.about, interests: entry.interests,
+                cell: SocialPolicy.roundedCell(entry.home), consentedAt: now()
+            )
+        }
+        for entry in seed.meetups {
+            meetups[entry.meetup.id] = entry.meetup
+            participantsByMeetup[entry.meetup.id] = entry.participantIds.map {
+                ParticipantRecord(userId: $0, status: .joined, joinedAt: entry.meetup.createdAt)
+            }
+            conversationRecords[entry.conversationId] = ConversationRecord(
+                id: entry.conversationId, kind: .meetup, meetupId: entry.meetup.id, createdAt: entry.meetup.createdAt,
+                members: Dictionary(uniqueKeysWithValues: entry.participantIds.map { ($0, entry.meetup.createdAt) })
+            )
+        }
+        for entry in seed.chatMessages {
+            chatMessages[entry.conversationId, default: []].append(entry.message)
+        }
+        for entry in seed.connectionRequests {
+            connections[entry.id] = ConnectionRecord(
+                id: entry.id, requesterId: entry.from, addresseeId: entry.to, note: entry.note,
+                status: .pending, createdAt: entry.createdAt
+            )
+        }
     }
 
     // MARK: - Test yardımcıları
@@ -213,6 +254,7 @@ extension InMemoryBackend: AuthRepository {
             throw MamaError.invalidInput(SessionStore.appleConfirmationRequiredMessage)
         }
         signedInWithApple = false
+        removeSocialData(of: userId)
         users[userId] = nil
         passwords = passwords.filter { $0.value.userId != userId }
         for (id, spot) in spots where spot.createdBy == userId { spots[id]?.createdBy = nil }
@@ -712,7 +754,7 @@ extension InMemoryBackend: ModerationRepository {
     public func report(_ draft: ReportDraft) async throws {
         let reporter = try requireUser()
         reports.append(draft)
-        guard draft.target == .post || draft.target == .comment else { return }
+        guard [.post, .comment, .chatMessage].contains(draft.target) else { return }
         let key = "\(draft.target.rawValue)-\(draft.targetId)"
         reportersByTarget[key, default: []].insert(reporter)
         if (reportersByTarget[key]?.count ?? 0) >= CommunityPolicy.reportsToAutoHide {
@@ -723,6 +765,7 @@ extension InMemoryBackend: ModerationRepository {
     public func block(userId: UUID) async throws {
         let me = try requireUser()
         blocks[me, default: []].insert(userId)
+        applyBlockToSocial(blocker: me, blocked: userId)
     }
 
     public func unblock(userId: UUID) async throws {

@@ -49,6 +49,8 @@ public final class ReportViewModel {
         case .user: return "Bu kullanıcıyı neden bildiriyorsun?"
         case .post: return "Bu paylaşımı neden bildiriyorsun?"
         case .comment: return "Bu yorumu neden bildiriyorsun?"
+        case .meetup: return "Bu buluşmayı neden bildiriyorsun?"
+        case .chatMessage: return "Bu mesajı neden bildiriyorsun?"
         }
     }
 

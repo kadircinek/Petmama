@@ -4,6 +4,9 @@ public enum ReportTarget: String, Codable, CaseIterable, Sendable, Hashable {
     case spot, animal, need, checkin, photo, user
     /// Mahalle paylaşımı ve yorumu.
     case post, comment
+    /// Buluşma ve sohbet mesajı (Tanışma).
+    case meetup
+    case chatMessage = "chat_message"
 }
 
 public enum ReportReason: String, Codable, CaseIterable, Sendable, Hashable {

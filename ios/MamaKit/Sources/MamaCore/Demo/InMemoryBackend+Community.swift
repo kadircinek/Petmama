@@ -291,6 +291,7 @@ extension InMemoryBackend {
         switch target {
         case .post: posts[id]?.isPendingModeration = true
         case .comment: hiddenCommentIds.insert(id)
+        case .chatMessage: markChatMessagePending(id)
         default: break
         }
     }

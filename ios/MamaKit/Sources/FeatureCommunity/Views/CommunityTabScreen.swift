@@ -33,6 +33,9 @@ public struct CommunityTabScreen<NeedsContent: View>: View {
             switch router.communitySection {
             case .feed:
                 CommunityFeedView(model: model)
+            case .meetups:
+                // Geçici: buluşma listesi Tanışma görev 9'da AppFeature'dan enjekte edilir.
+                EmptyView()
             case .needs:
                 needs()
             }

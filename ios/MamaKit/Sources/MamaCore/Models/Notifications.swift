@@ -11,6 +11,17 @@ public enum NotificationKind: String, Codable, CaseIterable, Sendable, Hashable 
     case communityComment = "community_comment"
     /// "Yerime bakar mısın?" isteğine biri "Ben bakarım" dedi.
     case coverVolunteered = "cover_volunteered"
+    // Tanışma
+    /// Buluşmana biri katıldı.
+    case meetupJoined = "meetup_joined"
+    /// Katıldığın buluşma iptal edildi.
+    case meetupCancelled = "meetup_cancelled"
+    /// Buluşma yaklaşıyor.
+    case meetupReminder = "meetup_reminder"
+    case connectionRequest = "connection_request"
+    case connectionAccepted = "connection_accepted"
+    /// Sohbete yeni mesaj (metin içermez, yalnızca yazar adı).
+    case chatMessage = "chat_message"
 }
 
 public struct AppNotification: Identifiable, Hashable, Codable, Sendable {
@@ -60,6 +71,8 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
     public var guardianAlerts: Bool
     /// Mahalle: paylaşımına yorum, "Ben bakarım" bildirimleri.
     public var communityUpdates: Bool
+    /// Tanışma: buluşma, bağlantı ve sohbet bildirimleri.
+    public var socialUpdates: Bool
 
     public init(
         radiusMeters: Int = 1000,
@@ -68,7 +81,8 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
         needFoodNearby: Bool = true,
         followedUpdates: Bool = true,
         guardianAlerts: Bool = true,
-        communityUpdates: Bool = true
+        communityUpdates: Bool = true,
+        socialUpdates: Bool = true
     ) {
         self.radiusMeters = radiusMeters
         self.quietStartHour = quietStartHour
@@ -77,6 +91,25 @@ public struct NotificationPreferences: Hashable, Codable, Sendable {
         self.followedUpdates = followedUpdates
         self.guardianAlerts = guardianAlerts
         self.communityUpdates = communityUpdates
+        self.socialUpdates = socialUpdates
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case radiusMeters, quietStartHour, quietEndHour, needFoodNearby, followedUpdates, guardianAlerts
+        case communityUpdates, socialUpdates
+    }
+
+    /// `socialUpdates` eklenmeden önce kaydedilmiş tercihler de çözülsün (eksikse açık).
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        radiusMeters = try container.decode(Int.self, forKey: .radiusMeters)
+        quietStartHour = try container.decode(Int.self, forKey: .quietStartHour)
+        quietEndHour = try container.decode(Int.self, forKey: .quietEndHour)
+        needFoodNearby = try container.decode(Bool.self, forKey: .needFoodNearby)
+        followedUpdates = try container.decode(Bool.self, forKey: .followedUpdates)
+        guardianAlerts = try container.decode(Bool.self, forKey: .guardianAlerts)
+        communityUpdates = try container.decode(Bool.self, forKey: .communityUpdates)
+        socialUpdates = try container.decodeIfPresent(Bool.self, forKey: .socialUpdates) ?? true
     }
 
     public static let `default` = NotificationPreferences()

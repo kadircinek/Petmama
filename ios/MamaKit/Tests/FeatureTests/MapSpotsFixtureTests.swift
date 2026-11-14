@@ -37,6 +37,8 @@ enum MapSpotsFixture {
             moderation: backend,
             donations: backend,
             community: backend,
+            social: backend,
+            chatUpdates: backend,
             media: backend,
             spotCache: cache,
             checkInQueue: queue,

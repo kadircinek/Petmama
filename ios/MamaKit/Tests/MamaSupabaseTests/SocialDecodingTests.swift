@@ -82,6 +82,18 @@ final class SocialDecodingTests: XCTestCase {
         XCTAssertEqual(second.status, .cancelled)
         XCTAssertNil(second.capacity)
         XCTAssertNil(second.distanceMeters)
+        XCTAssertFalse(first.isTour, "is_tour yoksa (eski sunucu) normal buluşma")
+    }
+
+    func testMeetupRowDecodesIsTour() throws {
+        let meetups = try SupabaseDecoding.meetups(from: data("""
+        [{"id": "\(Self.meetupId)", "title": "Mama turu: Moda sahil", "starts_at": "2026-11-16T09:00:00Z",
+          "ends_at": "2026-11-16T10:30:00Z", "place_name": "Moda sahil", "lat": 40.98, "lng": 29.03,
+          "organizer_id": "\(Self.userId)", "status": "active", "viewer_role": "none", "is_tour": true},
+         {"id": "d0000000-0000-4000-8000-000000000002", "starts_at": "2026-11-16T09:00:00Z",
+          "ends_at": "2026-11-16T10:00:00Z", "lat": 41.0, "lng": 29.0, "organizer_id": "\(Self.userId)", "is_tour": false}]
+        """))
+        XCTAssertEqual(meetups.map(\.isTour), [true, false])
     }
 
     func testMeetupRowWithoutCoordinateOrUnknownStatus() throws {
@@ -138,6 +150,21 @@ final class SocialDecodingTests: XCTestCase {
         XCTAssertEqual(lovers[2].connection, .connected(conversationId: uuid(Self.convId)))
         XCTAssertEqual(lovers[2].distanceBand, .from3to10km)
         XCTAssertEqual(lovers[3].connection, ConnectionState.none)
+        XCTAssertFalse(lovers[0].fedToday, "fed_today yoksa (eski sunucu) false")
+        XCTAssertNil(lovers[0].onTourMeetupId)
+    }
+
+    func testAnimalLoversDecodeFedTodayAndTour() throws {
+        let lovers = try SupabaseDecoding.animalLovers(from: data("""
+        [{"user_id": "\(Self.userId)", "distance_band": "under_1km", "connection_state": "none",
+          "fed_today": true, "on_tour_meetup_id": "\(Self.meetupId)"},
+         {"user_id": "0c9d7c1e-58a6-4d0b-8f7f-3f8f6a6e2c11", "distance_band": "1_3km", "connection_state": "none",
+          "fed_today": false, "on_tour_meetup_id": null}]
+        """))
+        XCTAssertEqual(lovers.map(\.fedToday), [true, false])
+        XCTAssertEqual(lovers[0].onTourMeetupId, uuid(Self.meetupId))
+        XCTAssertTrue(lovers[0].isOnTour)
+        XCTAssertNil(lovers[1].onTourMeetupId)
     }
 
     func testAnimalLoverConnectionWithoutIdFallsBackToNone() throws {
@@ -236,6 +263,29 @@ final class SocialDecodingTests: XCTestCase {
         assertServerError(try result(#"{"status":"invalid","reason":"brand_new"}"#).createMeetupOutcome())
         assertServerError(try result(#"{"status":"created"}"#).createMeetupOutcome())
         assertServerError(try result(#"{"status":"mystery"}"#).createMeetupOutcome())
+    }
+
+    func testStartTourOutcomes() throws {
+        XCTAssertEqual(
+            try result(#"{"status":"started","meetup_id":"\#(Self.meetupId)","conversation_id":"\#(Self.convId)"}"#).startTourOutcome(),
+            .started(meetupId: uuid(Self.meetupId), conversationId: uuid(Self.convId))
+        )
+        XCTAssertEqual(try result(#"{"status":"consent_required"}"#).startTourOutcome(), .consentRequired)
+        XCTAssertEqual(try result(#"{"status":"spot_not_found"}"#).startTourOutcome(), .spotNotFound)
+        XCTAssertEqual(try result(#"{"status":"already_touring"}"#).startTourOutcome(), .alreadyTouring)
+        XCTAssertEqual(try result(#"{"status":"limit_reached","limit":3}"#).startTourOutcome(), .limitReached(3))
+        XCTAssertEqual(try result(#"{"status":"limit_reached"}"#).startTourOutcome(), .limitReached(SocialPolicy.dailyTours))
+        XCTAssertEqual(try result(#"{"status":"invalid","reason":"duration_range"}"#).startTourOutcome(), .durationRange)
+        assertServerError(try result(#"{"status":"invalid","reason":"brand_new"}"#).startTourOutcome())
+        assertServerError(try result(#"{"status":"started","meetup_id":"\#(Self.meetupId)"}"#).startTourOutcome())
+        assertServerError(try result(#"{"status":"mystery"}"#).startTourOutcome())
+    }
+
+    func testStartTourParamsMatchServerSignature() throws {
+        let params = try json(SupabaseBackend.startTourParams(spotId: uuid(Self.meetupId), durationMinutes: 90))
+        XCTAssertEqual(Set(params.keys), ["p_spot_id", "p_duration_minutes"])
+        XCTAssertEqual(params["p_spot_id"] as? String, Self.meetupId)
+        XCTAssertEqual(params["p_duration_minutes"] as? Int, 90)
     }
 
     func testJoinMeetupOutcomes() throws {

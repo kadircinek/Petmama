@@ -62,6 +62,7 @@ struct MeetupRowDTO: Decodable {
     var conversationId: UUID?
     var distanceM: Double?
     var createdAt: String?
+    var isTour: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id, title, description, lat, lng, capacity, status
@@ -79,6 +80,7 @@ struct MeetupRowDTO: Decodable {
         case conversationId = "conversation_id"
         case distanceM = "distance_m"
         case createdAt = "created_at"
+        case isTour = "is_tour"
     }
 
     /// Konumu, düzenleyeni ya da zamanı olmayan satır atlanır. Bilinmeyen `status` iptal sayılır
@@ -105,7 +107,8 @@ struct MeetupRowDTO: Decodable {
             viewerRole: viewerRole.flatMap(MeetupViewerRole.init(rawValue:)) ?? .none,
             conversationId: conversationId,
             distanceMeters: distanceM,
-            createdAt: date(createdAt) ?? unknownDate
+            createdAt: date(createdAt) ?? unknownDate,
+            isTour: isTour ?? false
         )
     }
 }
@@ -151,6 +154,8 @@ struct AnimalLoverRowDTO: Decodable {
     var connectionState: String?
     var requestId: UUID?
     var conversationId: UUID?
+    var fedToday: Bool?
+    var onTourMeetupId: UUID?
 
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -164,6 +169,8 @@ struct AnimalLoverRowDTO: Decodable {
         case connectionState = "connection_state"
         case requestId = "request_id"
         case conversationId = "conversation_id"
+        case fedToday = "fed_today"
+        case onTourMeetupId = "on_tour_meetup_id"
     }
 
     /// Mesafe bandı bilinmeyen satır atlanır (bant olmadan mesafe gösterilemez). Gereken kimliği eksik
@@ -180,7 +187,9 @@ struct AnimalLoverRowDTO: Decodable {
             fedLast30Days: fed30d ?? 0,
             distanceBand: band,
             sharedInterestCount: sharedInterestCount ?? 0,
-            connection: connection
+            connection: connection,
+            fedToday: fedToday ?? false,
+            onTourMeetupId: onTourMeetupId
         )
     }
 
@@ -365,6 +374,25 @@ struct SocialResultDTO: Decodable {
                 throw MamaError.server("\(rpc): beklenmeyen reason '\(reason ?? "null")'")
             }
             return .invalid(value)
+        default: throw StatusError.unexpected(rpc: rpc, status: status)
+        }
+    }
+
+    func startTourOutcome() throws -> StartTourOutcome {
+        let rpc = "start_feeding_tour"
+        switch status {
+        case "started":
+            guard let meetupId, let conversationId else { throw MamaError.server("\(rpc): meetup_id/conversation_id eksik") }
+            return .started(meetupId: meetupId, conversationId: conversationId)
+        case "consent_required": return .consentRequired
+        case "spot_not_found": return .spotNotFound
+        case "already_touring": return .alreadyTouring
+        case "limit_reached": return .limitReached(limit ?? SocialPolicy.dailyTours)
+        case "invalid":
+            guard reason == "duration_range" else {
+                throw MamaError.server("\(rpc): beklenmeyen reason '\(reason ?? "null")'")
+            }
+            return .durationRange
         default: throw StatusError.unexpected(rpc: rpc, status: status)
         }
     }

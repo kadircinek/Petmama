@@ -38,6 +38,8 @@ public enum DemoData {
     public static let emreId = id(1, 2)
     public static let zeynepId = id(1, 3)
     public static let meId = id(1, 9)
+    /// Ayşe'nin şu an açık mama turu (Moda Sahili bankları; başlangıç `now − 20 dk`, 90 dk).
+    public static let ayseTourId = id(8, 3)
 
     /// Demo bire bir sohbetinde karşı tarafın sırayla verdiği hazır cevaplar (`InMemoryBackend.demoResponseDelay` sonra).
     public static let cannedReplies: [String] = [
@@ -260,9 +262,19 @@ public enum DemoData {
             startsAt: at(4, hour: 14), endsAt: at(4, hour: 17), placeName: "Caferağa Spor Salonu yanı",
             coordinate: Coordinate(latitude: 40.98640, longitude: 29.02720), spotId: id(2, 5),
             organizerId: emreId, organizerName: "Emre", createdAt: ago(hours: 30))
+        // Anlık mama turu (spec 2026-11-16): Ayşe şu an Moda Sahili'nde; Zeynep katıldı. Emre bugün mama koydu
+        // (yukarıdaki check-in'ler, "Kilise bahçesi önü" 30 dk önce): şeritte "Bugün besledi".
+        let beach = Coordinate(latitude: 40.98290, longitude: 29.02480)
+        let tourStart = now.addingTimeInterval(-20 * 60)
+        let ayseTour = Meetup(
+            id: ayseTourId, title: SocialPolicy.tourTitle(spotTitle: "Moda Sahili bankları"),
+            startsAt: tourStart, endsAt: tourStart.addingTimeInterval(TimeInterval(SocialPolicy.defaultTourDuration) * 60),
+            placeName: "Moda Sahili bankları", coordinate: beach, spotId: id(2, 2),
+            organizerId: ayseId, organizerName: "Ayşe", organizerIsVerified: true, createdAt: tourStart, isTour: true)
         let meetups: [(meetup: Meetup, participantIds: [UUID], conversationId: UUID)] = [
             (parkTour, [ayseId, emreId, zeynepId], id(9, 1)),
             (shelterWorkshop, [emreId], id(9, 2)),
+            (ayseTour, [ayseId, zeynepId], id(9, 3)),
         ]
         let chatMessages: [(conversationId: UUID, message: ChatMessage)] = [
             (id(9, 1), ChatMessage(id: id(10, 1), authorId: ayseId, authorName: "Ayşe",
@@ -272,6 +284,12 @@ public enum DemoData {
                                    body: "Ben iki yeni su kabı alırım.", createdAt: ago(hours: 4))),
             (id(9, 1), ChatMessage(id: id(10, 3), authorId: zeynepId, authorName: "Zeynep",
                                    body: "Ben de kısırlaştırılmamış kedilerin listesini getiririm.", createdAt: ago(hours: 1))),
+            (id(9, 3), ChatMessage(id: id(10, 4), authorId: ayseId, authorName: "Ayşe",
+                                   body: "Sahildeki kaplara geldim, su da getirdim. Yolu düşen uğrasın!",
+                                   createdAt: now.addingTimeInterval(-15 * 60))),
+            (id(9, 3), ChatMessage(id: id(10, 5), authorId: zeynepId, authorName: "Zeynep",
+                                   body: "10 dakikaya oradayım, kuru mama getiriyorum.",
+                                   createdAt: now.addingTimeInterval(-10 * 60))),
         ]
         let connectionRequests: [(id: UUID, from: UUID, to: UUID, note: String, createdAt: Date)] = [
             (id(11, 1), zeynepId, meId, "Moda Parkı'ndaki kedilerin kısırlaştırma takibini beraber yapalım mı?", ago(hours: 2)),

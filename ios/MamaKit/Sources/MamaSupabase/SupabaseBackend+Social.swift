@@ -120,6 +120,14 @@ extension SupabaseBackend: SocialRepository {
         }
     }
 
+    public func startFeedingTour(spotId: UUID, durationMinutes: Int) async throws -> StartTourOutcome {
+        try await perform {
+            _ = try requireUserId()
+            let data = try await rpc("start_feeding_tour", Self.startTourParams(spotId: spotId, durationMinutes: durationMinutes))
+            return try SupabaseDecoding.socialResult(from: data).startTourOutcome()
+        }
+    }
+
     // MARK: Hayvanseverler ve bağlantılar
 
     public func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover] {
@@ -246,6 +254,14 @@ extension SupabaseBackend: SocialRepository {
             "lng": .double(draft.coordinate.longitude),
             "p_spot_id": Param.uuid(draft.spotId),
             "p_capacity": draft.capacity.map(AnyJSON.integer) ?? .null,
+        ]
+    }
+
+    /// `start_feeding_tour(p_spot_id uuid, p_duration_minutes int)`.
+    static func startTourParams(spotId: UUID, durationMinutes: Int) -> JSONObject {
+        [
+            "p_spot_id": Param.uuid(spotId),
+            "p_duration_minutes": .integer(durationMinutes),
         ]
     }
 

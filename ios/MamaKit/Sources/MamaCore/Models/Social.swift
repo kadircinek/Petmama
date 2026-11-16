@@ -56,6 +56,8 @@ public struct Meetup: Identifiable, Hashable, Codable, Sendable {
     /// İzleyicinin verdiği konumdan; konum verilmediyse boş.
     public var distanceMeters: Double?
     public var createdAt: Date
+    /// Anlık mama turu: hemen başlayan, herkese açık bir mama noktasındaki kısa buluşma (spec 2026-11-16).
+    public var isTour: Bool
 
     public init(
         id: UUID = UUID(),
@@ -77,7 +79,8 @@ public struct Meetup: Identifiable, Hashable, Codable, Sendable {
         viewerRole: MeetupViewerRole = .none,
         conversationId: UUID? = nil,
         distanceMeters: Double? = nil,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        isTour: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -99,6 +102,7 @@ public struct Meetup: Identifiable, Hashable, Codable, Sendable {
         self.conversationId = conversationId
         self.distanceMeters = distanceMeters
         self.createdAt = createdAt
+        self.isTour = isTour
     }
 
     /// Kişi sınırı doldu mu?
@@ -175,6 +179,19 @@ public enum CreateMeetupOutcome: Equatable, Sendable {
     case invalid(MeetupInvalidReason)
 }
 
+/// `start_feeding_tour` sonucu.
+public enum StartTourOutcome: Equatable, Sendable {
+    case started(meetupId: UUID, conversationId: UUID)
+    case consentRequired
+    /// Nokta yok, kaldırılmış, görünmüyor ya da herkese açık (`public`) değil.
+    case spotNotFound
+    /// Zaten açık bir turun var (aynı anda en fazla bir).
+    case alreadyTouring
+    case limitReached(Int)
+    /// Süre `SocialPolicy.tourDurationRange` dışında.
+    case durationRange
+}
+
 public enum JoinMeetupOutcome: Equatable, Sendable {
     case joined(conversationId: UUID)
     case full
@@ -234,6 +251,10 @@ public struct AnimalLover: Identifiable, Hashable, Sendable {
     public var distanceBand: DistanceBand
     public var sharedInterestCount: Int
     public var connection: ConnectionState
+    /// Bugün (İstanbul günü) "mama/su koydum" check-in'i yaptı ya da tur açtı. Nerede/ne zaman olduğu bilinmez.
+    public var fedToday: Bool
+    /// Şu an açık mama turu (izleyene görünür); yoksa `nil`.
+    public var onTourMeetupId: UUID?
 
     public init(
         id: UUID,
@@ -245,7 +266,9 @@ public struct AnimalLover: Identifiable, Hashable, Sendable {
         fedLast30Days: Int = 0,
         distanceBand: DistanceBand,
         sharedInterestCount: Int = 0,
-        connection: ConnectionState = .none
+        connection: ConnectionState = .none,
+        fedToday: Bool = false,
+        onTourMeetupId: UUID? = nil
     ) {
         self.id = id
         self.displayName = displayName
@@ -257,7 +280,11 @@ public struct AnimalLover: Identifiable, Hashable, Sendable {
         self.distanceBand = distanceBand
         self.sharedInterestCount = sharedInterestCount
         self.connection = connection
+        self.fedToday = fedToday
+        self.onTourMeetupId = onTourMeetupId
     }
+
+    public var isOnTour: Bool { onTourMeetupId != nil }
 }
 
 /// Bana gelen bekleyen bağlantı isteği.

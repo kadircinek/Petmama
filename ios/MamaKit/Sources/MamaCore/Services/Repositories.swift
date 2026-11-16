@@ -165,6 +165,8 @@ public protocol SocialRepository: Sendable {
     func removeParticipant(meetupId: UUID, userId: UUID) async throws -> Bool
     /// Yalnızca düzenleyen, bitmemiş buluşma.
     func cancelMeetup(id: UUID) async throws -> Bool
+    /// "Mama turuna çıkıyorum": herkese açık noktadan hemen başlayan tur (`start_feeding_tour`).
+    func startFeedingTour(spotId: UUID, durationMinutes: Int) async throws -> StartTourOutcome
 
     /// ≤10 km içindeki görünür hayvanseverler (izleyici görünür ve konumlu olmalı).
     func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover]

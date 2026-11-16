@@ -153,7 +153,7 @@ extension InMemoryBackend: SocialRepository {
         if [title, description, place].contains(where: ContentFilter.containsProfanity) { return .rejectedContent }
 
         let today = istanbulCalendar().startOfDay(for: now())
-        if meetups.values.filter({ $0.organizerId == me && $0.createdAt >= today }).count >= SocialPolicy.dailyMeetups {
+        if meetups.values.filter({ $0.organizerId == me && !$0.isTour && $0.createdAt >= today }).count >= SocialPolicy.dailyMeetups {
             return .limitReached(SocialPolicy.dailyMeetups)
         }
         if let reason = SocialPolicy.validate(draft, now: now()) { return .invalid(reason) }
@@ -224,6 +224,36 @@ extension InMemoryBackend: SocialRepository {
         return true
     }
 
+    /// Sunucudaki sıra: onay → süre → nokta (aktif, görünür, `public`) → açık tur → günlük tur sınırı.
+    public func startFeedingTour(spotId: UUID, durationMinutes: Int) async throws -> StartTourOutcome {
+        let me = try requireUser()
+        guard let organizer = users[me] else { throw MamaError.notSignedIn }
+        guard hasConsented(me) else { return .consentRequired }
+        guard SocialPolicy.tourDurationRange.contains(durationMinutes) else { return .durationRange }
+        guard let raw = spots[spotId], raw.visibility == .public, let spot = present(raw) else { return .spotNotFound }
+
+        if meetups.values.contains(where: { $0.organizerId == me && $0.isTour && $0.status == .active && $0.endsAt > now() }) {
+            return .alreadyTouring
+        }
+        let today = istanbulCalendar().startOfDay(for: now())
+        if meetups.values.filter({ $0.organizerId == me && $0.isTour && $0.createdAt >= today }).count >= SocialPolicy.dailyTours {
+            return .limitReached(SocialPolicy.dailyTours)
+        }
+
+        let place = SocialPolicy.prefix(SocialPolicy.trimmed(spot.title), maxLength: SocialPolicy.placeNameLength.upperBound)
+        let tour = Meetup(
+            title: SocialPolicy.tourTitle(spotTitle: place), startsAt: now(),
+            endsAt: now().addingTimeInterval(TimeInterval(durationMinutes) * 60),
+            placeName: place, coordinate: raw.coordinate, spotId: spotId,
+            organizerId: me, organizerName: organizer.displayName, createdAt: now(), isTour: true
+        )
+        meetups[tour.id] = tour
+        participantsByMeetup[tour.id] = [ParticipantRecord(userId: me, status: .joined, joinedAt: now())]
+        let conversation = ConversationRecord(id: UUID(), kind: .meetup, meetupId: tour.id, createdAt: now(), members: [me: now()])
+        conversationRecords[conversation.id] = conversation
+        return .started(meetupId: tour.id, conversationId: conversation.id)
+    }
+
     // MARK: Hayvanseverler
 
     public func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover] {
@@ -231,6 +261,7 @@ extension InMemoryBackend: SocialRepository {
         settleScriptedConnections()
         guard hasConsented(me), let mine = socialProfiles[me], mine.isVisible, let myCell = mine.cell else { return [] }
         let monthAgo = now().addingTimeInterval(-30 * 86_400)
+        let today = istanbulCalendar().startOfDay(for: now())
 
         return socialProfiles.compactMap { userId, record -> (AnimalLover, Double)? in
             guard userId != me, record.isVisible, record.consentedAt != nil, let cell = record.cell,
@@ -248,12 +279,16 @@ extension InMemoryBackend: SocialRepository {
                 fedLast30Days: checkIns.filter { $0.userId == userId && $0.kind == .fed && $0.createdAt >= monthAgo }.count,
                 distanceBand: band,
                 sharedInterestCount: record.interests.filter { mine.interests.contains($0) }.count,
-                connection: connectionState(between: me, and: userId)
+                connection: connectionState(between: me, and: userId),
+                fedToday: fedToday(userId, since: today),
+                onTourMeetupId: activeTour(of: userId)?.id
             )
             return (lover, meters)
         }
         .map(\.0)
         .sorted {
+            if $0.isOnTour != $1.isOnTour { return $0.isOnTour }
+            if $0.fedToday != $1.fedToday { return $0.fedToday }
             if $0.distanceBand != $1.distanceBand { return $0.distanceBand.rank < $1.distanceBand.rank }
             if $0.sharedInterestCount != $1.sharedInterestCount { return $0.sharedInterestCount > $1.sharedInterestCount }
             if $0.displayName != $1.displayName { return $0.displayName < $1.displayName }
@@ -468,6 +503,19 @@ extension InMemoryBackend {
 
     func isJoined(_ userId: UUID, _ meetupId: UUID) -> Bool {
         (participantsByMeetup[meetupId] ?? []).contains { $0.userId == userId && $0.status == .joined }
+    }
+
+    /// Bugün "mama/su koydum" check-in'i ya da açılmış bir tur (sunucuda `animal_lovers_near.fed_today`).
+    func fedToday(_ userId: UUID, since today: Date) -> Bool {
+        checkIns.contains { $0.userId == userId && ($0.kind == .fed || $0.kind == .water) && $0.createdAt >= today }
+            || meetups.values.contains { $0.organizerId == userId && $0.isTour && $0.createdAt >= today }
+    }
+
+    /// Kişinin şu an açık turu (en son başlayan).
+    func activeTour(of userId: UUID) -> Meetup? {
+        meetups.values
+            .filter { $0.organizerId == userId && $0.isTour && $0.status == .active && $0.startsAt <= now() && $0.endsAt > now() }
+            .max { ($0.startsAt, $1.id.uuidString) < ($1.startsAt, $0.id.uuidString) }
     }
 
     func meetupConversationId(_ meetupId: UUID) -> UUID? {

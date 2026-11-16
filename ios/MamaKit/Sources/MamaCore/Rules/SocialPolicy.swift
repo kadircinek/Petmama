@@ -16,6 +16,19 @@ public enum SocialPolicy {
     /// Kullanıcı başına günde (İstanbul günü) en fazla buluşma.
     public static let dailyMeetups = 3
 
+    // Anlık mama turu (spec 2026-11-16): hemen başlar, yalnızca herkese açık bir noktadan.
+    /// Arayüzde sunulan süreler (dk).
+    public static let tourDurations = [60, 90, 120]
+    public static let defaultTourDuration = 90
+    /// Sunucunun kabul ettiği süre aralığı (dk).
+    public static let tourDurationRange = 60...120
+    /// Kullanıcı başına günde (İstanbul günü) en fazla tur; buluşma limitinden ayrı.
+    public static let dailyTours = 3
+    /// "Mama turu: <nokta adı>" (başlık sınırına kırpılır).
+    public static func tourTitle(spotTitle: String) -> String {
+        prefix("Mama turu: " + trimmed(spotTitle), maxLength: titleLength.upperBound)
+    }
+
     // Hayvanseverler
     public static let maxAbout = 300
     public static let maxNote = 200

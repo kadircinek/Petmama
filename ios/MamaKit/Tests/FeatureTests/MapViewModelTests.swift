@@ -226,7 +226,7 @@ final class MapViewModelTests: XCTestCase {
         let (model, _) = makeModel()
         model.setVisibleBounds(wideBounds)
         await model.loadRegion()
-        XCTAssertEqual(model.meetups.count, 2)
+        XCTAssertEqual(model.meetups.count, 3)
     }
 
     func testMeetupsHiddenWhenFilterOff() async {
@@ -239,7 +239,7 @@ final class MapViewModelTests: XCTestCase {
         XCTAssertEqual(model.meetups, [])
         XCTAssertEqual(filter.activeCount, 1)
         await model.applyFilter(.default)
-        XCTAssertEqual(model.meetups.count, 2)
+        XCTAssertEqual(model.meetups.count, 3)
     }
 
     func testMeetupsEmptyWhenSignedOutAndSpotsStillLoad() async {

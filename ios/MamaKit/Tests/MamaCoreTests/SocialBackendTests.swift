@@ -97,7 +97,7 @@ final class SocialBackendTests: XCTestCase {
         XCTAssertTrue(incoming.isEmpty, "onay yoksa okuma boş")
         // Buluşma listesi onay istemez.
         let meetups = try await backend.meetups(near: .modaKadikoy, radiusMeters: 10_000)
-        XCTAssertEqual(meetups.count, 2)
+        XCTAssertEqual(meetups.count, 3, "iki buluşma + Ayşe'nin açık mama turu")
         XCTAssertEqual(meetups.first { $0.id == DemoData.id(8, 1) }?.participantCount, 3)
 
         let consented = try await backend.giveSocialConsent()
@@ -481,5 +481,162 @@ final class SocialBackendTests: XCTestCase {
         // Ayşe'nin düzenlediği seed buluşması da gider.
         let meetups = try await backend.meetups(near: .modaKadikoy, radiusMeters: 10_000)
         XCTAssertFalse(meetups.contains { $0.organizerId == DemoData.ayseId })
+    }
+    // MARK: - Mama turu (spec 2026-11-16)
+
+    func testTourPolicyConstants() {
+        XCTAssertEqual(SocialPolicy.tourDurations, [60, 90, 120])
+        XCTAssertEqual(SocialPolicy.defaultTourDuration, 90)
+        XCTAssertEqual(SocialPolicy.dailyTours, 3)
+        XCTAssertEqual(SocialPolicy.tourDurationRange, 60...120)
+    }
+
+    func testStartFeedingTourRules() async throws {
+        let park = DemoData.id(2, 1)
+        let consent = try await backend.startFeedingTour(spotId: park, durationMinutes: 90)
+        XCTAssertEqual(consent, .consentRequired)
+        _ = try await backend.giveSocialConsent()
+
+        for (spot, minutes, expected) in [
+            (park, 59, StartTourOutcome.durationRange),
+            (park, 121, .durationRange),
+            (UUID(), 90, .spotNotFound),
+            (DemoData.id(2, 13), 90, .spotNotFound),   // bulanık nokta
+            (DemoData.id(2, 14), 90, .spotNotFound),   // özel nokta
+        ] {
+            let outcome = try await backend.startFeedingTour(spotId: spot, durationMinutes: minutes)
+            XCTAssertEqual(outcome, expected, "\(spot) \(minutes)")
+        }
+        let untouched = try await backend.meetups(near: .modaKadikoy, radiusMeters: 10_000)
+        XCTAssertFalse(untouched.contains { $0.organizerId == me }, "geçersiz çağrılar tur açmaz")
+
+        guard case .started(let tourId, let conversationId) = try await backend.startFeedingTour(spotId: park, durationMinutes: 90) else {
+            return XCTFail("tur başlamadı")
+        }
+        let loaded = try await backend.meetup(id: tourId, near: nil)
+        let tour = try XCTUnwrap(loaded)
+        XCTAssertTrue(tour.isTour)
+        XCTAssertEqual(tour.startsAt, start)
+        XCTAssertEqual(tour.endsAt, start.addingTimeInterval(90 * 60))
+        XCTAssertEqual(tour.title, "Mama turu: Moda Parkı girişi")
+        XCTAssertEqual(tour.placeName, "Moda Parkı girişi")
+        XCTAssertEqual(tour.spotId, park)
+        XCTAssertEqual(tour.coordinate, Coordinate(latitude: 40.98455, longitude: 29.02560))
+        XCTAssertNil(tour.capacity)
+        XCTAssertEqual(tour.viewerRole, .organizer)
+        XCTAssertEqual(tour.conversationId, conversationId)
+        XCTAssertEqual(tour.participantCount, 1)
+        let chat = try await backend.conversations().first { $0.id == conversationId }
+        XCTAssertEqual(chat?.kind, .meetup)
+
+        let second = try await backend.startFeedingTour(spotId: DemoData.id(2, 2), durationMinutes: 60)
+        XCTAssertEqual(second, .alreadyTouring)
+
+        // "Turu bitir" (iptal) → yeni tur; süresi dolan tur da açık sayılmaz.
+        let ended = try await backend.cancelMeetup(id: tourId)
+        XCTAssertTrue(ended)
+        guard case .started = try await backend.startFeedingTour(spotId: DemoData.id(2, 2), durationMinutes: 60) else {
+            return XCTFail("ikinci tur başlamadı")
+        }
+        clock.advance(61 * 60)
+        guard case .started(let thirdId, _) = try await backend.startFeedingTour(spotId: park, durationMinutes: 120) else {
+            return XCTFail("üçüncü tur başlamadı")
+        }
+        _ = try await backend.cancelMeetup(id: thirdId)
+        let fourth = try await backend.startFeedingTour(spotId: park, durationMinutes: 90)
+        XCTAssertEqual(fourth, .limitReached(SocialPolicy.dailyTours))
+
+        // Turlar buluşma limitine sayılmaz.
+        for _ in 0..<SocialPolicy.dailyMeetups {
+            guard case .created = try await backend.createMeetup(draft(startsIn: 5 * 3600)) else { return XCTFail("buluşma açılamadı") }
+        }
+        let overLimit = try await backend.createMeetup(draft(startsIn: 5 * 3600))
+        XCTAssertEqual(overLimit, .limitReached(SocialPolicy.dailyMeetups))
+    }
+
+    func testMeetupsDoNotCountTowardTourLimit() async throws {
+        _ = try await backend.giveSocialConsent()
+        for _ in 0..<SocialPolicy.dailyMeetups {
+            guard case .created = try await backend.createMeetup(draft()) else { return XCTFail("buluşma açılamadı") }
+        }
+        guard case .started = try await backend.startFeedingTour(spotId: DemoData.id(2, 1), durationMinutes: 60) else {
+            return XCTFail("tur başlamadı")
+        }
+    }
+
+    func testOthersJoinTourAndSeeIt() async throws {
+        _ = try await backend.giveSocialConsent()
+        guard case .started(let tourId, let conversationId) = try await backend.startFeedingTour(spotId: DemoData.id(2, 1), durationMinutes: 60) else {
+            return XCTFail("tur başlamadı")
+        }
+        await backend.setCurrentUser(DemoData.emreId)
+        let listed = try await backend.meetups(near: .modaKadikoy, radiusMeters: 10_000).first { $0.id == tourId }
+        XCTAssertEqual(listed?.isTour, true)
+        XCTAssertEqual(listed?.viewerRole, MeetupViewerRole.none)
+        let joined = try await backend.joinMeetup(id: tourId)
+        XCTAssertEqual(joined, .joined(conversationId: conversationId))
+        // Geçmiş turlar listede görünmez.
+        clock.advance(61 * 60)
+        let later = try await backend.meetups(near: .modaKadikoy, radiusMeters: 10_000)
+        XCTAssertFalse(later.contains { $0.id == tourId })
+    }
+
+    func testDemoSeedHasTourAndFedToday() async throws {
+        try await consentAndShow()
+        let loaded = try await backend.meetup(id: DemoData.ayseTourId, near: .modaKadikoy)
+        let tour = try XCTUnwrap(loaded)
+        XCTAssertTrue(tour.isTour)
+        XCTAssertEqual(tour.organizerId, DemoData.ayseId)
+        XCTAssertLessThanOrEqual(tour.startsAt, start)
+        XCTAssertGreaterThan(tour.endsAt, start)
+        XCTAssertNotNil(tour.spotId, "herkese açık demo noktası")
+        XCTAssertLessThan(try XCTUnwrap(tour.distanceMeters), 1000)
+        let regular = try await backend.meetup(id: DemoData.id(8, 1), near: nil)
+        XCTAssertEqual(regular?.isTour, false)
+
+        let lovers = try await backend.animalLovers(interest: nil)
+        let ayse = try XCTUnwrap(lovers.first { $0.id == DemoData.ayseId })
+        XCTAssertEqual(ayse.onTourMeetupId, DemoData.ayseTourId)
+        XCTAssertTrue(ayse.fedToday)
+        let emre = try XCTUnwrap(lovers.first { $0.id == DemoData.emreId })
+        XCTAssertNil(emre.onTourMeetupId)
+        XCTAssertTrue(emre.fedToday)
+    }
+
+    func testAnimalLoversOrderTourThenFedTodayThenBand() async throws {
+        let clock = self.clock!
+        var seed = DemoData.make(now: start)
+        seed.meetups.removeAll { $0.meetup.isTour }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = NotificationPolicy.timeZone
+        let today = calendar.startOfDay(for: start)
+        seed.checkIns = [
+            CheckIn(spotId: DemoData.id(2, 1), userId: DemoData.zeynepId, kind: .water, createdAt: start.addingTimeInterval(-3600)),
+            CheckIn(spotId: DemoData.id(2, 1), userId: DemoData.emreId, kind: .fed, createdAt: today.addingTimeInterval(-60)),
+            CheckIn(spotId: DemoData.id(2, 1), userId: DemoData.ayseId, kind: .needFood, createdAt: start),
+        ]
+        backend = InMemoryBackend(seed: seed, signedIn: true, now: { clock.now })
+        try await consentAndShow()
+
+        var lovers = try await backend.animalLovers(interest: nil)
+        XCTAssertEqual(lovers.map(\.id), [DemoData.zeynepId, DemoData.ayseId, DemoData.emreId], "bugün besleyen banttan önce")
+        XCTAssertEqual(lovers.map(\.fedToday), [true, false, false], "dün besleyen ve 'mama gerekli' sayılmaz")
+
+        await backend.setCurrentUser(DemoData.emreId)
+        guard case .started(let tourId, _) = try await backend.startFeedingTour(spotId: DemoData.id(2, 5), durationMinutes: 60) else {
+            return XCTFail("Emre turu başlatamadı")
+        }
+        await backend.setCurrentUser(me)
+        lovers = try await backend.animalLovers(interest: nil)
+        XCTAssertEqual(lovers.map(\.id), [DemoData.emreId, DemoData.zeynepId, DemoData.ayseId], "turda olan en önde")
+        XCTAssertEqual(lovers.first?.onTourMeetupId, tourId)
+        XCTAssertEqual(lovers.first?.fedToday, true, "tur açmak bugün besledi sayılır")
+
+        await backend.setCurrentUser(DemoData.emreId)
+        _ = try await backend.cancelMeetup(id: tourId)
+        await backend.setCurrentUser(me)
+        let emre = try await backend.animalLovers(interest: nil).first { $0.id == DemoData.emreId }
+        XCTAssertNil(emre?.onTourMeetupId)
+        XCTAssertEqual(emre?.fedToday, true)
     }
 }

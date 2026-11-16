@@ -27,15 +27,20 @@ public struct MeetupDetailScreen: View {
     public var body: some View {
         content
             .mamaBackground()
-            .navigationTitle(String(localized: "Buluşma"))
+            .navigationTitle(isTour ? String(localized: "Mama turu") : String(localized: "Buluşma"))
             .navigationBarTitleDisplayMode(.inline)
             .task(id: session.userId) { await reload() }
             .onChange(of: router.sheet) { old, new in
                 guard old != nil, new == nil else { return }
                 Task { await sheetClosed() }
             }
-            .confirmationDialog("Buluşma iptal edilsin mi?", isPresented: $showsCancelDialog, titleVisibility: .visible) {
-                Button("Buluşmayı iptal et", role: .destructive) { cancel() }
+            .confirmationDialog(isTour ? String(localized: "Tur bitirilsin mi?") : String(localized: "Buluşma iptal edilsin mi?"),
+                                isPresented: $showsCancelDialog, titleVisibility: .visible) {
+                if isTour {
+                    Button("Turu bitir", role: .destructive) { cancel() }
+                } else {
+                    Button("Buluşmayı iptal et", role: .destructive) { cancel() }
+                }
                 Button("Vazgeç", role: .cancel) {}
             } message: {
                 Text("Katılanlara haber veririz; sohbet yalnızca okunur hale gelir.")
@@ -147,6 +152,7 @@ public struct MeetupDetailScreen: View {
                 .foregroundStyle(MamaColor.textPrimary)
                 .accessibilityAddTraits(.isHeader)
             FlowLayout(spacing: 6) {
+                if meetup.isTour { TourBadge() }
                 MeetupStatusChips(meetup: meetup, now: services.now())
                 TagChip(participantsText(meetup), systemImage: "person.2.fill")
             }
@@ -303,7 +309,11 @@ public struct MeetupDetailScreen: View {
                 Button {
                     showsCancelDialog = true
                 } label: {
-                    Text("Buluşmayı iptal et")
+                    if meetup.isTour {
+                        Text("Turu bitir")
+                    } else {
+                        Text("Buluşmayı iptal et")
+                    }
                 }
                 .buttonStyle(.mamaSecondary(tint: MamaColor.statusUrgent, systemImage: "xmark.circle"))
                 .disabled(model.isBusy)
@@ -387,10 +397,16 @@ public struct MeetupDetailScreen: View {
         }
     }
 
+    private var isTour: Bool { model.meetup?.isTour ?? false }
+
     private func cancel() {
         Task {
             if await model.cancel() {
-                router.showToast(String(localized: "Buluşma iptal edildi. Katılanlara haber verdik."), style: .info)
+                if isTour {
+                    router.showToast(String(localized: "Turun bitti. Teşekkürler!"), style: .info)
+                } else {
+                    router.showToast(String(localized: "Buluşma iptal edildi. Katılanlara haber verdik."), style: .info)
+                }
             }
         }
     }

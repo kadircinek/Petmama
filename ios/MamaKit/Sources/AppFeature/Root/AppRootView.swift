@@ -109,6 +109,9 @@ struct MainTabView: View {
             TabStack(tab: .community, services: services, bottomInset: tabBarHeight) {
                 // Mahalle: besleyicilerin akışı, Buluşmalar (D19) ve İhtiyaçlar bölümü (D17).
                 CommunityTabScreen(services: services) {
+                    // Akış'ın üstü: "Şu an turda" + mahalledeki hayvanseverler (spec 2026-11-16).
+                    NeighborhoodSocialSection(services: services)
+                } meetups: {
                     MeetupsListView(services: services)
                 } needs: {
                     NeedsTabScreen(services: services)

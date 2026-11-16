@@ -100,6 +100,19 @@ public struct SpotDetailScreen: View {
     /// Tanışma: bu noktada buluşma aç (D19). Buluşma noktası ve yer adı noktadan dolar.
     private func meetupButton(_ spot: Spot) -> some View {
         VStack(alignment: .leading, spacing: 6) {
+            // Anlık mama turu yalnızca herkese açık noktadan (spec 2026-11-16).
+            if spot.visibility == .public {
+                Button {
+                    router.present(.startTour(spotId: spot.id), session: session)
+                } label: {
+                    Text("Buradan tura çık")
+                }
+                .buttonStyle(.mamaPrimary(systemImage: "figure.walk"))
+                Text("Şu an buradaysan komşular turunu görsün, katılsın ve sana yazsın.")
+                    .font(MamaFont.caption)
+                    .foregroundStyle(MamaColor.textSecondary)
+                    .padding(.bottom, 4)
+            }
             Button {
                 router.present(.createMeetup(spotId: spot.id), session: session)
             } label: {

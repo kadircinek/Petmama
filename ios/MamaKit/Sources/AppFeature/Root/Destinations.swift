@@ -91,6 +91,8 @@ struct SheetDestination: View {
             CreateMeetupSheet(spotId: spotId, services: services)
         case .socialConsent:
             SocialConsentSheet(services: services)
+        case .startTour(let spotId):
+            StartTourSheet(spotId: spotId, services: services)
         }
     }
 }

@@ -45,6 +45,8 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
     case createMeetup(spotId: UUID?)
     /// Tanışma için tek seferlik 18+ ve koşullar onayı.
     case socialConsent
+    /// "Mama turuna çıkıyorum" (nokta detayından açılınca nokta seçili gelir).
+    case startTour(spotId: UUID?)
 
     public var id: String {
         switch self {
@@ -60,6 +62,7 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
         case .createPost(let kind, let spotId): return "createPost-\(kind?.rawValue ?? "")-\(spotId?.uuidString ?? "")"
         case .createMeetup(let spotId): return "createMeetup-\(spotId?.uuidString ?? "")"
         case .socialConsent: return "socialConsent"
+        case .startTour(let spotId): return "startTour-\(spotId?.uuidString ?? "")"
         }
     }
 
@@ -68,7 +71,7 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
         switch self {
         case .addMenu, .signIn: return false
         case .addSpot, .checkIn, .quickFeed, .createNeed, .createAnimal, .report, .editProfile, .createPost,
-             .createMeetup, .socialConsent: return true
+             .createMeetup, .socialConsent, .startTour: return true
         }
     }
 }

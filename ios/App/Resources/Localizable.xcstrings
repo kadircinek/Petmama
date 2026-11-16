@@ -342,6 +342,23 @@
         }
       }
     },
+    "%@ şu an turda": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ şu an turda"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is on a feeding round now"
+          }
+        }
+      }
+    },
     "%@: %lld kez mama kondu": {
       "extractionState": "manual",
       "localizations": {
@@ -423,6 +440,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld min"
+          }
+        }
+      }
+    },
+    "%lld dk kaldı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dk kaldı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min left"
           }
         }
       }
@@ -1855,6 +1889,23 @@
         }
       }
     },
+    "Başlatılıyor…": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başlatılıyor…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting…"
+          }
+        }
+      }
+    },
     "Başvuruların ve soruların için bize e-postayla ulaşabilirsin.": {
       "extractionState": "manual",
       "localizations": {
@@ -3079,6 +3130,40 @@
         }
       }
     },
+    "Bugün besledi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün besledi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fed today"
+          }
+        }
+      }
+    },
+    "Bugün kim besledi, kim şu an turda gör; komşu besleyicilerle tanış. Önce kısa bir onay gerekiyor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün kim besledi, kim şu an turda gör; komşu besleyicilerle tanış. Önce kısa bir onay gerekiyor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See who fed today and who is on a round right now, and meet neighbouring feeders. A short consent is needed first."
+          }
+        }
+      }
+    },
     "Bugün mahallende": {
       "extractionState": "manual",
       "localizations": {
@@ -3653,6 +3738,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Animals here (%lld)"
+          }
+        }
+      }
+    },
+    "Buradan tura çık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buradan tura çık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start a round from here"
           }
         }
       }
@@ -5578,6 +5680,23 @@
         }
       }
     },
+    "Görünür ol": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görünür ol"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Become visible"
+          }
+        }
+      }
+    },
     "Görünürlük": {
       "extractionState": "manual",
       "localizations": {
@@ -5710,6 +5829,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Which animals?"
+          }
+        }
+      }
+    },
+    "Hangi noktadasın?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hangi noktadasın?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which spot are you at?"
           }
         }
       }
@@ -8298,6 +8434,23 @@
         }
       }
     },
+    "Listeyi yalnızca kendini gösterenler görebilir. Görünür olunca sen de mahallendeki hayvanseverler arasında yer alırsın; kesin konumun asla görünmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listeyi yalnızca kendini gösterenler görebilir. Görünür olunca sen de mahallendeki hayvanseverler arasında yer alırsın; kesin konumun asla görünmez."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only people who show themselves can see the list. Once visible, you appear among the animal lovers in your neighbourhood; your exact location is never shown."
+          }
+        }
+      }
+    },
     "Lütfen yaklaşma; mamayı uzaktan bırak. Hem senin hem onun güvenliği için.": {
       "extractionState": "manual",
       "localizations": {
@@ -8396,6 +8549,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "The name used in the neighborhood, e.g. Pamuk"
+          }
+        }
+      }
+    },
+    "Mahalledeki hayvanseverler": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahalledeki hayvanseverler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animal lovers nearby"
           }
         }
       }
@@ -8515,6 +8685,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Introduce the friend in your neighborhood. Write what you know, leave the rest blank."
+          }
+        }
+      }
+    },
+    "Mahallendeki hayvanseverleri gör": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mahallendeki hayvanseverleri gör"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See the animal lovers in your neighbourhood"
           }
         }
       }
@@ -9012,6 +9199,23 @@
         }
       }
     },
+    "Mama turu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama turu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feeding round"
+          }
+        }
+      }
+    },
     "Mama turu, kulübe atölyesi… Komşu besleyicilerle birlikte yapın": {
       "extractionState": "manual",
       "localizations": {
@@ -9025,6 +9229,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Feeding round, shelter workshop… Do it together with fellow feeders"
+          }
+        }
+      }
+    },
+    "Mama turuna çıkıyorum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mama turuna çıkıyorum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm going on a feeding round"
           }
         }
       }
@@ -9076,6 +9297,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Distance"
+          }
+        }
+      }
+    },
+    "Mesaj at": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesaj at"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Message"
           }
         }
       }
@@ -9246,6 +9484,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "How long do we keep it?"
+          }
+        }
+      }
+    },
+    "Ne kadar sürecek?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne kadar sürecek?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long will it take?"
           }
         }
       }
@@ -10572,6 +10827,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "You're organizing"
+          }
+        }
+      }
+    },
+    "Sen şu an turdasın": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sen şu an turdasın"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're on a round now"
           }
         }
       }
@@ -12038,6 +12310,142 @@
         }
       }
     },
+    "Tur bitirilsin mi?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur bitirilsin mi?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End the round?"
+          }
+        }
+      }
+    },
+    "Tur seçtiğin herkese açık mama noktasında hemen başlar. Komşular katılıp sana yazabilir; senin konumun paylaşılmaz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tur seçtiğin herkese açık mama noktasında hemen başlar. Komşular katılıp sana yazabilir; senin konumun paylaşılmaz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The round starts right away at the public feeding spot you pick. Neighbours can join and message you; your location is not shared."
+          }
+        }
+      }
+    },
+    "Tura katıldın. Sohbetten haberleşebilirsiniz.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tura katıldın. Sohbetten haberleşebilirsiniz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You joined the round. Keep in touch in the chat."
+          }
+        }
+      }
+    },
+    "Tura çık": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tura çık"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start round"
+          }
+        }
+      }
+    },
+    "Turda": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turda"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On a round"
+          }
+        }
+      }
+    },
+    "Turu bitir": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turu bitir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End round"
+          }
+        }
+      }
+    },
+    "Turun başladı! Gelenlerle sohbette buluşun.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turun başladı! Gelenlerle sohbette buluşun."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your round has started! Meet whoever comes in the chat."
+          }
+        }
+      }
+    },
+    "Turun bitti. Teşekkürler!": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turun bitti. Teşekkürler!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your round has ended. Thank you!"
+          }
+        }
+      }
+    },
     "Tümü": {
       "extractionState": "manual",
       "localizations": {
@@ -12051,6 +12459,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "All"
+          }
+        }
+      }
+    },
+    "Tümünü gör": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tümünü gör"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See all"
           }
         }
       }
@@ -12463,6 +12888,40 @@
         }
       }
     },
+    "Yakında görünür hayvansever yok. Buluşmalara katılarak da tanışabilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında görünür hayvansever yok. Buluşmalara katılarak da tanışabilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No visible animal lovers nearby. You can also meet people by joining meetups."
+          }
+        }
+      }
+    },
+    "Yakında herkese açık bir mama noktası yok. Haritadan bir nokta ekleyebilirsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında herkese açık bir mama noktası yok. Haritadan bir nokta ekleyebilirsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are no public feeding spots nearby. You can add one from the map."
+          }
+        }
+      }
+    },
     "Yakında veteriner kliniği bulamadık.": {
       "extractionState": "manual",
       "localizations": {
@@ -12867,6 +13326,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "We mark the spot near you; your location isn't stored."
+          }
+        }
+      }
+    },
+    "Yalnızca herkese açık noktalar listelenir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca herkese açık noktalar listelenir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only public spots are listed."
           }
         }
       }
@@ -14656,6 +15132,23 @@
         }
       }
     },
+    "Şimdi bir noktadasın: komşular görsün, katılsın, yazsın": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi bir noktadasın: komşular görsün, katılsın, yazsın"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're at a spot now: let neighbours see, join and message you"
+          }
+        }
+      }
+    },
     "Şimdi değil": {
       "extractionState": "manual",
       "localizations": {
@@ -14771,6 +15264,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "No connection right now. We'll try again when you're back online."
+          }
+        }
+      }
+    },
+    "Şu an buradaysan komşular turunu görsün, katılsın ve sana yazsın.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an buradaysan komşular turunu görsün, katılsın ve sana yazsın."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you're here now, let neighbours see your round, join and message you."
+          }
+        }
+      }
+    },
+    "Şu an turda": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an turda"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On a round now"
           }
         }
       }

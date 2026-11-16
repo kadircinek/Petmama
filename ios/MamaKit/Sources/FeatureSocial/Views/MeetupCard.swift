@@ -11,11 +11,11 @@ struct MeetupCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 12) {
-                Image(systemName: "person.3.fill")
+                Image(systemName: meetup.isTour ? "figure.walk" : "person.3.fill")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(MamaColor.textPrimary)
                     .frame(width: 44, height: 44)
-                    .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(MamaColor.tileBlue))
+                    .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(meetup.isTour ? MamaColor.tileMint : MamaColor.tileBlue))
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(verbatim: meetup.title)
@@ -42,6 +42,7 @@ struct MeetupCard: View {
                 Spacer(minLength: 0)
             }
             FlowLayout(spacing: 6) {
+                if meetup.isTour { TourBadge() }
                 MeetupStatusChips(meetup: meetup, now: now)
                 TagChip(participantsText, systemImage: "person.2.fill")
                 if let distance = meetup.distanceMeters {
@@ -78,6 +79,13 @@ struct MeetupCard: View {
             return String(localized: "\(meetup.participantCount)/\(limit) kişi")
         }
         return String(localized: "\(meetup.participantCount) kişi")
+    }
+}
+
+/// Anlık mama turu rozeti (Buluşmalar listesi, buluşma detayı, Mahalle üstü).
+struct TourBadge: View {
+    var body: some View {
+        TagChip(String(localized: "Mama turu"), systemImage: "figure.walk", style: .positive)
     }
 }
 

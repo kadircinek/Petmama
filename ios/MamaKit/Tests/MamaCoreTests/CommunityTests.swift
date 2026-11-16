@@ -373,6 +373,20 @@ final class CommunityRouterTests: XCTestCase {
         router.present(.createPost(kind: .coverRequest, spotId: nil), session: session)
         XCTAssertEqual(router.sheet, .signIn)
     }
+
+    func testStartTourSheetRequiresSignInAndHasStableId() async {
+        let services = AppServices.demo()
+        let session = SessionStore(auth: services.auth, profiles: services.profiles)
+        let router = AppRouter()
+        let spotId = DemoData.id(2, 1)
+        XCTAssertTrue(AppSheet.startTour(spotId: spotId).requiresSignIn)
+        XCTAssertEqual(AppSheet.startTour(spotId: spotId).id, "startTour-\(spotId.uuidString)")
+        XCTAssertEqual(AppSheet.startTour(spotId: nil).id, "startTour-")
+        router.present(.startTour(spotId: spotId), session: session)
+        XCTAssertEqual(router.sheet, .signIn)
+        router.signInFinished(success: true)
+        XCTAssertEqual(router.sheet, .startTour(spotId: spotId))
+    }
 }
 
 final class MascotTests: XCTestCase {

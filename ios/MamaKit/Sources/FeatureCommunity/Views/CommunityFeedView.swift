@@ -4,8 +4,10 @@ import MamaCore
 import MamaDesign
 
 /// "Akış" bölümü: haftalık özet, tür filtresi ve paylaşım kartları. Tümü giriş gerektirir (D17).
-struct CommunityFeedView: View {
+struct CommunityFeedView<Header: View>: View {
     let model: CommunityFeedViewModel
+    /// Akış'ın en üstü (AppFeature'dan: "Şu an turda" + hayvanseverler şeridi).
+    @ViewBuilder let header: () -> Header
     @Environment(AppRouter.self) private var router
     @Environment(SessionStore.self) private var session
     @Environment(LocationStore.self) private var location
@@ -47,6 +49,8 @@ struct CommunityFeedView: View {
     private var feed: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 14) {
+                header()
+                    .padding(.horizontal, MamaMetrics.screenPadding)
                 if let summary = model.summary {
                     CommunitySummaryCard(summary: summary) { select(.coverRequest) }
                         .padding(.horizontal, MamaMetrics.screenPadding)

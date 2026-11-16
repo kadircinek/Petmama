@@ -96,7 +96,7 @@ private struct MeetupPinView: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "person.3.fill")
+            Image(systemName: meetup.isTour ? "figure.walk" : "person.3.fill")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(MamaColor.onInk)
                 .frame(width: 36, height: 36)

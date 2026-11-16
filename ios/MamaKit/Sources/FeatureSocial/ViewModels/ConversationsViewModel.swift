@@ -33,7 +33,12 @@ public final class ConversationsViewModel {
 extension ConversationSummary {
     /// Görünen başlık. Karşı tarafın hesabı silinmiş bire bir sohbette sunucunun Türkçe sabiti yerine yerelleştirilmiş metin.
     public var displayTitle: String {
-        if kind == .direct, otherUserId == nil { return String(localized: "Silinmiş kullanıcı") }
-        return title
+        guard kind == .direct, otherUserId == nil else { return title }
+        // Linux Foundation'da `String(localized:)` yok (ViewModel'ler Linux'ta derlenir ve test edilir).
+        #if canImport(Darwin)
+        return String(localized: "Silinmiş kullanıcı")
+        #else
+        return "Silinmiş kullanıcı"
+        #endif
     }
 }

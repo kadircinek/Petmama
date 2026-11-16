@@ -251,7 +251,7 @@ final class MapViewModelTests: XCTestCase {
         XCTAssertFalse(model.mapSpots.isEmpty)
     }
 
-    func testSpotFilterDecodesLegacyJSONWithMeetupsShown() throws {
+    func testSpotFilterDecodesLegacyJSONWithMeetupsShown() async throws {
         let legacy = try JSONEncoder().encode(SpotFilter.default)
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: legacy) as? [String: Any])
         object.removeValue(forKey: "showsMeetups")

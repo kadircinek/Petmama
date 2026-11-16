@@ -98,7 +98,7 @@ final class SocialConsentAndMeetupTests: XCTestCase {
         XCTAssertFalse(model.canChat)
     }
 
-    func testFailureMessagesAreWarmTurkish() {
+    func testFailureMessagesAreWarmTurkish() async {
         XCTAssertEqual(SocialMessages.message(for: JoinMeetupOutcome.consentRequired), "Önce sosyal onayı vermelisin.")
         XCTAssertNil(SocialMessages.message(for: JoinMeetupOutcome.joined(conversationId: UUID())))
         XCTAssertNotNil(SocialMessages.message(for: SendRequestOutcome.cooldown))
@@ -344,7 +344,7 @@ final class SocialChatTests: XCTestCase {
     /// Karşı taraf hesabını silerse sunucu başlığı ('Silinmiş kullanıcı') yerine yerelleştirilmiş metin gösterilir.
     func testDeletedUserTitleIsLocalized() async throws {
         let deleted = ConversationSummary(id: UUID(), kind: .direct, title: "Silinmiş kullanıcı", otherUserId: nil, isReadOnly: true)
-        XCTAssertEqual(deleted.displayTitle, String(localized: "Silinmiş kullanıcı"))
+        XCTAssertEqual(deleted.displayTitle, "Silinmiş kullanıcı")
         let named = ConversationSummary(id: UUID(), kind: .direct, title: "Ayşe", otherUserId: DemoData.ayseId)
         XCTAssertEqual(named.displayTitle, "Ayşe")
         let group = ConversationSummary(id: UUID(), kind: .meetup, title: "Moda Parkı mama turu")
@@ -358,7 +358,7 @@ final class SocialChatTests: XCTestCase {
         let model = ChatViewModel(services: env.services, conversationId: conversationId)
         await model.start()
         defer { model.stop() }
-        XCTAssertEqual(model.title, String(localized: "Silinmiş kullanıcı"))
+        XCTAssertEqual(model.title, "Silinmiş kullanıcı")
         XCTAssertTrue(model.isReadOnly)
         XCTAssertFalse(model.isHidden)
     }

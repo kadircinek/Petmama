@@ -150,8 +150,63 @@ final class NeighborhoodSocialViewModelTests: XCTestCase {
         let tour = try XCTUnwrap(model.tours.first)
         let conversationId = await model.messageTour(tour)
         XCTAssertNil(conversationId)
-        XCTAssertEqual(model.message, SocialMessages.consentRequired)
+        XCTAssertNil(model.message, "onay ekranı açılır; ayrıca uyarı metni gösterilmez")
         XCTAssertTrue(model.lastActionNeedsConsent)
+    }
+
+    /// Onay verildikten sonra yarım kalan "Mesaj at" kendiliğinden tamamlanır (kullanıcı ikinci kez dokunmaz).
+    func testPendingMessageResumesAfterConsent() async throws {
+        let env = try await makeSocialEnvironment(consented: false)
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        let tour = try XCTUnwrap(model.tours.first)
+        let first = await model.messageTour(tour)
+        XCTAssertNil(first)
+
+        _ = try await env.backend.giveSocialConsent()
+        await model.load(at: .modaKadikoy)
+        let resumed = await model.resumeAfterConsent()
+
+        guard case .openConversation(let conversationId)? = resumed else { return XCTFail("sohbet açılmalıydı: \(String(describing: resumed))") }
+        let listed = try await env.backend.conversations().map(\.id)
+        XCTAssertTrue(listed.contains(conversationId))
+        XCTAssertNil(model.message)
+        let again = await model.resumeAfterConsent()
+        XCTAssertNil(again, "bekleyen işlem bir kez çalışır")
+    }
+
+    func testPendingJoinResumesAfterConsent() async throws {
+        let env = try await makeSocialEnvironment(consented: false)
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        let tour = try XCTUnwrap(model.tours.first)
+        _ = await model.join(tour)
+
+        _ = try await env.backend.giveSocialConsent()
+        await model.load(at: .modaKadikoy)
+        let resumed = await model.resumeAfterConsent()
+
+        XCTAssertEqual(resumed, .joined)
+        XCTAssertEqual(model.tours.first?.viewerRole, .participant)
+    }
+
+    /// Onay ekranı vazgeçilerek kapatılırsa bekleyen işlem düşer; sonradan kendiliğinden çalışmaz.
+    func testPendingActionDroppedWhenConsentNotGiven() async throws {
+        let env = try await makeSocialEnvironment(consented: false)
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        let tour = try XCTUnwrap(model.tours.first)
+        _ = await model.join(tour)
+
+        await model.load(at: .modaKadikoy)
+        let resumed = await model.resumeAfterConsent()
+        XCTAssertNil(resumed)
+
+        _ = try await env.backend.giveSocialConsent()
+        await model.load(at: .modaKadikoy)
+        let later = await model.resumeAfterConsent()
+        XCTAssertNil(later)
+        XCTAssertEqual(model.tours.first?.viewerRole, MeetupViewerRole.none)
     }
 
     func testOrganizerEndsTour() async throws {

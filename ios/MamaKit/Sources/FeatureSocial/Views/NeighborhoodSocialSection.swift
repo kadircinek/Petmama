@@ -47,7 +47,19 @@ public struct NeighborhoodSocialSection: View {
         .onChange(of: refreshToken) { _, _ in Task { await reload() } }
         .onChange(of: router.sheet) { old, new in
             // Onay / tur başlatma / giriş sheet'i kapanınca tazele.
-            if old != nil, new == nil { Task { await reload() } }
+            guard old != nil, new == nil else { return }
+            Task {
+                await reload()
+                // Onay verildiyse yarım kalan "Katıl" / "Mesaj at" kendiliğinden tamamlanır.
+                switch await model.resumeAfterConsent() {
+                case .joined?:
+                    router.showToast(String(localized: "Tura katıldın. Sohbetten haberleşebilirsiniz."))
+                case .openConversation(let conversationId)?:
+                    router.push(.conversation(conversationId))
+                case nil:
+                    break
+                }
+            }
         }
         .onChange(of: location.coordinate == nil) { _, isNil in
             if !isNil { Task { await reload() } }

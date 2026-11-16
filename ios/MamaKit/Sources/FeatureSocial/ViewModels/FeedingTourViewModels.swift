@@ -6,6 +6,12 @@ import MamaCore
 ///
 /// Turlar sosyal onay olmadan da listelenir (buluşmalar gibi); şerit yalnızca onay vermiş ve görünür olan
 /// izleyiciye gösterilir (kendini göstermeyen başkalarını göremez — Tanışma 5.5/1), yoksa davet kartı.
+/// Onaydan sonra kendiliğinden tamamlanan tur eylemi.
+public enum ResumedTourAction: Equatable, Sendable {
+    case joined
+    case openConversation(UUID)
+}
+
 @MainActor
 @Observable
 public final class NeighborhoodSocialViewModel {
@@ -40,6 +46,8 @@ public final class NeighborhoodSocialViewModel {
     public private(set) var personMessage: String?
     /// Son eylem sosyal onay istediği için yapılamadı: arayüz onay ekranını açar.
     public private(set) var lastActionNeedsConsent = false
+    /// Onay gerektiği için yarım kalan tur eylemi; onay verilince `resumeAfterConsent()` tamamlar.
+    @ObservationIgnored private var pendingAfterConsent: (tourId: UUID, action: TourAction)?
     public var error: MamaError?
     @ObservationIgnored private let services: AppServices
     @ObservationIgnored private var origin: Coordinate = .modaKadikoy
@@ -130,6 +138,23 @@ public final class NeighborhoodSocialViewModel {
         return conversationId
     }
 
+    /// Onay ekranı kapandıktan ve `load` çağrıldıktan sonra: onay verildiyse yarım kalan "Katıl" / "Mesaj at"
+    /// tamamlanır. Onay verilmediyse bekleyen eylem düşer (sonradan kendiliğinden çalışmaz).
+    public func resumeAfterConsent() async -> ResumedTourAction? {
+        guard let pending = pendingAfterConsent else { return nil }
+        pendingAfterConsent = nil
+        guard profile?.hasConsented == true, let tour = tours.first(where: { $0.id == pending.tourId }) else { return nil }
+        switch pending.action {
+        case .join:
+            if case .joined? = await join(tour) { return .joined }
+            return nil
+        case .message:
+            return await messageTour(tour).map(ResumedTourAction.openConversation)
+        case .end:
+            return nil
+        }
+    }
+
     /// "Turu bitir" (yalnızca düzenleyen; buluşma iptaliyle aynı).
     public func endTour(_ tour: Meetup) async -> Bool {
         let done = await act(on: tour, .end) { [services] () async throws -> Bool in
@@ -146,12 +171,18 @@ public final class NeighborhoodSocialViewModel {
         message = nil
         error = nil
         lastActionNeedsConsent = false
+        pendingAfterConsent = nil
         defer { busyMeetupId = nil; busyAction = nil }
         do {
             let result = try await work()
             if let outcome = result as? JoinMeetupOutcome {
-                message = SocialMessages.message(for: outcome)
-                lastActionNeedsConsent = outcome == .consentRequired
+                if outcome == .consentRequired {
+                    // Onay ekranı açılır; ayrıca uyarı metni göstermeye gerek yok.
+                    lastActionNeedsConsent = true
+                    pendingAfterConsent = (tour.id, action)
+                } else {
+                    message = SocialMessages.message(for: outcome)
+                }
             }
             try await reload()
             return result

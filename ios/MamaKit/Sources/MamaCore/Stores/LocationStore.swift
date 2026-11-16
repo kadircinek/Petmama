@@ -25,9 +25,11 @@ public final class LocationStore {
     public private(set) var authorization: LocationAuthorization
 
     @ObservationIgnored private let driver: any LocationDriver
+    @ObservationIgnored private let refreshTimeout: Duration
 
-    public init(driver: any LocationDriver) {
+    public init(driver: any LocationDriver, refreshTimeout: Duration = .seconds(8)) {
         self.driver = driver
+        self.refreshTimeout = refreshTimeout
         self.authorization = driver.authorization
         driver.onUpdate = { [weak self] coordinate in
             self?.coordinate = coordinate
@@ -43,15 +45,31 @@ public final class LocationStore {
         return authorization
     }
 
-    /// Bir kez konum alır (check-in anında taze konum için).
+    /// Bir kez konum alır (check-in anında taze konum için). Sürücü cevap vermezse (ör. iOS, takip açıkken
+    /// `requestLocation`'ı yanıtlamaz ve hareketsiz kullanıcıya yeni konum gelmez) `refreshTimeout` sonunda
+    /// bilinen son konumla döner — asla sonsuza kadar beklemez.
     @discardableResult
     public func refresh() async -> Coordinate? {
         authorization = driver.authorization
         guard authorization == .authorized else { return coordinate }
-        if let fresh = await driver.currentLocation() {
+        if let fresh = await currentLocationWithTimeout() {
             coordinate = fresh
         }
         return coordinate
+    }
+
+    private func currentLocationWithTimeout() async -> Coordinate? {
+        let driver = driver
+        let timeout = refreshTimeout
+        return await withCheckedContinuation { continuation in
+            let once = ResumeOnce(continuation)
+            let work = Task { @MainActor in once.resume(await driver.currentLocation()) }
+            Task { @MainActor in
+                try? await Task.sleep(for: timeout)
+                once.resume(nil)
+                work.cancel()
+            }
+        }
     }
 
     public func start() {
@@ -61,6 +79,17 @@ public final class LocationStore {
 
     public func stop() {
         driver.stopUpdating()
+    }
+}
+
+/// Devamlılığı yalnızca bir kez sürdürür (sürücü ile zaman aşımı yarışı için).
+@MainActor
+private final class ResumeOnce {
+    private var continuation: CheckedContinuation<Coordinate?, Never>?
+    init(_ continuation: CheckedContinuation<Coordinate?, Never>) { self.continuation = continuation }
+    func resume(_ value: Coordinate?) {
+        continuation?.resume(returning: value)
+        continuation = nil
     }
 }
 

@@ -163,7 +163,7 @@ $$;
 
 -- ---------------------------------------------------------------------------
 -- start_feeding_tour — "Mama turuna çıkıyorum"
--- Sıra: onay → süre → nokta → (kilit) açık tur → günlük limit.
+-- Sıra: onay → süre → nokta (aktif, public, onaylı, görünür) → (kilit) açık tur → günlük limit.
 -- ---------------------------------------------------------------------------
 create function public.start_feeding_tour(p_spot_id uuid, p_duration_minutes int default 90)
 returns jsonb
@@ -191,6 +191,7 @@ begin
   select f.is_moderator into v_mod from private.viewer_flags(v_uid) f;
   select * into v_spot from public.spots sp
    where sp.id = p_spot_id and sp.is_active and sp.visibility = 'public'
+     and sp.moderation_state = 'approved'   -- kendi onay bekleyen noktası da olmaz (spot_visible ona izin verir)
      and private.spot_visible(sp, v_uid, v_mod);
   if not found then
     return jsonb_build_object('status', 'spot_not_found');
@@ -259,6 +260,36 @@ begin
                     where n.kind = 'meetup_reminder' and n.meetup_id = t.meetup_id and n.user_id = t.user_id);
   get diagnostics v_n = row_count;
   return v_n;
+end
+$$;
+
+-- ---------------------------------------------------------------------------
+-- meetup_cancelled: tur bitirilince tura özgü metin (gövdenin kalanı 0024 ile aynı)
+-- ---------------------------------------------------------------------------
+create or replace function private.notify_meetup_cancelled()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  r record;
+begin
+  for r in
+    select mp.user_id from public.meetup_participants mp
+    where mp.meetup_id = new.id and mp.status = 'joined' and mp.user_id <> new.organizer_id
+  loop
+    if new.is_tour then
+      perform private.notify_social(
+        r.user_id, new.organizer_id, 'meetup_cancelled', 'Tur bitti',
+        format('"%s" turu sona erdi.', new.title), new.id);
+    else
+      perform private.notify_social(
+        r.user_id, new.organizer_id, 'meetup_cancelled', 'Buluşma iptal edildi',
+        format('"%s" buluşması iptal edildi.', new.title), new.id);
+    end if;
+  end loop;
+  return null;
 end
 $$;
 

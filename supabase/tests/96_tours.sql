@@ -18,6 +18,10 @@ declare
   priv   uuid;
   gone   uuid;
   pend   uuid;
+  ownp   uuid;
+  blk1   uuid := tests.make_user('Engelleyen');
+  blk2   uuid := tests.make_user('Engellenen');
+  inv    uuid := tests.make_user('Gorunmez izleyen');
   longsp uuid;
   j      jsonb;
   t1     uuid;
@@ -37,7 +41,8 @@ begin
   pend   := tests.make_spot(lat, lng, 'Onay bekleyen', 'public', a);
   longsp := tests.make_spot(lat, lng, repeat('ç', 80));
   update spots set is_active = false where id = gone;
-  update spots set moderation_state = 'pending' where id = pend;
+  ownp   := tests.make_spot(lat, lng, 'Kendi bekleyen', 'public', org);
+  update spots set moderation_state = 'pending' where id in (pend, ownp);
   day0 := private.istanbul_day_start();
 
   -- yetkiler
@@ -51,7 +56,7 @@ begin
   perform tests.admin();
   perform tests.eq((select count(*)::int from meetups where organizer_id = nc), 0, 'no tour inserted without consent');
 
-  foreach t1 in array array[org, v, a, b, c, mm] loop
+  foreach t1 in array array[org, v, a, b, c, mm, blk1, blk2, inv] loop
     perform tests.login(t1); perform give_social_consent();
   end loop;
 
@@ -66,6 +71,7 @@ begin
   perform tests.eq(start_feeding_tour(priv)->>'status', 'spot_not_found', 'private spot (even own) → spot_not_found');
   perform tests.eq(start_feeding_tour(gone)->>'status', 'spot_not_found', 'inactive spot → spot_not_found');
   perform tests.eq(start_feeding_tour(pend)->>'status', 'spot_not_found', 'pending spot of someone else → spot_not_found');
+  perform tests.eq(start_feeding_tour(ownp)->>'status', 'spot_not_found', 'own pending (unapproved) spot → spot_not_found');
   perform tests.admin();
   perform tests.eq((select count(*)::int from meetups where organizer_id = org), 0, 'no tour inserted by invalid calls');
 
@@ -110,12 +116,26 @@ begin
   perform tests.eq((select count(*)::int from notifications where user_id = org and kind = 'meetup_joined' and meetup_id = t1), 1,
                    'organizer notified of join');
 
+  -- engel: organizatörü engelleyen ve organizatörün engellediği turu görmez, katılamaz
+  insert into blocks (user_id, blocked_user_id) values (blk1, org), (org, blk2);
+  perform tests.login(blk1);
+  perform tests.check(not exists (select 1 from meetups_near(lat, lng) x where x.id = t1), 'blocker of organizer: tour not listed');
+  perform tests.eq(join_meetup(t1)->>'status', 'not_found', 'blocker of organizer: join → not_found');
+  perform tests.login(blk2);
+  perform tests.check(not exists (select 1 from meetups_near(lat, lng) x where x.id = t1), 'blocked by organizer: tour not listed');
+  perform tests.eq(join_meetup(t1)->>'status', 'not_found', 'blocked by organizer: join → not_found');
+  perform tests.admin();
+
   -- iptal (Turu bitir) → yeni tur açılabilir; katılana iptal bildirimi
   perform tests.login(org);
   perform tests.eq(cancel_meetup(t1)->>'status', 'ok', 'organizer ends tour');
   perform tests.admin();
   perform tests.eq((select count(*)::int from notifications where user_id = a and kind = 'meetup_cancelled' and meetup_id = t1), 1,
                    'participant notified of cancel');
+  perform tests.eq((select title from notifications where user_id = a and kind = 'meetup_cancelled' and meetup_id = t1), 'Tur bitti',
+                   'tour end uses tour title copy');
+  perform tests.eq((select body from notifications where user_id = a and kind = 'meetup_cancelled' and meetup_id = t1),
+                   '"Mama turu: Moda sahil" turu sona erdi.', 'tour end body names the tour');
   perform tests.login(org);
   j := start_feeding_tour(longsp, 120);
   perform tests.eq(j->>'status', 'started', 'second tour after cancel');
@@ -204,6 +224,10 @@ begin
   perform tests.login(v);
   perform tests.check((select on_tour_meetup_id is null from animal_lovers_near() where user_id = org), 'ended tour → not on tour');
   perform tests.check((select fed_today from animal_lovers_near() where user_id = org), 'still fed_today after ending tour');
+
+  -- görünür olmayan izleyici: 0 satır
+  perform tests.login(inv); perform update_social_profile(false, '', array[]::social_interest[], lat, lng);
+  perform tests.eq((select count(*)::int from animal_lovers_near()), 0, 'invisible viewer: 0 rows');
 
   -- engel: turdaki kişi engelliyse listede yok
   perform tests.admin();

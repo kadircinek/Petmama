@@ -347,7 +347,7 @@ uyar; günlük 3 push limiti yalnızca `need_food_nearby` içindir.
 # Tanışma (buluşmalar + Hayvanseverler + sohbet) — v0.3
 
 Mahalle'nin üstüne kurulan sosyal katman (D19, spec: `docs/superpowers/specs/2026-11-14-tanisma-design.md`).
-Migration'lar: `20261114000018…24`. İlkeler:
+Migration'lar: `20261114000018…24`, anlık mama turu ve "Bugün besledi" için `20261116000025` (D20). İlkeler:
 
 - **Tümü giriş gerektirir.** Bu bölümdeki her RPC yalnızca `authenticated` rolüne açıktır; tablolar RLS açık ve
   `anon`/`authenticated` doğrudan okuyamaz/yazamaz (yalnızca `security definer` RPC'ler).
@@ -380,7 +380,7 @@ Migration'lar: `20261114000018…24`. İlkeler:
 ## Tablolar
 
 - `social_profiles(user_id pk → profiles on delete cascade, is_visible bool default false, about text ≤300, interests social_interest[], cell geography(Point) [≈1 km], adult_confirmed_at, terms_accepted_at, updated_at)`
-- `meetups(id, organizer_id → profiles cascade, title 3–80, description ≤600, starts_at, ends_at [süre 30 dk–8 saat], place_name 1–80, location geography(Point) [tam], spot_id → spots set null, capacity null|2–50, status, created_at)`
+- `meetups(id, organizer_id → profiles cascade, title 3–80, description ≤600, starts_at, ends_at [süre 30 dk–8 saat], place_name 1–80, location geography(Point) [tam], spot_id → spots set null, capacity null|2–50, status, created_at, is_tour bool not null default false [0025])`
 - `meetup_participants(meetup_id → meetups cascade, user_id → profiles cascade, status participant_status, joined_at, pk(meetup_id, user_id))` — düzenleyen de `joined` satırıdır
 - `connections(id, requester_id, addressee_id → profiles cascade, note ≤200, status, created_at, responded_at)` — sırasız çift başına tek satır
 - `conversations(id, kind, meetup_id unique → meetups cascade, connection_id unique → connections set null, created_at, closed_at)`
@@ -398,7 +398,9 @@ direct sohbet salt okunurdur, başlığı "Silinmiş kullanıcı".
 |---|---|
 | Buluşma başlangıcı | `now() + 1 saat` … `now() + 60 gün` |
 | Buluşma süresi | 30 dk – 8 saat (istemci varsayılanı 2 saat) |
-| Günlük buluşma (İstanbul günü) | 3 → `limit_reached` |
+| Günlük buluşma (İstanbul günü) | 3 → `limit_reached` (turlar sayılmaz) |
+| Anlık mama turu | hemen başlar (`starts_at = now()`), süre **60–120 dk** (istemci 60/90/120, varsayılan 90); yalnızca aktif, izleyene görünür ve `visibility = 'public'` nokta; aynı anda **tek** açık tur (`already_touring`); günde **3** tur (iptal/bitmiş dahil, buluşma limitinden ayrı); hatırlatma bildirimi yok |
+| "Bugün besledi" (`fed_today`) | bugün (İstanbul günü) `fed` ya da `water` check-in'i **veya** bugün açılmış bir tur; nerede/ne zaman bilgisi dönmez |
 | Buluşma sohbeti | bitişten **24 saat** sonra (ya da iptalde) salt okunur; bitişten **30 gün** sonra mesajlar silinir (`social-chat-retention` cron, 03:20) |
 | Günlük bağlantı isteği | 10 → `limit_reached` |
 | Reddedilen istek | gönderene "beklemede" görünür; aynı kişiye **30 gün** `cooldown` |
@@ -420,7 +422,8 @@ organizer_id uuid, organizer_name text, organizer_avatar_url text, organizer_is_
 viewer_role text,                       /* organizer | participant | removed | none */
 conversation_id uuid,                   /* yalnızca organizer/participant için dolu */
 distance_m float8,                      /* izleyicinin verdiği konumdan; verilmediyse null */
-created_at timestamptz
+created_at timestamptz,
+is_tour bool                            /* 0025: anlık mama turu (sona eklendi) */
 ```
 
 ## RPC'ler (hepsi auth)
@@ -437,8 +440,9 @@ created_at timestamptz
 | `join_meetup` | `p_meetup_id uuid` | `jsonb` | `{status:'joined', conversation_id}` \| `full` \| `removed` \| `cancelled` \| `ended` \| `consent_required` \| `not_found` |
 | `leave_meetup` | `p_meetup_id uuid` | `jsonb` | `ok` \| `organizer_cannot_leave` (düzenleyen iptal eder) |
 | `remove_meetup_participant` | `p_meetup_id uuid, p_user_id uuid` | `jsonb` | `ok` \| `not_allowed` (yalnızca düzenleyen, aktif ve bitmemiş buluşma) |
-| `cancel_meetup` | `p_meetup_id uuid` | `jsonb` | `ok` (zaten iptalse de) \| `not_allowed` (düzenleyen değil ya da bitmiş) |
-| `animal_lovers_near` | `p_interest social_interest = null` | `table(user_id, display_name, avatar_url, about, interests, is_verified_feeder, fed_30d int, distance_band, shared_interest_count int, connection_state text, request_id uuid, conversation_id uuid)` | izleyicinin kendi `cell`'inden ≤10 km; mesafe bandına, sonra ortak ilgi sayısına göre. `connection_state`: `none \| outgoing_pending \| incoming_pending \| connected` |
+| `cancel_meetup` | `p_meetup_id uuid` | `jsonb` | `ok` (zaten iptalse de) \| `not_allowed` (düzenleyen değil ya da bitmiş). Turda "Turu bitir" de budur |
+| `start_feeding_tour` | `p_spot_id uuid, p_duration_minutes int = 90` | `jsonb` | "Mama turuna çıkıyorum" (0025). Bkz. aşağı |
+| `animal_lovers_near` | `p_interest social_interest = null` | `table(user_id, display_name, avatar_url, about, interests, is_verified_feeder, fed_30d int, distance_band, shared_interest_count int, connection_state text, request_id uuid, conversation_id uuid, fed_today bool, on_tour_meetup_id uuid)` | izleyicinin kendi `cell`'inden ≤10 km. Sıra (0025): şu an turda olanlar → `fed_today` → mesafe bandı → ortak ilgi sayısı → ad. `on_tour_meetup_id`: kişinin şu an açık turu (engel zaten süzülür), yoksa null. `connection_state`: `none \| outgoing_pending \| incoming_pending \| connected` |
 | `incoming_connection_requests` | — | `table(request_id, user_id, display_name, avatar_url, about, interests, is_verified_feeder, note, created_at)` | bana gelen `pending` istekler |
 | `send_connection_request` | `p_user_id uuid, p_note text = null` | `jsonb` | bkz. aşağı |
 | `respond_connection` | `p_request_id uuid, p_accept bool` | `jsonb` | `{status:'accepted', conversation_id}` \| `declined` \| `not_found` |
@@ -461,6 +465,22 @@ created_at timestamptz
                                 | "start_too_late" | "duration_range" | "capacity_range" | "spot_not_found" }
 ```
 Düzenleyen `joined` katılımcı olarak eklenir ve buluşmanın grup sohbeti açılır.
+
+### `start_feeding_tour` sonucu
+
+```jsonc
+{ "status": "started", "meetup_id": "…", "conversation_id": "…" }
+{ "status": "consent_required" }
+{ "status": "invalid", "reason": "duration_range" }   // 60–120 dk dışı ya da null
+{ "status": "spot_not_found" }    // yok, pasif, izleyene görünmüyor ya da visibility <> 'public'
+{ "status": "already_touring" }   // düzenlediği aktif, bitmemiş bir tur var
+{ "status": "limit_reached", "limit": 3 }
+```
+Sıra: onay → süre → nokta → açık tur → günlük limit (son ikisi kullanıcı başına advisory kilit altında). Tur,
+`is_tour = true` bir buluşmadır: başlık `'Mama turu: ' || nokta adı` (80'e kırpılır), `place_name` = nokta adı,
+`location` = noktanın konumu, `spot_id` = nokta, `capacity` yok. Düzenleyen `create_meetup`'taki gibi katılımcı ve
+sohbet üyesi olur. Katıl/ayrıl/çıkar/iptal, sohbet, rapor ve `meetup_joined` / `meetup_cancelled` bildirimleri
+buluşmalarla aynı; `meetup_reminder` turlara gönderilmez.
 
 ### `send_connection_request` sonucu
 
@@ -487,7 +507,7 @@ tercihi (satır yoksa açık) ve "gönderen = alıcı değil" kuralı. İptal ed
 |---|---|---|
 | `meetup_joined` | düzenleyen | `meetup_id`, `actor_id` |
 | `meetup_cancelled` | katılımcılar (düzenleyen hariç); hesap silmede de | `meetup_id` |
-| `meetup_reminder` | düzenleyen + katılımcılar, buluşma başına bir kez; cron `meetup-reminders` her 15 dk, 2 saat içinde başlayanlar | `meetup_id` |
+| `meetup_reminder` | düzenleyen + katılımcılar, buluşma başına bir kez; cron `meetup-reminders` her 15 dk, 2 saat içinde başlayanlar. **Turlara gönderilmez** (0025) | `meetup_id` |
 | `connection_request` | alıcı | `actor_id` |
 | `connection_accepted` | ilk gönderen (otomatik kabulde diğer taraf) | `actor_id` |
 | `chat_message` | yazar dışındaki üyeler; aynı sohbet için okunmamış bildirim varsa yenisi yok. **Mesaj metni içermez**, yalnızca yazar adı | `conversation_id`, `actor_id` |

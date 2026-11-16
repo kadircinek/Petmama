@@ -206,7 +206,7 @@ final class StartTourViewModelTests: XCTestCase {
         XCTAssertEqual(outcome, .consentRequired)
     }
 
-    func testMessages() {
+    func testMessages() async {
         XCTAssertNil(SocialMessages.message(for: StartTourOutcome.started(meetupId: UUID(), conversationId: UUID())))
         XCTAssertEqual(SocialMessages.message(for: StartTourOutcome.limitReached(3)), "Bugün 3 tur başlattın, yarın devam edebilirsin.")
         XCTAssertNotNil(SocialMessages.message(for: StartTourOutcome.spotNotFound))

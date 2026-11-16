@@ -32,6 +32,18 @@ public enum SocialMessages {
         }
     }
 
+    public static func message(for outcome: StartTourOutcome) -> String? {
+        switch outcome {
+        case .started: return nil
+        case .consentRequired: return consentRequired
+        case .spotNotFound: return "Bu nokta artık görünmüyor ya da herkese açık değil. Başka bir nokta seç."
+        case .alreadyTouring: return "Zaten açık bir turun var. Yenisini başlatmak için önce onu bitir."
+        case .limitReached(let limit): return "Bugün \(limit) tur başlattın, yarın devam edebilirsin."
+        case .durationRange:
+            return "Tur süresi \(SocialPolicy.tourDurationRange.lowerBound) ile \(SocialPolicy.tourDurationRange.upperBound) dakika arasında olmalı."
+        }
+    }
+
     public static func message(for reason: MeetupInvalidReason) -> String {
         switch reason {
         case .titleLength: return "Başlık \(SocialPolicy.titleLength.lowerBound) ile \(SocialPolicy.titleLength.upperBound) karakter arasında olmalı."

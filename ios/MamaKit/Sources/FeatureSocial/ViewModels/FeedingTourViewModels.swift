@@ -11,6 +11,8 @@ import MamaCore
 public final class NeighborhoodSocialViewModel {
     public enum StripState: Equatable, Sendable {
         case loading
+        /// Profil okunamadı (bağlantı/sunucu hatası): yanlış bir onay daveti yerine şerit hiç gösterilmez.
+        case unavailable
         /// Sosyal onay yok: "Mahallendeki hayvanseverleri gör" → onay.
         case needsConsent
         /// Onay var ama Hayvanseverler'de görünür değil → görünür ol.
@@ -20,21 +22,29 @@ public final class NeighborhoodSocialViewModel {
 
     /// Şeritte gösterilen en fazla kişi ("Tümünü gör" → Hayvanseverler).
     public static let stripLimit = 12
+    /// "Şu an turda" bölümünde en fazla kart ("Tümünü gör" → Buluşmalar).
+    public static let maxTourCards = 3
+
+    public enum TourAction: Equatable, Sendable { case join, message, end }
 
     public private(set) var tours: [Meetup] = []
     public private(set) var lovers: [AnimalLover] = []
     public private(set) var profile: SocialProfile?
     public private(set) var hasLoaded = false
-    /// Katıl / Mesaj at / Turu bitir sürerken o turun kimliği.
+    /// Katıl / Mesaj at / Turu bitir sürerken o turun kimliği ve hangi eylem olduğu.
     public private(set) var busyMeetupId: UUID?
-    /// Son eylemin kullanıcıya gösterilecek mesajı.
+    public private(set) var busyAction: TourAction?
+    /// Son tur eyleminin mesajı (Mahalle bandında).
     public private(set) var message: String?
+    /// Şeritteki kişi kartı eylemlerinin mesajı (yalnızca kişi sheet'inde).
+    public private(set) var personMessage: String?
     /// Son eylem sosyal onay istediği için yapılamadı: arayüz onay ekranını açar.
     public private(set) var lastActionNeedsConsent = false
     public var error: MamaError?
     @ObservationIgnored private let services: AppServices
     @ObservationIgnored private var origin: Coordinate = .modaKadikoy
     @ObservationIgnored private var lastSentCell: Coordinate?
+    @ObservationIgnored private var profileLoadFailed = false
 
     public init(services: AppServices) {
         self.services = services
@@ -44,6 +54,7 @@ public final class NeighborhoodSocialViewModel {
 
     public var stripState: StripState {
         guard hasLoaded else { return .loading }
+        if profile == nil, profileLoadFailed { return .unavailable }
         guard profile?.hasConsented == true else { return .needsConsent }
         guard profile?.isVisible == true else { return .needsVisibility }
         return .lovers
@@ -55,8 +66,26 @@ public final class NeighborhoodSocialViewModel {
 
     /// Kalan dakika (yukarı yuvarlanır); bitmişse 0.
     public func remainingMinutes(_ tour: Meetup) -> Int {
-        let seconds = tour.endsAt.timeIntervalSince(now)
+        remainingMinutes(tour, at: now)
+    }
+
+    public func remainingMinutes(_ tour: Meetup, at date: Date) -> Int {
+        let seconds = tour.endsAt.timeIntervalSince(date)
         return seconds > 0 ? Int((seconds / 60).rounded(.up)) : 0
+    }
+
+    /// Çizim anındaki turlar: bitenler (yeniden yükleme beklemeden) düşer, en fazla `maxTourCards`.
+    public func visibleTours(at date: Date) -> [Meetup] {
+        Array(activeTours(at: date).prefix(Self.maxTourCards))
+    }
+
+    /// Kart sınırını aşan aktif tur var mı ("Tümünü gör").
+    public func hasMoreTours(at date: Date) -> Bool {
+        activeTours(at: date).count > Self.maxTourCards
+    }
+
+    private func activeTours(at date: Date) -> [Meetup] {
+        tours.filter { $0.status == .active && $0.startsAt <= date && $0.endsAt > date }
     }
 
     public func lover(id: UUID) -> AnimalLover? {
@@ -68,7 +97,13 @@ public final class NeighborhoodSocialViewModel {
         error = nil
         defer { hasLoaded = true }
         do {
-            profile = try await services.social.socialProfile()
+            do {
+                profile = try await services.social.socialProfile()
+                profileLoadFailed = false
+            } catch {
+                profileLoadFailed = true
+                throw error
+            }
             try await refreshLocation(coordinate)
             try await reload()
         } catch {
@@ -80,7 +115,7 @@ public final class NeighborhoodSocialViewModel {
 
     /// Tura katılır; sonuç mesajı `message`'da.
     public func join(_ tour: Meetup) async -> JoinMeetupOutcome? {
-        await act(on: tour) { [services] in
+        await act(on: tour, .join) { [services] in
             try await services.social.joinMeetup(id: tour.id)
         }
     }
@@ -88,26 +123,30 @@ public final class NeighborhoodSocialViewModel {
     /// "Mesaj at" / "Sohbete git": üye değilse önce katılır, sonra turun grup sohbetinin kimliğini döner.
     public func messageTour(_ tour: Meetup) async -> UUID? {
         if isMember(tour), let conversationId = tour.conversationId { return conversationId }
-        guard case .joined(let conversationId) = await join(tour) else { return nil }
+        let outcome = await act(on: tour, .message) { [services] in
+            try await services.social.joinMeetup(id: tour.id)
+        }
+        guard case .joined(let conversationId) = outcome else { return nil }
         return conversationId
     }
 
     /// "Turu bitir" (yalnızca düzenleyen; buluşma iptaliyle aynı).
     public func endTour(_ tour: Meetup) async -> Bool {
-        let done = await act(on: tour) { [services] () async throws -> Bool in
+        let done = await act(on: tour, .end) { [services] () async throws -> Bool in
             try await services.social.cancelMeetup(id: tour.id)
         }
         if done == false { message = SocialMessages.cancelFailed }
         return done ?? false
     }
 
-    private func act<T>(on tour: Meetup, _ work: () async throws -> T) async -> T? {
+    private func act<T>(on tour: Meetup, _ action: TourAction, _ work: () async throws -> T) async -> T? {
         guard busyMeetupId == nil else { return nil }
         busyMeetupId = tour.id
+        busyAction = action
         message = nil
         error = nil
         lastActionNeedsConsent = false
-        defer { busyMeetupId = nil }
+        defer { busyMeetupId = nil; busyAction = nil }
         do {
             let result = try await work()
             if let outcome = result as? JoinMeetupOutcome {
@@ -125,11 +164,11 @@ public final class NeighborhoodSocialViewModel {
     // MARK: Şerit (AnimalLoverCard eylemleri)
 
     public func sendRequest(to userId: UUID, note: String?) async -> SendRequestOutcome? {
-        message = nil
+        personMessage = nil
         error = nil
         do {
             let outcome = try await services.social.sendConnectionRequest(to: userId, note: note)
-            message = SocialMessages.message(for: outcome)
+            personMessage = SocialMessages.message(for: outcome)
             lastActionNeedsConsent = outcome == .consentRequired
             try await reloadLovers()
             return outcome
@@ -141,7 +180,7 @@ public final class NeighborhoodSocialViewModel {
 
     @discardableResult
     public func withdraw(requestId: UUID) async -> Bool {
-        message = nil
+        personMessage = nil
         error = nil
         do {
             try await services.social.withdrawConnectionRequest(id: requestId)

@@ -108,9 +108,9 @@ struct MainTabView: View {
                 .toolbar(.hidden, for: .tabBar)
             TabStack(tab: .community, services: services, bottomInset: tabBarHeight) {
                 // Mahalle: besleyicilerin akışı, Buluşmalar (D19) ve İhtiyaçlar bölümü (D17).
-                CommunityTabScreen(services: services) {
+                CommunityTabScreen(services: services) { refreshToken in
                     // Akış'ın üstü: "Şu an turda" + mahalledeki hayvanseverler (spec 2026-11-16).
-                    NeighborhoodSocialSection(services: services)
+                    NeighborhoodSocialSection(services: services, refreshToken: refreshToken)
                 } meetups: {
                     MeetupsListView(services: services)
                 } needs: {

@@ -6,8 +6,9 @@ import MamaDesign
 /// "Akış" bölümü: haftalık özet, tür filtresi ve paylaşım kartları. Tümü giriş gerektirir (D17).
 struct CommunityFeedView<Header: View>: View {
     let model: CommunityFeedViewModel
-    /// Akış'ın en üstü (AppFeature'dan: "Şu an turda" + hayvanseverler şeridi).
-    @ViewBuilder let header: () -> Header
+    /// Akış'ın en üstü (AppFeature'dan: "Şu an turda" + hayvanseverler şeridi). Parametre: aşağı çekince artan
+    /// yenileme sayacı (başlık kendi modelini de tazelesin).
+    @ViewBuilder let header: (Int) -> Header
     @Environment(AppRouter.self) private var router
     @Environment(SessionStore.self) private var session
     @Environment(LocationStore.self) private var location
@@ -16,6 +17,7 @@ struct CommunityFeedView<Header: View>: View {
     /// Detayı açılan paylaşım; dönüşte kartı tazelenir (pati, yorum sayısı).
     @State private var lastOpenedPostId: UUID?
     @State private var volunteerFeedback = 0
+    @State private var headerRefreshToken = 0
 
     var body: some View {
         content
@@ -49,7 +51,7 @@ struct CommunityFeedView<Header: View>: View {
     private var feed: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 14) {
-                header()
+                header(headerRefreshToken)
                     .padding(.horizontal, MamaMetrics.screenPadding)
                 if let summary = model.summary {
                     CommunitySummaryCard(summary: summary) { select(.coverRequest) }
@@ -66,7 +68,10 @@ struct CommunityFeedView<Header: View>: View {
             // Yüzen "Mahalleye yaz" butonu son kartın üstünü örtmesin.
             .padding(.bottom, 96)
         }
-        .refreshable { await reload() }
+        .refreshable {
+            headerRefreshToken += 1
+            await reload()
+        }
         .overlay(alignment: .bottom) { composeButton }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -16,10 +16,13 @@ public struct NeighborhoodSocialSection: View {
     @State private var showsEndDialog = false
     @State private var showsProfileEdit = false
     private let services: AppServices
+    /// Akış aşağı çekilince artar: başlık da yeniden yüklenir.
+    private let refreshToken: Int
 
-    public init(services: AppServices) {
+    public init(services: AppServices, refreshToken: Int = 0) {
         _model = State(initialValue: NeighborhoodSocialViewModel(services: services))
         self.services = services
+        self.refreshToken = refreshToken
     }
 
     public var body: some View {
@@ -32,14 +35,16 @@ public struct NeighborhoodSocialSection: View {
                     if let message = model.message {
                         BannerView(message, style: .info)
                     }
-                    if !model.tours.isEmpty {
-                        tours
+                    // Kalan süre dakikada bir yenilenir; biten tur yeniden yükleme beklemeden düşer.
+                    TimelineView(.periodic(from: .now, by: 60)) { context in
+                        tours(at: context.date)
                     }
                     strip
                 }
             }
         }
         .task(id: session.userId) { await reload() }
+        .onChange(of: refreshToken) { _, _ in Task { await reload() } }
         .onChange(of: router.sheet) { old, new in
             // Onay / tur başlatma / giriş sheet'i kapanınca tazele.
             if old != nil, new == nil { Task { await reload() } }
@@ -69,18 +74,31 @@ public struct NeighborhoodSocialSection: View {
 
     // MARK: - Şu an turda
 
-    private var tours: some View {
+    @ViewBuilder
+    private func tours(at date: Date) -> some View {
+        let visible = model.visibleTours(at: date)
+        if !visible.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                if model.hasMoreTours(at: date) {
+                    SectionHeader(String(localized: "Şu an turda"), actionTitle: String(localized: "Tümünü gör")) {
+                        router.communitySection = .meetups
+                    }
+                } else {
+                    SectionHeader(String(localized: "Şu an turda"))
+                }
+                tourCards(visible, at: date)
+            }
+        }
+    }
+
+    private func tourCards(_ visible: [Meetup], at date: Date) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Şu an turda")
-                .font(MamaFont.title3)
-                .foregroundStyle(MamaColor.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-            ForEach(model.tours) { tour in
+            ForEach(visible) { tour in
                 TourNowCard(
                     tour: tour,
-                    remainingMinutes: model.remainingMinutes(tour),
+                    remainingMinutes: model.remainingMinutes(tour, at: date),
                     isMember: model.isMember(tour),
-                    isBusy: model.busyMeetupId == tour.id,
+                    busyAction: model.busyMeetupId == tour.id ? model.busyAction : nil,
                     isDisabled: model.busyMeetupId != nil,
                     onOpen: { router.push(.meetup(tour.id)) },
                     onJoin: { join(tour) },
@@ -99,7 +117,7 @@ public struct NeighborhoodSocialSection: View {
     @ViewBuilder
     private var strip: some View {
         switch model.stripState {
-        case .loading:
+        case .loading, .unavailable:
             EmptyView()
         case .needsConsent:
             NeighborhoodLoversInvite(
@@ -188,7 +206,7 @@ struct TourNowCard: View {
     let tour: Meetup
     let remainingMinutes: Int
     let isMember: Bool
-    let isBusy: Bool
+    let busyAction: NeighborhoodSocialViewModel.TourAction?
     let isDisabled: Bool
     let onOpen: () -> Void
     let onJoin: () -> Void
@@ -249,15 +267,21 @@ struct TourNowCard: View {
         } else {
             HStack(spacing: 10) {
                 Button(action: onJoin) {
-                    if isBusy {
+                    if busyAction == .join {
                         ProgressView().tint(MamaColor.onInk)
                     } else {
                         Text("Katıl")
                     }
                 }
                 .buttonStyle(.mamaPrimary(systemImage: "figure.walk"))
-                Button(action: onMessage) { Text("Mesaj at") }
-                    .buttonStyle(.mamaSecondary(systemImage: "bubble.left.fill"))
+                Button(action: onMessage) {
+                    if busyAction == .message {
+                        ProgressView()
+                    } else {
+                        Text("Mesaj at")
+                    }
+                }
+                .buttonStyle(.mamaSecondary(systemImage: "bubble.left.fill"))
             }
             .disabled(isDisabled)
         }
@@ -370,7 +394,7 @@ struct NeighborhoodLoverSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    if let message = model.message {
+                    if let message = model.personMessage {
                         BannerView(message, style: .info)
                     }
                     if let lover = model.lover(id: loverId) {

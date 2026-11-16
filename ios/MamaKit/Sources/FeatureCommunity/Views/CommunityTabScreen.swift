@@ -11,13 +11,13 @@ import MamaDesign
 public struct CommunityTabScreen<FeedHeader: View, MeetupsContent: View, NeedsContent: View>: View {
     @State private var model: CommunityFeedViewModel
     @Environment(AppRouter.self) private var router
-    private let feedHeader: () -> FeedHeader
+    private let feedHeader: (Int) -> FeedHeader
     private let meetups: () -> MeetupsContent
     private let needs: () -> NeedsContent
 
     public init(
         services: AppServices,
-        @ViewBuilder feedHeader: @escaping () -> FeedHeader,
+        @ViewBuilder feedHeader: @escaping (_ refreshToken: Int) -> FeedHeader,
         @ViewBuilder meetups: @escaping () -> MeetupsContent,
         @ViewBuilder needs: @escaping () -> NeedsContent
     ) {
@@ -43,7 +43,7 @@ public struct CommunityTabScreen<FeedHeader: View, MeetupsContent: View, NeedsCo
 
             switch router.communitySection {
             case .feed:
-                CommunityFeedView(model: model) { feedHeader() }
+                CommunityFeedView(model: model) { feedHeader($0) }
             case .meetups:
                 meetups()
             case .needs:
@@ -66,7 +66,7 @@ public struct CommunityTabScreen<FeedHeader: View, MeetupsContent: View, NeedsCo
 
 #Preview("Akış") {
     PreviewEnvironment { services in
-        CommunityTabScreen(services: services) {
+        CommunityTabScreen(services: services) { _ in
             EmptyView()
         } meetups: {
             Text("Buluşmalar")
@@ -78,7 +78,7 @@ public struct CommunityTabScreen<FeedHeader: View, MeetupsContent: View, NeedsCo
 
 #Preview("Giriş yok") {
     PreviewEnvironment(signedIn: false) { services in
-        CommunityTabScreen(services: services) {
+        CommunityTabScreen(services: services) { _ in
             EmptyView()
         } meetups: {
             Text("Buluşmalar")

@@ -56,6 +56,66 @@ final class NeighborhoodSocialViewModelTests: XCTestCase {
         XCTAssertTrue(model.tours.isEmpty, "süresi dolan tur kartı kalkar")
     }
 
+    func testVisibleToursPruneEndedAtRenderTime() async throws {
+        let env = try await makeSocialEnvironment()
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        let tour = try XCTUnwrap(model.tours.first)
+        XCTAssertEqual(model.visibleTours(at: env.clock.now).map(\.id), [tour.id])
+        // Yeniden yüklemeden: saat ilerleyince biten tur kartı çizimde düşer.
+        XCTAssertEqual(model.visibleTours(at: tour.endsAt.addingTimeInterval(-1)).map(\.id), [tour.id])
+        XCTAssertTrue(model.visibleTours(at: tour.endsAt).isEmpty)
+        XCTAssertFalse(model.hasMoreTours(at: env.clock.now))
+    }
+
+    func testTourCardsCappedAtThree() async throws {
+        let env = try await makeSocialEnvironment()
+        for (user, spot) in [(DemoData.emreId, DemoData.id(2, 5)), (DemoData.zeynepId, DemoData.id(2, 1)), (DemoData.meId, DemoData.id(2, 10))] {
+            await env.backend.setCurrentUser(user)
+            guard case .started = try await env.backend.startFeedingTour(spotId: spot, durationMinutes: 60) else {
+                return XCTFail("tur başlamadı")
+            }
+        }
+        await env.backend.setCurrentUser(DemoData.meId)
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        XCTAssertEqual(model.tours.count, 4)
+        XCTAssertEqual(model.visibleTours(at: env.clock.now).count, NeighborhoodSocialViewModel.maxTourCards)
+        XCTAssertEqual(NeighborhoodSocialViewModel.maxTourCards, 3)
+        XCTAssertTrue(model.hasMoreTours(at: env.clock.now))
+        XCTAssertEqual(model.visibleTours(at: env.clock.now).first?.viewerRole, .organizer, "kendi turum kesilmez")
+    }
+
+    func testProfileLoadFailureHidesStripInsteadOfInviting() async throws {
+        let env = try await makeSocialEnvironment()
+        await env.backend.setCurrentUser(nil)   // okumalar notSignedIn ile hata verir
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        XCTAssertNotNil(model.error)
+        XCTAssertEqual(model.stripState, .unavailable, "hata varken onay daveti gösterilmez")
+    }
+
+    func testPersonActionMessageIsSeparateFromTourMessage() async throws {
+        let env = try await makeSocialEnvironment()
+        let outcome = try await env.backend.updateSocialProfile(isVisible: true, about: "", interests: [], at: .modaKadikoy)
+        XCTAssertEqual(outcome, .saved)
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        _ = await model.sendRequest(to: DemoData.emreId, note: nil)
+        XCTAssertEqual(model.personMessage, SocialMessages.message(for: SendRequestOutcome.sent(requestId: UUID())))
+        XCTAssertNil(model.message, "kişi kartının mesajı Mahalle bandında tekrar görünmez")
+    }
+
+    func testBusyActionTracksWhichButton() async throws {
+        let env = try await makeSocialEnvironment()
+        let model = NeighborhoodSocialViewModel(services: env.services)
+        await model.load(at: .modaKadikoy)
+        XCTAssertNil(model.busyAction)
+        let tour = try XCTUnwrap(model.tours.first)
+        _ = await model.messageTour(tour)
+        XCTAssertNil(model.busyAction, "işlem bitince temizlenir")
+    }
+
     func testJoinThenMessageOpensConversation() async throws {
         let env = try await makeSocialEnvironment()
         let model = NeighborhoodSocialViewModel(services: env.services)

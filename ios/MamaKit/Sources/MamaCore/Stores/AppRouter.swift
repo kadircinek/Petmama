@@ -22,6 +22,9 @@ public enum AppRoute: Hashable, Sendable {
     case conversations
     case animalLovers
     case connectionRequests
+    // Moderasyon (yalnızca moderatör; Faz 3.1)
+    case moderation
+    case moderationCase(target: ReportTarget, id: UUID)
 }
 
 /// Modallar (sheet). Birden fazla feature'dan açılabilenler burada.

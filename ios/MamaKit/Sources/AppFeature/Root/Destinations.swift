@@ -6,6 +6,7 @@ import FeatureAnimals
 import FeatureCommunity
 import FeatureDonate
 import FeatureMap
+import FeatureModeration
 import FeatureNeeds
 import FeatureOnboarding
 import FeatureProfile
@@ -53,6 +54,10 @@ struct RouteDestination: View {
             AnimalLoversScreen(services: services)
         case .connectionRequests:
             ConnectionRequestsScreen(services: services)
+        case .moderation:
+            ModerationQueueScreen(services: services)
+        case .moderationCase(let target, let id):
+            ModerationCaseScreen(target: target, targetId: id, services: services)
         }
     }
 }

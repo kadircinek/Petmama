@@ -41,6 +41,8 @@ extension InMemoryBackend {
     // Test yardımcıları
     public func allModerationActions() -> [ModerationActionRecord] { moderationActions }
     public func setSuspendedUntil(_ date: Date?, for userId: UUID) { users[userId]?.suspendedUntil = date }
+    /// Sunucudaki ham satır gibi (uzaklaştırma bitişi dahil).
+    public func rawUser(_ id: UUID) -> UserProfile? { users[id] }
 
     // MARK: - Önizleme
 

@@ -299,6 +299,39 @@ extension ReportReason {
     }
 }
 
+extension ReportTarget {
+    /// Moderasyon kuyruğundaki hedef türü.
+    public var label: String {
+        switch self {
+        case .spot: return String(localized: "Nokta")
+        case .animal: return String(localized: "Hayvan profili")
+        case .need: return String(localized: "İhtiyaç")
+        case .checkin: return String(localized: "Check-in")
+        case .photo: return String(localized: "Fotoğraf")
+        case .user: return String(localized: "Kullanıcı")
+        case .post: return String(localized: "Paylaşım")
+        case .comment: return String(localized: "Yorum")
+        case .meetup: return String(localized: "Buluşma")
+        case .chatMessage: return String(localized: "Sohbet mesajı")
+        }
+    }
+
+    public var systemImage: String {
+        switch self {
+        case .spot: return "mappin.circle.fill"
+        case .animal: return "pawprint.fill"
+        case .need: return "cross.case.fill"
+        case .checkin: return "checkmark.circle.fill"
+        case .photo: return "photo.fill"
+        case .user: return "person.fill"
+        case .post: return "text.bubble.fill"
+        case .comment: return "bubble.left.fill"
+        case .meetup: return "person.3.fill"
+        case .chatMessage: return "bubble.left.and.bubble.right.fill"
+        }
+    }
+}
+
 extension NotificationKind {
     public var systemImage: String {
         switch self {

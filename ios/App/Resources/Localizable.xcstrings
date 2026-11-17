@@ -325,6 +325,23 @@
         }
       }
     },
+    "%@ uzaklaştır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ uzaklaştır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suspend for %@"
+          }
+        }
+      }
+    },
     "%@ uzakta": {
       "extractionState": "manual",
       "localizations": {
@@ -576,6 +593,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld paws"
+          }
+        }
+      }
+    },
+    "%lld rapor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld rapor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld reports"
           }
         }
       }
@@ -954,6 +988,23 @@
         }
       }
     },
+    "30 gün": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 gün"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 days"
+          }
+        }
+      }
+    },
     "3–10 km": {
       "extractionState": "manual",
       "localizations": {
@@ -967,6 +1018,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "3–10 km"
+          }
+        }
+      }
+    },
+    "7 gün": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 gün"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 days"
           }
         }
       }
@@ -1498,6 +1566,23 @@
         }
       }
     },
+    "Açık (%lld)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık (%lld)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open (%lld)"
+          }
+        }
+      }
+    },
     "Açık ihtiyaçlar": {
       "extractionState": "manual",
       "localizations": {
@@ -1936,6 +2021,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "No pending requests"
+          }
+        }
+      }
+    },
+    "Bekleyen rapor yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekleyen rapor yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No pending reports"
           }
         }
       }
@@ -2994,6 +3096,23 @@
         }
       }
     },
+    "Bu rapor artık yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu rapor artık yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This report no longer exists"
+          }
+        }
+      }
+    },
     "Bu rehber tıbbi tavsiye değildir. Hasta veya yaralı bir hayvan görürsen bir veterinere danış ve \"İhtiyaç bildir\" ile gönüllülere haber ver.": {
       "extractionState": "manual",
       "localizations": {
@@ -3279,6 +3398,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Meetup cancelled. We let the participants know."
+          }
+        }
+      }
+    },
+    "Buluşma iptal edilir, katılanlara haber verilir. Açık raporlar kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buluşma iptal edilir, katılanlara haber verilir. Açık raporlar kapanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meetup is cancelled and participants are notified. Open reports are closed."
           }
         }
       }
@@ -4711,6 +4847,23 @@
         }
       }
     },
+    "En çok raporlanan ve en eski önce. Raporlara 24 saat içinde bakmaya çalış.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En çok raporlanan ve en eski önce. Raporlara 24 saat içinde bakmaya çalış."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most reported and oldest first. Try to review reports within 24 hours."
+          }
+        }
+      }
+    },
     "Enerjik": {
       "extractionState": "manual",
       "localizations": {
@@ -5102,6 +5255,23 @@
         }
       }
     },
+    "Fotoğraf": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo"
+          }
+        }
+      }
+    },
     "Fotoğraf ekle": {
       "extractionState": "manual",
       "localizations": {
@@ -5115,6 +5285,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Add photo"
+          }
+        }
+      }
+    },
+    "Fotoğraf kaldırılır. Açık raporlar kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf kaldırılır. Açık raporlar kapanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The photo is removed. Open reports are closed."
           }
         }
       }
@@ -6598,6 +6785,23 @@
         }
       }
     },
+    "Hesabın %@ tarihine kadar askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın %@ tarihine kadar askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account is suspended until %@. Until then you can keep reading, but you can't post or send messages."
+          }
+        }
+      }
+    },
     "Hesabın açık olduğu sürece": {
       "extractionState": "manual",
       "localizations": {
@@ -6645,6 +6849,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Delete your account?"
+          }
+        }
+      }
+    },
+    "Hesabın süresiz olarak askıya alındı. Okumaya devam edebilirsin ama paylaşım yapamaz, mesaj gönderemezsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın süresiz olarak askıya alındı. Okumaya devam edebilirsin ama paylaşım yapamaz, mesaj gönderemezsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account is suspended indefinitely. You can keep reading, but you can't post or send messages."
           }
         }
       }
@@ -6904,6 +7125,40 @@
         }
       }
     },
+    "Kaldır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaldır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove"
+          }
+        }
+      }
+    },
+    "Kaldırıldı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaldırıldı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed"
+          }
+        }
+      }
+    },
     "Kaldırılmış ya da pasife alınmış olabilir.": {
       "extractionState": "manual",
       "localizations": {
@@ -6951,6 +7206,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bowl is dirty or broken"
+          }
+        }
+      }
+    },
+    "Kapananlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapananlar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closed"
           }
         }
       }
@@ -7070,6 +7342,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Temperament"
+          }
+        }
+      }
+    },
+    "Karar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decision"
           }
         }
       }
@@ -7291,6 +7580,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lost / found"
+          }
+        }
+      }
+    },
+    "Kayıt kalıcı olarak silinir. Açık raporlar kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kayıt kalıcı olarak silinir. Açık raporlar kapanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The record is deleted permanently. Open reports are closed."
           }
         }
       }
@@ -8043,6 +8349,57 @@
         }
       }
     },
+    "Kullanıcı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanıcı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "User"
+          }
+        }
+      }
+    },
+    "Kullanıcı raporunda içerik yoktur: yalnızca raporlar kapanır. Uzaklaştırma ayrı bir karardır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanıcı raporunda içerik yoktur: yalnızca raporlar kapanır. Uzaklaştırma ayrı bir karardır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A user report has no content: only the reports are closed. Suspension is a separate decision."
+          }
+        }
+      }
+    },
+    "Kullanıcı uzaklaştırılsın mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanıcı uzaklaştırılsın mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suspend this user?"
+          }
+        }
+      }
+    },
     "Kullanıcıyı bildir veya engelle": {
       "extractionState": "manual",
       "localizations": {
@@ -8056,6 +8413,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Report or block user"
+          }
+        }
+      }
+    },
+    "Kullanıcıyı uzaklaştır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanıcıyı uzaklaştır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suspend user"
           }
         }
       }
@@ -8226,6 +8600,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "A short name (optional)"
+          }
+        }
+      }
+    },
+    "Kısa not (isteğe bağlı)": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısa not (isteğe bağlı)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short note (optional)"
           }
         }
       }
@@ -9369,6 +9760,40 @@
         }
       }
     },
+    "Moderasyon": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderasyon"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderation"
+          }
+        }
+      }
+    },
+    "Moderatör": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderatör"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderator"
+          }
+        }
+      }
+    },
     "Mükerrer kontrolü": {
       "extractionState": "manual",
       "localizations": {
@@ -9926,6 +10351,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Note (optional)"
+          }
+        }
+      }
+    },
+    "Not en fazla 500 karakter olabilir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not en fazla 500 karakter olabilir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The note can be at most 500 characters."
+          }
+        }
+      }
+    },
+    "Not yalnızca karar kaydında görünür, kullanıcıya gitmez.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not yalnızca karar kaydında görünür, kullanıcıya gitmez."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The note is only kept in the decision log; the user never sees it."
           }
         }
       }
@@ -10508,6 +10967,40 @@
         }
       }
     },
+    "Rapor": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rapor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report"
+          }
+        }
+      }
+    },
+    "Rapor yüklenemedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rapor yüklenemedi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load the report"
+          }
+        }
+      }
+    },
     "Raporla": {
       "extractionState": "manual",
       "localizations": {
@@ -10525,6 +11018,40 @@
         }
       }
     },
+    "Raporlanan kullanıcı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporlanan kullanıcı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reported user"
+          }
+        }
+      }
+    },
+    "Raporlar": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporlar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reports"
+          }
+        }
+      }
+    },
     "Raporlar ve engellemeler": {
       "extractionState": "manual",
       "localizations": {
@@ -10538,6 +11065,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reports and blocks"
+          }
+        }
+      }
+    },
+    "Raporlar yüklenemedi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporlar yüklenemedi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load reports"
+          }
+        }
+      }
+    },
+    "Raporları incele, karar ver": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raporları incele, karar ver"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review reports and decide"
           }
         }
       }
@@ -10572,6 +11133,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your report goes to the moderation team and is reviewed within 24 hours. Your identity isn't shared with the person reported."
+          }
+        }
+      }
+    },
+    "Reddedildi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reddedildi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismissed"
           }
         }
       }
@@ -10984,6 +11562,23 @@
         }
       }
     },
+    "Silinmiş": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silinmiş"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deleted"
+          }
+        }
+      }
+    },
     "Silinmiş kullanıcı": {
       "extractionState": "manual",
       "localizations": {
@@ -11048,6 +11643,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chat"
+          }
+        }
+      }
+    },
+    "Sohbet mesajı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sohbet mesajı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat message"
           }
         }
       }
@@ -11256,6 +11868,23 @@
         }
       }
     },
+    "Son 30 günde kapanan rapor yok": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 30 günde kapanan rapor yok"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No reports closed in the last 30 days"
+          }
+        }
+      }
+    },
     "Son 7 gün": {
       "extractionState": "manual",
       "localizations": {
@@ -11286,6 +11915,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ spots visited in the last 7 days."
+          }
+        }
+      }
+    },
+    "Son 90 günde kaldırılan": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 90 günde kaldırılan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed in the last 90 days"
+          }
+        }
+      }
+    },
+    "Son 90 günde uzaklaştırma": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son 90 günde uzaklaştırma"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suspensions in the last 90 days"
           }
         }
       }
@@ -11609,6 +12272,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Expired"
+          }
+        }
+      }
+    },
+    "Süresiz": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Süresiz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indefinitely"
           }
         }
       }
@@ -12633,6 +13313,40 @@
         }
       }
     },
+    "Uygun bulundu": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygun bulundu"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Approved"
+          }
+        }
+      }
+    },
+    "Uygun, yayında kalsın": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygun, yayında kalsın"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fine, keep it up"
+          }
+        }
+      }
+    },
     "Uygunsuz içerik": {
       "extractionState": "manual",
       "localizations": {
@@ -12667,6 +13381,57 @@
         }
       }
     },
+    "Uzaklaştırma kaldırılsın mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzaklaştırma kaldırılsın mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lift the suspension?"
+          }
+        }
+      }
+    },
+    "Uzaklaştırmayı kaldır": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzaklaştırmayı kaldır"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lift suspension"
+          }
+        }
+      }
+    },
+    "Uzaklaştırılan kişi uygulamayı okumaya devam eder ama hiçbir şey yazamaz: nokta, check-in, paylaşım, yorum, mesaj, buluşma, istek.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzaklaştırılan kişi uygulamayı okumaya devam eder ama hiçbir şey yazamaz: nokta, check-in, paylaşım, yorum, mesaj, buluşma, istek."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A suspended person can keep reading the app but can't write anything: spots, check-ins, posts, comments, messages, meetups, requests."
+          }
+        }
+      }
+    },
     "Vazgeç": {
       "extractionState": "manual",
       "localizations": {
@@ -12680,6 +13445,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Verdiğin kararlar burada listelenir.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verdiğin kararlar burada listelenir."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your decisions are listed here."
           }
         }
       }
@@ -13364,6 +14146,23 @@
         }
       }
     },
+    "Yalnızca raporlanan mesaj gösterilir; sohbetin geri kalanı gizli kalır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yalnızca raporlanan mesaj gösterilir; sohbetin geri kalanı gizli kalır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the reported message is shown; the rest of the conversation stays private."
+          }
+        }
+      }
+    },
     "Yalnızca uygulamayı kullanırken; arka planda konum istemeyiz.": {
       "extractionState": "manual",
       "localizations": {
@@ -13462,6 +14261,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Puppy/kitten"
+          }
+        }
+      }
+    },
+    "Yayında": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yayında"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
           }
         }
       }
@@ -13581,6 +14397,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mark a new feeding spot"
+          }
+        }
+      }
+    },
+    "Yeni bir rapor geldiğinde burada görünür. Raporlara 24 saat içinde bakmaya çalış.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni bir rapor geldiğinde burada görünür. Raporlara 24 saat içinde bakmaya çalış."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New reports appear here. Try to review them within 24 hours."
           }
         }
       }
@@ -13768,6 +14601,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Directions"
+          }
+        }
+      }
+    },
+    "Yorum": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yorum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment"
           }
         }
       }
@@ -14860,6 +15710,23 @@
         }
       }
     },
+    "İncelemede": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İncelemede"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Under review"
+          }
+        }
+      }
+    },
     "İncelemede; yalnızca sen görüyorsun": {
       "extractionState": "manual",
       "localizations": {
@@ -15043,6 +15910,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "Allow"
+          }
+        }
+      }
+    },
+    "İçerik herkesten gizlenir, yazarı da göremez. Açık raporlar kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçerik herkesten gizlenir, yazarı da göremez. Açık raporlar kapanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The content is hidden from everyone, including its author. Open reports are closed."
+          }
+        }
+      }
+    },
+    "İçerik kaldırılsın mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçerik kaldırılsın mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove this content?"
+          }
+        }
+      }
+    },
+    "İçerik sahibi": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçerik sahibi"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Content owner"
+          }
+        }
+      }
+    },
+    "İçerik yayında kalsın mı?": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçerik yayında kalsın mı?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this content up?"
+          }
+        }
+      }
+    },
+    "İçerik yayında kalır (gizlendiyse geri açılır), açık raporlar kapanır.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İçerik yayında kalır (gizlendiyse geri açılır), açık raporlar kapanır."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The content stays up (restored if it was hidden) and open reports are closed."
+          }
+        }
+      }
+    },
+    "İşleme alındı": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşleme alındı"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actioned"
           }
         }
       }
@@ -15298,6 +16267,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "On a round now"
+          }
+        }
+      }
+    },
+    "Şu an uzaklaştırılmış: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şu an uzaklaştırılmış: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Currently suspended: %@"
           }
         }
       }

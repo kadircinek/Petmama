@@ -43,6 +43,9 @@ public struct ProfileTabScreen: View {
         if let error = model.error {
             BannerView(error.userMessage, style: .warning)
         }
+        if let notice = model.suspensionNotice(profile) {
+            BannerView(notice, style: .warning, systemImage: "hand.raised.fill")
+        }
         if !model.isVerified(profile), model.hasLoadedStats {
             verificationProgress
         }
@@ -78,6 +81,19 @@ public struct ProfileTabScreen: View {
                     tint: MamaColor.tileBlue,
                     badge: model.unreadBadgeText
                 )
+            }
+            if model.showsModeration(profile) {
+                MenuDivider()
+                // FeatureProfile FeatureModeration'ı tanımaz: rotayı AppFeature çözer.
+                NavigationLink(value: AppRoute.moderation) {
+                    MenuRow(
+                        title: String(localized: "Moderasyon"),
+                        systemImage: "checkmark.shield.fill",
+                        tint: MamaColor.tilePeach,
+                        subtitle: String(localized: "Raporları incele, karar ver"),
+                        badge: model.moderationBadgeText
+                    )
+                }
             }
             MenuDivider()
             NavigationLink(value: AppRoute.settings) {

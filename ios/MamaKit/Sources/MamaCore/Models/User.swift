@@ -10,6 +10,8 @@ public struct UserProfile: Identifiable, Hashable, Codable, Sendable {
     public var isVerifiedFeeder: Bool
     public var isModerator: Bool
     public var createdAt: Date
+    /// Yalnızca oturumdaki kullanıcının kendi profilinde dolu: uzaklaştırma bitişi (süresiz `Date.distantFuture`).
+    public var suspendedUntil: Date?
 
     public init(
         id: UUID = UUID(),
@@ -19,7 +21,8 @@ public struct UserProfile: Identifiable, Hashable, Codable, Sendable {
         trustScore: Int = TrustPolicy.initialTrustScore,
         isVerifiedFeeder: Bool = false,
         isModerator: Bool = false,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        suspendedUntil: Date? = nil
     ) {
         self.id = id
         self.displayName = displayName
@@ -29,6 +32,7 @@ public struct UserProfile: Identifiable, Hashable, Codable, Sendable {
         self.isVerifiedFeeder = isVerifiedFeeder
         self.isModerator = isModerator
         self.createdAt = createdAt
+        self.suspendedUntil = suspendedUntil
     }
 }
 

@@ -212,6 +212,7 @@ final class CommunityFeedActionsTests: XCTestCase {
 
     func testDeleteSomeoneElsesPostIsNotAllowed() async {
         let backend = makeBackend()
+        await backend.setModerator(false, for: DemoData.meId) // demo kullanıcısı moderatör (Faz 3.1)
         let model = CommunityFeedViewModel(services: makeServices(backend))
         await model.load(near: .modaKadikoy)
 

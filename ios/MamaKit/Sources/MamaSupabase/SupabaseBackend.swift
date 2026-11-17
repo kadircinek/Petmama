@@ -90,13 +90,21 @@ public final class SupabaseBackend: Sendable {
         return response.data
     }
 
+    /// `profiles` okuma yetkisi sütun bazlıdır (`suspended_until` başkalarına kapalı, 0026): `select=*` hata verir.
+    static let profileColumns = "id,display_name,avatar_url,neighborhood,trust_score,is_verified_feeder,is_moderator,created_at"
+
     func fetchProfile(id: UUID) async throws -> UserProfile? {
         let response: PostgrestResponse<Void> = try await client.from("profiles")
-            .select()
+            .select(Self.profileColumns)
             .eq("id", value: id.postgresString)
             .limit(1)
             .execute()
-        return try SupabaseDecoding.profiles(from: response.data).first
+        guard var profile = try SupabaseDecoding.profiles(from: response.data).first else { return nil }
+        // Uzaklaştırma bitişi yalnızca kişinin kendisine döner (`my_suspension`).
+        if id == signedInUserId {
+            profile.suspendedUntil = try? await ownSuspension()
+        }
+        return profile
     }
 
     /// Profil satırı normalde `auth.users` trigger'ıyla oluşur; yoksa (eski hesap, yarış) eklemeyi dener.
@@ -106,7 +114,7 @@ public final class SupabaseBackend: Sendable {
         do {
             let response: PostgrestResponse<Void> = try await client.from("profiles")
                 .insert(["id": Param.uuid(userId), "display_name": .string(name)] as JSONObject, returning: .representation)
-                .select()
+                .select(Self.profileColumns)
                 .execute()
             if let created = try SupabaseDecoding.profiles(from: response.data).first { return created }
         } catch {
@@ -119,9 +127,10 @@ public final class SupabaseBackend: Sendable {
         let response: PostgrestResponse<Void> = try await client.from("profiles")
             .update(fields, returning: .representation)
             .eq("id", value: userId.postgresString)
-            .select()
+            .select(Self.profileColumns)
             .execute()
-        guard let profile = try SupabaseDecoding.profiles(from: response.data).first else { throw MamaError.notFound }
+        guard var profile = try SupabaseDecoding.profiles(from: response.data).first else { throw MamaError.notFound }
+        profile.suspendedUntil = try? await ownSuspension()
         return profile
     }
 

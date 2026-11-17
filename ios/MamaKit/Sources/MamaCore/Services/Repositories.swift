@@ -99,6 +99,21 @@ public protocol ModerationRepository: Sendable {
     func blockedUserIds() async throws -> Set<UUID>
 }
 
+/// Uygulama içi moderasyon (Faz 3.1). Sunucu moderatörlüğü her çağrıda yeniden doğrular:
+/// moderatör olmayana sayaç 0, kuyruk boş, detay `permissionDenied`, eylemler `notAllowed`.
+public protocol ModeratorRepository: Sendable {
+    /// Açık raporu olan hedef sayısı (Profil rozeti).
+    func openCaseCount() async throws -> Int
+    /// `closed == false`: açık raporlar (en çok raporlanan, en eski önce). `true`: son 30 günde kapananlar.
+    func moderationQueue(closed: Bool, limit: Int) async throws -> [ModerationCase]
+    /// Hiç raporu olmayan hedefte `nil`.
+    func moderationCase(target: ReportTarget, id: UUID) async throws -> ModerationCaseDetail?
+    func decide(target: ReportTarget, id: UUID, decision: ModerationDecision, note: String?) async throws -> ModerationOutcome
+    /// Kendini ve moderatörleri uzaklaştıramaz (`notAllowed`).
+    func suspend(userId: UUID, length: SuspensionLength, note: String?) async throws -> SuspendOutcome
+    func unsuspend(userId: UUID) async throws -> ModerationOutcome
+}
+
 public protocol DonationRepository: Sendable {
     func overview() async throws -> DonationOverview?
     /// Yalnızca "bağış sayfasına gidildi" olayı ölçülür (PRD 8.2).

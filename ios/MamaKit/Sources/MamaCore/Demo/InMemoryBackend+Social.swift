@@ -71,7 +71,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func giveSocialConsent() async throws -> SocialProfile {
-        let me = try requireUser()
+        let me = try requireWriter()
         var record = socialProfiles[me] ?? SocialProfileRecord()
         record.consentedAt = record.consentedAt ?? now()
         socialProfiles[me] = record
@@ -79,7 +79,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func updateSocialProfile(isVisible: Bool, about: String, interests: [SocialInterest], at coordinate: Coordinate?) async throws -> SocialProfileOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         guard hasConsented(me), var record = socialProfiles[me] else { return .consentRequired }
         let text = SocialPolicy.trimmed(about)
         if SocialPolicy.length(text) > SocialPolicy.maxAbout { return .aboutTooLong }
@@ -139,7 +139,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func createMeetup(_ draft: MeetupDraft) async throws -> CreateMeetupOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         guard let organizer = users[me] else { throw MamaError.notSignedIn }
         guard hasConsented(me) else { return .consentRequired }
 
@@ -175,7 +175,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func joinMeetup(id: UUID) async throws -> JoinMeetupOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         guard hasConsented(me) else { return .consentRequired }
         guard let meetup = meetups[id], !isBlocked(me, meetup.organizerId) else { return .notFound }
         if meetup.status == .cancelled { return .cancelled }
@@ -205,7 +205,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func removeParticipant(meetupId: UUID, userId: UUID) async throws -> Bool {
-        let me = try requireUser()
+        let me = try requireWriter()
         guard let meetup = meetups[meetupId], meetup.organizerId == me, userId != me,
               let index = participantsByMeetup[meetupId]?.firstIndex(where: { $0.userId == userId && $0.status == .joined })
         else { return false }
@@ -226,7 +226,7 @@ extension InMemoryBackend: SocialRepository {
 
     /// Sunucudaki sıra: onay → süre → nokta (aktif, görünür, `public`) → açık tur → günlük tur sınırı.
     public func startFeedingTour(spotId: UUID, durationMinutes: Int) async throws -> StartTourOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         guard let organizer = users[me] else { throw MamaError.notSignedIn }
         guard hasConsented(me) else { return .consentRequired }
         guard SocialPolicy.tourDurationRange.contains(durationMinutes) else { return .durationRange }
@@ -299,7 +299,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func sendConnectionRequest(to userId: UUID, note: String?) async throws -> SendRequestOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         settleScriptedConnections()
         guard hasConsented(me) else { return .consentRequired }
         guard socialProfiles[me]?.isVisible == true else { return .notVisible }
@@ -350,7 +350,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func respondToConnection(requestId: UUID, accept: Bool) async throws -> UUID? {
-        let me = try requireUser()
+        let me = try requireWriter()
         settleScriptedConnections()
         guard let request = connections[requestId], request.addresseeId == me, request.status == .pending,
               !isBlocked(me, request.requesterId) else { return nil }
@@ -452,7 +452,7 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func sendMessage(conversationId: UUID, body: String) async throws -> SendMessageOutcome {
-        let me = try requireUser()
+        let me = try requireWriter()
         settleScriptedConnections()
         // Onay yoksa üyelik de olamaz (protokolde ayrı bir sonuç yok).
         guard hasConsented(me), let conversation = conversationRecords[conversationId],
@@ -678,6 +678,7 @@ extension InMemoryBackend {
         (chatMessages[conversationId] ?? [])
             .filter { $0.createdAt <= now() }
             .filter { !$0.isPendingModeration || $0.authorId == viewer }
+            .filter { !rejectedMessageIds.contains($0.id) }
             .filter { $0.authorId == viewer || !isBlocked(viewer, $0.authorId) }
             .compactMap { message -> ChatMessage? in
                 guard let author = users[message.authorId] else { return nil }

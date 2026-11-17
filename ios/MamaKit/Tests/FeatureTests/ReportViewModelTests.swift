@@ -8,7 +8,9 @@ private let reportNow = Date(timeIntervalSince1970: 1_800_000_000)
 final class ReportViewModelTests: XCTestCase {
     private func makeEnvironment(signedIn: Bool = true) -> (InMemoryBackend, AppServices) {
         let now = reportNow
-        let backend = InMemoryBackend(seed: DemoData.make(now: now), signedIn: signedIn, now: { now })
+        var seed = DemoData.make(now: now)
+        seed.reports = [] // yalnızca bu testte gönderilen raporlar
+        let backend = InMemoryBackend(seed: seed, signedIn: signedIn, now: { now })
         return (backend, AppServices.inMemory(backend, now: { now }))
     }
 

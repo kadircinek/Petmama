@@ -24,6 +24,8 @@ public struct DemoSeed: Sendable {
     public var chatMessages: [(conversationId: UUID, message: ChatMessage)] = []
     /// Bekleyen bağlantı istekleri.
     public var connectionRequests: [(id: UUID, from: UUID, to: UUID, note: String, createdAt: Date)] = []
+    /// Moderasyon kuyruğu boş görünmesin diye açık raporlar (demo kullanıcısı moderatördür).
+    public var reports: [(reporterId: UUID, draft: ReportDraft, createdAt: Date)] = []
     /// Demo modunda "giriş yap" ile oturum açılan kullanıcı.
     public var demoUserId: UUID
 }
@@ -40,6 +42,8 @@ public enum DemoData {
     public static let meId = id(1, 9)
     /// Ayşe'nin şu an açık mama turu (Moda Sahili bankları; başlangıç `now − 20 dk`, 90 dk).
     public static let ayseTourId = id(8, 3)
+    /// Moderasyon demosunda iki kez raporlanmış paylaşım (Zeynep'in mama paylaşımı).
+    public static let moderationPostId = id(6, 4)
 
     /// Demo bire bir sohbetinde karşı tarafın sırayla verdiği hazır cevaplar (`InMemoryBackend.demoResponseDelay` sonra).
     public static let cannedReplies: [String] = [
@@ -55,7 +59,8 @@ public enum DemoData {
             UserProfile(id: ayseId, displayName: "Ayşe", neighborhood: "Moda", trustScore: 64, isVerifiedFeeder: true, createdAt: ago(hours: 24 * 120)),
             UserProfile(id: emreId, displayName: "Emre", neighborhood: "Caferağa", trustScore: 18, createdAt: ago(hours: 24 * 40)),
             UserProfile(id: zeynepId, displayName: "Zeynep", neighborhood: "Moda", trustScore: 12, createdAt: ago(hours: 24 * 10)),
-            UserProfile(id: meId, displayName: "Sen", neighborhood: "Moda", trustScore: 10, createdAt: ago(hours: 24 * 3)),
+            // Demo kullanıcısı moderatördür: Profil → Moderasyon ekranı Supabase'siz denenebilsin (Faz 3.1).
+            UserProfile(id: meId, displayName: "Sen", neighborhood: "Moda", trustScore: 10, isModerator: true, createdAt: ago(hours: 24 * 3)),
         ]
 
         // (başlık, enlem, boylam, tip, tür, son beslenme saat önce, açık talep, acil, görünürlük, not)
@@ -295,6 +300,16 @@ public enum DemoData {
             (id(11, 1), zeynepId, meId, "Moda Parkı'ndaki kedilerin kısırlaştırma takibini beraber yapalım mı?", ago(hours: 2)),
         ]
 
+        // Moderasyon: üç açık vaka (paylaşım 2 rapor, sohbet mesajı, kullanıcı)
+        let reports: [(reporterId: UUID, draft: ReportDraft, createdAt: Date)] = [
+            (ayseId, ReportDraft(target: .post, targetId: moderationPostId, reason: .spam,
+                                 details: "Aynı ilanı her gün paylaşıyor."), ago(hours: 6)),
+            (emreId, ReportDraft(target: .post, targetId: moderationPostId, reason: .inappropriate), ago(hours: 4)),
+            (emreId, ReportDraft(target: .chatMessage, targetId: id(10, 3), reason: .harassment,
+                                 details: "Grup sohbetinde kaba davrandı."), ago(hours: 3)),
+            (zeynepId, ReportDraft(target: .user, targetId: emreId, reason: .harassment), ago(hours: 2)),
+        ]
+
         return DemoSeed(
             users: users,
             spots: spots,
@@ -312,6 +327,7 @@ public enum DemoData {
             meetups: meetups,
             chatMessages: chatMessages,
             connectionRequests: connectionRequests,
+            reports: reports,
             demoUserId: meId
         )
     }

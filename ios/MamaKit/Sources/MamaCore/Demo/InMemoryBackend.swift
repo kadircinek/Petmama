@@ -24,7 +24,14 @@ public actor InMemoryBackend {
     var notificationsByUser: [UUID: [AppNotification]] = [:]
     var preferencesByUser: [UUID: NotificationPreferences] = [:]
     var blocks: [UUID: Set<UUID>] = [:]
-    private(set) var reports: [ReportDraft] = []
+    /// Raporlar ve moderasyon kaydı (Faz 3.1, InMemoryBackend+Moderation.swift).
+    var reportRecords: [ReportRecord] = []
+    var moderationActions: [ModerationActionRecord] = []
+    /// Moderatörün kaldırdığı (`rejected`) içerik: moderatör dışında kimse, yazarı da görmez.
+    var rejectedSpotIds: Set<UUID> = []
+    var rejectedPostIds: Set<UUID> = []
+    var rejectedCommentIds: Set<UUID> = []
+    var rejectedMessageIds: Set<UUID> = []
     private(set) var donationClicks: [String] = []
     private(set) var deviceTokens: [UUID: String] = [:]
     var donationOverview: DonationOverview
@@ -36,7 +43,6 @@ public actor InMemoryBackend {
     var hiddenCommentIds: Set<UUID> = []
     var paws: [UUID: Set<UUID>] = [:]
     var coverVolunteers: [UUID: [UUID]] = [:]
-    var reportersByTarget: [String: Set<UUID>] = [:]
     var mediaDirectory: URL
 
     // Tanışma. Türetilmiş alanlar (katılımcı sayısı, rol, okunmamış…) okuma anında hesaplanır.
@@ -109,6 +115,9 @@ public actor InMemoryBackend {
         for entry in seed.chatMessages {
             chatMessages[entry.conversationId, default: []].append(entry.message)
         }
+        for entry in seed.reports {
+            reportRecords.append(ReportRecord(reporterId: entry.reporterId, draft: entry.draft, createdAt: entry.createdAt))
+        }
         for entry in seed.connectionRequests {
             connections[entry.id] = ConnectionRecord(
                 id: entry.id, requesterId: entry.from, addresseeId: entry.to, note: entry.note,
@@ -121,7 +130,7 @@ public actor InMemoryBackend {
 
     public func signInAsDemoUser() { currentUser = demoUserId }
     public func setCurrentUser(_ id: UUID?) { currentUser = id }
-    public func allReports() -> [ReportDraft] { reports }
+    public func allReports() -> [ReportDraft] { reportRecords.map(\.draft) }
     public func allDonationClicks() -> [String] { donationClicks }
     public func notifications(for userId: UUID) -> [AppNotification] { notificationsByUser[userId] ?? [] }
     public func rawSpot(_ id: UUID) -> Spot? { spots[id] }
@@ -134,6 +143,20 @@ public actor InMemoryBackend {
     func requireUser() throws -> UUID {
         guard let currentUser else { throw MamaError.notSignedIn }
         return currentUser
+    }
+
+    /// Yazma kapısı (sunucuda `private.require_uid()`): oturum + uzaklaştırma. Okumalar ve izin verilen
+    /// yazmalar (engelleme, profil, bildirim ayarları, ayrılma/silme) `requireUser()` kullanır.
+    func requireWriter() throws -> UUID {
+        let userId = try requireUser()
+        if let until = users[userId]?.suspendedUntil, until > now() {
+            throw MamaError.suspension(until: until)
+        }
+        return userId
+    }
+
+    func isModerator(_ userId: UUID?) -> Bool {
+        userId.flatMap { users[$0]?.isModerator } ?? false
     }
 
     func isPrivileged(_ userId: UUID?, for spot: Spot) -> Bool {
@@ -151,6 +174,7 @@ public actor InMemoryBackend {
     func present(_ spot: Spot, origin: Coordinate? = nil) -> Spot? {
         let viewer = currentUser
         guard spot.isActive else { return nil }
+        if rejectedSpotIds.contains(spot.id), !isModerator(viewer) { return nil }
         if spot.visibility == .private, viewer == nil { return nil }
 
         var result = spot
@@ -342,7 +366,7 @@ extension InMemoryBackend: SpotRepository {
     }
 
     public func createSpot(_ draft: SpotDraft) async throws -> CreateSpotOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         let user = users[userId]
         if ContentFilter.containsProfanity(draft.title) || ContentFilter.containsProfanity(draft.note ?? "") {
             return .rejectedContent
@@ -376,7 +400,7 @@ extension InMemoryBackend: SpotRepository {
     }
 
     public func reportGone(spotId: UUID) async throws -> GoneReportOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard spots[spotId] != nil else { throw MamaError.notFound }
         goneReports[spotId, default: []].insert(userId)
         let count = goneReports[spotId]?.count ?? 0
@@ -410,7 +434,7 @@ extension InMemoryBackend: SpotRepository {
 
 extension InMemoryBackend: CheckInRepository {
     public func checkIn(_ draft: CheckInDraft) async throws -> CheckInOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let spot = spots[draft.spotId] else { throw MamaError.notFound }
         guard spot.isActive else { return .spotInactive }
 
@@ -511,7 +535,7 @@ extension InMemoryBackend: AnimalRepository {
     }
 
     public func createAnimal(_ draft: AnimalDraft) async throws -> Animal {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         if ContentFilter.containsProfanity(draft.name ?? "") || ContentFilter.containsProfanity(draft.about ?? "") {
             throw MamaError.rejectedContent
         }
@@ -541,7 +565,7 @@ extension InMemoryBackend: AnimalRepository {
     }
 
     public func markSeen(animalId: UUID, spotId: UUID) async throws {
-        _ = try requireUser()
+        _ = try requireWriter()
         guard animals[animalId] != nil else { throw MamaError.notFound }
         let key = AnimalSpotKey(a: animalId, b: spotId)
         animalSpots[key] = ((animalSpots[key]?.seenCount ?? 0) + 1, now())
@@ -593,7 +617,7 @@ extension InMemoryBackend: NeedRepository {
     }
 
     public func createNeed(_ draft: NeedDraft) async throws -> UUID {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard draft.isValid else { throw MamaError.invalidInput("Bir açıklama yaz ve ihtiyacı bir noktaya veya hayvana bağla.") }
         if ContentFilter.containsProfanity(draft.description) { throw MamaError.rejectedContent }
         let need = Need(
@@ -611,7 +635,7 @@ extension InMemoryBackend: NeedRepository {
     }
 
     public func claim(needId: UUID) async throws -> ClaimOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let need = needs[needId] else { throw MamaError.notFound }
         switch need.status {
         case .resolved: return .resolved
@@ -625,7 +649,7 @@ extension InMemoryBackend: NeedRepository {
     }
 
     public func resolve(needId: UUID) async throws -> Bool {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let need = needs[needId] else { throw MamaError.notFound }
         let allowed = need.createdBy == userId || need.claimedBy == userId || (users[userId]?.isVerifiedFeeder ?? false)
         guard allowed else { return false }
@@ -648,7 +672,14 @@ extension InMemoryBackend: NeedRepository {
 // MARK: - ProfileRepository
 
 extension InMemoryBackend: ProfileRepository {
-    public func profile(id: UUID) async throws -> UserProfile? { users[id] }
+    /// Uzaklaştırma bitişi yalnızca kişinin kendisine döner (sunucuda `my_suspension`).
+    public func profile(id: UUID) async throws -> UserProfile? {
+        guard var profile = users[id] else { return nil }
+        if id != currentUser || !ModerationPolicy.isSuspended(until: profile.suspendedUntil, now: now()) {
+            profile.suspendedUntil = nil
+        }
+        return profile
+    }
 
     public func stats(userId: UUID) async throws -> ProfileStats {
         let mine = checkIns.filter { $0.userId == userId }
@@ -691,7 +722,8 @@ extension InMemoryBackend: ProfileRepository {
     }
 
     public func setFollowing(_ following: Bool, target: FollowTarget, id: UUID) async throws {
-        let userId = try requireUser()
+        // Takipten çıkmak uzaklaştırmada da açık; takip etmek yazmadır.
+        let userId = following ? try requireWriter() : try requireUser()
         let key = FollowKey(user: userId, target: target, id: id)
         if following { follows.insert(key) } else { follows.remove(key) }
     }
@@ -702,7 +734,8 @@ extension InMemoryBackend: ProfileRepository {
     }
 
     public func setGuardian(spotId: UUID, schedule: Set<Weekday>?) async throws {
-        let userId = try requireUser()
+        // Koruyuculuktan çıkmak uzaklaştırmada da açık.
+        let userId = schedule == nil ? try requireUser() : try requireWriter()
         guardians[AnimalSpotKey(a: userId, b: spotId)] = schedule
     }
 }
@@ -754,12 +787,14 @@ extension InMemoryBackend: NotificationRepository {
 
 extension InMemoryBackend: ModerationRepository {
     public func report(_ draft: ReportDraft) async throws {
-        let reporter = try requireUser()
-        reports.append(draft)
+        let reporter = try requireWriter()
+        reportRecords.append(ReportRecord(reporterId: reporter, draft: draft, createdAt: now()))
         guard [.post, .comment, .chatMessage].contains(draft.target) else { return }
-        let key = "\(draft.target.rawValue)-\(draft.targetId)"
-        reportersByTarget[key, default: []].insert(reporter)
-        if (reportersByTarget[key]?.count ?? 0) >= CommunityPolicy.reportsToAutoHide {
+        // Sunucuyla aynı: hedefin AÇIK raporlarını yazan farklı kişi sayısı.
+        let reporters = Set(reportRecords
+            .filter { $0.draft.target == draft.target && $0.draft.targetId == draft.targetId && $0.status == .open }
+            .compactMap(\.reporterId))
+        if reporters.count >= CommunityPolicy.reportsToAutoHide {
             hideReportedCommunityContent(target: draft.target, id: draft.targetId)
         }
     }

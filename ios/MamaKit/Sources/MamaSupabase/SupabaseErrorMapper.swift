@@ -112,6 +112,8 @@ enum SupabaseErrorMapper {
         // Sözleşmedeki `raise exception` mesajları (supabase/migrations).
         switch lowered {
         case "not_authenticated": return .notSignedIn
+        // Uzaklaştırılmış kullanıcının yazması (0026): detail = bitiş ('infinity' = süresiz).
+        case "suspended": return suspended(detail: error.detail)
         case "rejected_content": return .rejectedContent
         case "invalid_coordinates": return .invalidInput(invalidLocationMessage)
         case "not_found": return .notFound
@@ -140,6 +142,11 @@ enum SupabaseErrorMapper {
         if lowered.contains("not authenticated") || lowered.contains("jwt expired") { return .notSignedIn }
         if lowered.contains("permission denied") || lowered.contains("row-level security") { return .permissionDenied }
         return .server(message)
+    }
+
+    static func suspended(detail: String?) -> MamaError {
+        guard let until = suspensionDate(detail) else { return .suspended(until: nil) }
+        return MamaError.suspension(until: until)
     }
 
     static func isUniqueViolation(_ error: any Error) -> Bool {

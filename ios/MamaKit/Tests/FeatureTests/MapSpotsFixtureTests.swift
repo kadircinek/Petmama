@@ -35,6 +35,7 @@ enum MapSpotsFixture {
             profiles: backend,
             notifications: backend,
             moderation: backend,
+            moderator: backend,
             donations: backend,
             community: backend,
             social: backend,

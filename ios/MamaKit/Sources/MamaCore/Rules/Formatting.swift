@@ -90,4 +90,19 @@ public enum MamaFormat {
         }
         return String(grouped.reversed()) + " kg"
     }
+
+    /// "24 Kasım 2026" / "November 24, 2026" (İstanbul günü).
+    public static func day(_ date: Date, language: Language = .current) -> String {
+        let formatter = DateFormatter()
+        formatter.timeZone = NotificationPolicy.timeZone
+        switch language {
+        case .turkish:
+            formatter.locale = Locale(identifier: "tr_TR")
+            formatter.dateFormat = "d MMMM yyyy"
+        case .english:
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "MMMM d, yyyy"
+        }
+        return formatter.string(from: date)
+    }
 }

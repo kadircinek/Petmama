@@ -284,6 +284,7 @@ final class InMemoryCommunityTests: XCTestCase {
 
     func testDeletePermissions() async throws {
         let backend = makeBackend()
+        await backend.setModerator(false, for: DemoData.meId) // demo kullanıcısı moderatör (Faz 3.1)
         let notMine = try await backend.deletePost(id: DemoData.id(6, 2))
         XCTAssertFalse(notMine)
         let notMyComment = try await backend.deleteComment(id: DemoData.id(7, 1))

@@ -11,6 +11,8 @@ public enum MamaError: Error, Equatable, Sendable {
     case invalidInput(String)
     case rejectedContent
     case permissionDenied
+    /// Moderatör hesabı askıya aldı: okur ama yazamaz. `until == nil` süresiz.
+    case suspended(until: Date?)
     case server(String)
 
     /// Kullanıcıya gösterilecek sıcak, suçlayıcı olmayan mesaj (PRD 6.4 "Ton").
@@ -24,8 +26,27 @@ public enum MamaError: Error, Equatable, Sendable {
         case .invalidInput(let message): return message
         case .rejectedContent: return "Metinde uygunsuz bir ifade var gibi görünüyor. Biraz düzenler misin?"
         case .permissionDenied: return "Bu işlem için yetkin yok."
+        case .suspended(let until): return Self.suspensionMessage(until: until)
         case .server: return "Bir şeyler ters gitti. Birazdan tekrar dener misin?"
         }
+    }
+
+    /// Sunucunun bitiş tarihinden (`Date.distantFuture` = süresiz) hata.
+    public static func suspension(until: Date) -> MamaError {
+        .suspended(until: ModerationPolicy.isIndefinite(until) ? nil : until)
+    }
+
+    private static func suspensionMessage(until: Date?) -> String {
+        guard let until else {
+            return "Hesabın süresiz olarak askıya alındı. Okumaya devam edebilirsin ama paylaşım yapamaz, mesaj gönderemezsin."
+        }
+        let date = MamaFormat.day(until)
+        // Linux Foundation'da `String(localized:)` yok (MamaCore Linux'ta derlenir ve test edilir).
+        #if canImport(Darwin)
+        return String(localized: "Hesabın \(date) tarihine kadar askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin.")
+        #else
+        return "Hesabın \(date) tarihine kadar askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin."
+        #endif
     }
 
     /// URLError ve benzeri hataları bağlantı hatası olarak sınıflandırır.

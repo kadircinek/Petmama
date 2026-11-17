@@ -48,6 +48,8 @@ public struct AppServices: Sendable {
     public var profiles: any ProfileRepository
     public var notifications: any NotificationRepository
     public var moderation: any ModerationRepository
+    /// Moderatör ekranı (Faz 3.1).
+    public var moderator: any ModeratorRepository
     public var donations: any DonationRepository
     public var community: any CommunityRepository
     public var social: any SocialRepository
@@ -67,6 +69,7 @@ public struct AppServices: Sendable {
         profiles: any ProfileRepository,
         notifications: any NotificationRepository,
         moderation: any ModerationRepository,
+        moderator: any ModeratorRepository,
         donations: any DonationRepository,
         community: any CommunityRepository,
         social: any SocialRepository,
@@ -85,6 +88,7 @@ public struct AppServices: Sendable {
         self.profiles = profiles
         self.notifications = notifications
         self.moderation = moderation
+        self.moderator = moderator
         self.donations = donations
         self.community = community
         self.social = social
@@ -113,6 +117,7 @@ public struct AppServices: Sendable {
             profiles: backend,
             notifications: backend,
             moderation: backend,
+            moderator: backend,
             donations: backend,
             community: backend,
             social: backend,

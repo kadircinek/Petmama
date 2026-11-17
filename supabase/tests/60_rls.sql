@@ -240,9 +240,15 @@ begin
   perform tests.eq((select count(*)::int from reports), 0, 'reporter cannot read reports');
   perform tests.login(m);
   perform tests.eq((select count(*)::int from reports where reporter_id = u), 1, 'moderator reads reports');
-  update reports set status = 'actioned', resolved_at = now() where reporter_id = u;
+  -- karar yalnızca moderation_decide ile (kayıt altında; 0027): doğrudan güncelleme yetkisi yok
+  begin
+    update reports set status = 'actioned', resolved_at = now() where reporter_id = u;
+    perform tests.check(false, 'moderator direct report update should be denied');
+  exception when insufficient_privilege then
+    perform tests.check(true, 'moderator cannot update reports directly');
+  end;
   perform tests.admin();
-  perform tests.eq((select status from reports where reporter_id = u), 'actioned'::report_status, 'moderator updates report');
+  perform tests.eq((select status from reports where reporter_id = u), 'open'::report_status, 'report stays open');
 end
 $$;
 

@@ -420,9 +420,10 @@ begin
     'insert into follows (user_id, target_type, target_id) values (auth.uid(), ''spot'', %L)', spot)), 'follows insert blocked');
   perform tests.check(tests.raises_suspended(format(
     'insert into guardians (user_id, spot_id) values (auth.uid(), %L)', spot)), 'guardians insert blocked');
-  perform tests.check(tests.raises_suspended(format(
+  -- taciz edilen uzaklaştırılmış kullanıcı yine de raporlayabilir (fix M4)
+  perform tests.check(not tests.raises_suspended(format(
     'insert into reports (reporter_id, target_type, target_id, reason) values (auth.uid(), ''post'', %L, ''spam'')', post)),
-    'reports insert blocked');
+    'suspended can still report');
 
   -- okumalar açık
   perform tests.check((select count(*) from spots_near(lat, lng, 1000, 50)) >= 1, 'suspended can read spots');
@@ -436,8 +437,12 @@ begin
   insert into blocks (user_id, blocked_user_id) values (s, mod2);
   perform tests.check(exists (select 1 from blocks where user_id = s and blocked_user_id = mod2), 'suspended can block');
   update notification_prefs set radius_m = 900 where user_id = s;
-  update profiles set display_name = 'Yeni adım' where id = s;
-  perform tests.eq((select display_name from profiles where id = s), 'Yeni adım', 'suspended can edit own profile');
+  update profiles set neighborhood = 'Moda' where id = s;
+  perform tests.eq((select neighborhood from profiles where id = s), 'Moda', 'suspended can edit own neighborhood');
+  perform tests.check(tests.raises_suspended(format('update profiles set display_name = ''Yeni adım'' where id = %L', s)),
+                      'suspended cannot change display_name');
+  perform tests.check(tests.raises_suspended(format('update profiles set avatar_url = ''https://x.test/a.jpg'' where id = %L', s)),
+                      'suspended cannot change avatar_url');
   perform mark_conversation_read(conv);
   perform tests.eq(leave_meetup(meet)->>'status', 'ok', 'suspended can leave a meetup');
   delete from follows where user_id = s;
@@ -480,6 +485,8 @@ begin
   perform tests.check(exists (select 1 from moderation_actions where target_id = s and action = 'unsuspend'), 'unsuspend logged');
   perform tests.login(s);
   perform tests.check(not tests.raises_suspended(format('select toggle_post_paw(%L)', post)), 'unsuspended → writes allowed');
+  update profiles set display_name = 'Serbest ad' where id = s;
+  perform tests.eq((select display_name from profiles where id = s), 'Serbest ad', 'unsuspended → display_name editable');
   insert into animals (name, created_by) values ('Serbest', s);
   perform tests.check(exists (select 1 from animals where name = 'Serbest'), 'unsuspended → direct insert allowed');
 
@@ -488,6 +495,146 @@ begin
   delete from auth.users where id = mod;
   perform tests.check(exists (select 1 from moderation_actions where target_id = s and moderator_id is null),
                       'deleted moderator → actions kept, moderator_id null');
+end
+$$;
+
+-- ---------------------------------------------------------------------------
+-- 5) Düzeltme turu 1: izin verilen yazmalar, güvenlik eylemleri, depolama, rapor güncelleme, geri alınamayan içerik
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  mod    uuid := tests.make_user('Moderatör', 10, false, true);
+  s      uuid := tests.make_user('Uzaklaştırılan');
+  a      uuid := tests.make_user('Bağlantı A');
+  b      uuid := tests.make_user('Bağlantı B');
+  c      uuid := tests.make_user('İstek C');
+  d      uuid := tests.make_user('İstek D');
+  lat    float8 := tests.base_lat();
+  lng    float8 := tests.base_lng();
+  fn     text;
+  def    text;
+  j      jsonb;
+  meet   uuid;
+  post   uuid;
+  cmt    uuid;
+  r_out  uuid;
+  r_in   uuid;
+  r_in2  uuid;
+  need   uuid;
+  animal uuid;
+  rep    uuid := tests.make_user('Raporcu');
+begin
+  -- M1: yeniden yazılan izinli fonksiyonlar require_reader kullanır
+  foreach fn in array array['register_device_token', 'update_notify_center', 'mark_conversation_read', 'leave_meetup',
+                            'cancel_meetup', 'withdraw_connection_request', 'remove_connection',
+                            'delete_community_post', 'delete_community_comment'] loop
+    for def in select p.prosrc from pg_proc p where p.pronamespace = 'public'::regnamespace and p.proname = fn loop
+      perform tests.check(position('private.require_reader()' in def) > 0 and position('private.require_uid()' in def) = 0,
+                          fn || ' uses require_reader only');
+    end loop;
+  end loop;
+
+  -- hazırlık (uzaklaştırmadan önce)
+  foreach fn in array array[s::text, a::text, b::text, c::text, d::text] loop
+    perform tests.login(fn::uuid); perform give_social_consent();
+  end loop;
+  perform tests.login(s);
+  perform tests.eq(update_social_profile(true, 'Merhaba', '{cats}', lat, lng)->>'status', 'ok', 'visible before suspension');
+  j := create_meetup('Kendi buluşmam', '', now() + interval '3 hours', 60, 'Moda', lat, lng);
+  meet := (j->>'meetup_id')::uuid;
+  perform tests.admin();
+  insert into community_posts (author_id, kind, body, cell) values (s, 'note', 'Kendi paylaşımım', private.make_point(lat, lng))
+  returning id into post;
+  insert into community_comments (post_id, author_id, body) values (post, s, 'Kendi yorumum') returning id into cmt;
+  insert into connections (requester_id, addressee_id, status, responded_at) values (s, a, 'accepted', now());
+  insert into connections (requester_id, addressee_id) values (s, b) returning id into r_out;
+  insert into connections (requester_id, addressee_id) values (c, s) returning id into r_in;
+  insert into connections (requester_id, addressee_id) values (d, s) returning id into r_in2;
+
+  perform tests.login(mod);
+  perform tests.eq(moderation_suspend_user(s, 30, null)->>'status', 'ok', 'suspend for fix round');
+
+  -- M1: izin verilen yazmalar
+  perform tests.login(s);
+  perform tests.check(not tests.raises_suspended('select register_device_token(''tok-fix-round-1'', ''sandbox'')'),
+                      'suspended can register device token');
+  perform tests.check(not tests.raises_suspended(format('select update_notify_center(%s, %s)', lat, lng)),
+                      'suspended can update notify center');
+  perform tests.eq(cancel_meetup(meet)->>'status', 'ok', 'suspended can cancel own meetup');
+  perform withdraw_connection_request(r_out);
+  perform remove_connection(a);
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from connections where id = r_out), 0, 'suspended can withdraw request');
+  perform tests.eq((select status::text from connections where least(requester_id, addressee_id) = least(s, a)
+                      and greatest(requester_id, addressee_id) = greatest(s, a)), 'removed', 'suspended can remove connection');
+  perform tests.login(s);
+  perform tests.eq(delete_community_comment(cmt)->>'status', 'ok', 'suspended can delete own comment');
+  perform tests.eq(delete_community_post(post)->>'status', 'ok', 'suspended can delete own post');
+
+  -- M4: güvenlik eylemleri
+  perform tests.eq(respond_connection(r_in, false)->>'status', 'declined', 'suspended can decline a request');
+  perform tests.check(tests.raises_suspended(format('select respond_connection(%L, true)', r_in2)), 'suspended cannot accept');
+  perform tests.check(tests.raises_suspended(format('select update_social_profile(true, ''Merhaba'', ''{cats}'', %s, %s)', lat, lng)),
+                      'suspended cannot stay/become visible');
+  perform tests.check(tests.raises_suspended('select update_social_profile(false, ''Yeni metin'', ''{cats}'', null, null)'),
+                      'suspended cannot edit about while hiding');
+  perform tests.eq(update_social_profile(false, 'Merhaba', '{cats}', null, null)->>'status', 'ok', 'suspended can hide');
+  perform tests.admin();
+  perform tests.eq((select is_visible from social_profiles where user_id = s), false, 'hidden after suspension');
+  perform tests.eq((select about from social_profiles where user_id = s), 'Merhaba', 'about unchanged');
+  perform tests.login(s);
+
+  -- Important: depolama yazmaları
+  perform tests.check(tests.raises_suspended(format(
+    'insert into storage.objects (bucket_id, name, owner) values (''photos'', %L, %L)', s::text || '/yeni.jpg', s)),
+    'suspended cannot upload to photos');
+  perform tests.admin();
+  insert into storage.objects (bucket_id, name, owner) values ('photos', s::text || '/eski.jpg', s);
+  perform tests.login(s);
+  perform tests.check(tests.raises_suspended(format(
+    'update storage.objects set name = %L where name = %L', s::text || '/degisti.jpg', s::text || '/eski.jpg')),
+    'suspended cannot overwrite own photo');
+  delete from storage.objects where name = s::text || '/eski.jpg';
+  perform tests.admin();
+  perform tests.eq((select count(*)::int from storage.objects where name = s::text || '/eski.jpg'), 0, 'suspended can delete own photo');
+  perform tests.login(a);
+  insert into storage.objects (bucket_id, name, owner) values ('photos', a::text || '/ok.jpg', a);
+  perform tests.check(exists (select 1 from storage.objects where name = a::text || '/ok.jpg'), 'non-suspended upload still works');
+
+  -- M2: raporlar doğrudan güncellenemez (karar yalnızca moderation_decide ile, kayıtlı)
+  perform tests.login(rep);
+  insert into reports (reporter_id, target_type, target_id, reason) values (rep, 'user', b, 'spam');
+  perform tests.login(mod);
+  perform tests.check(tests.denied('update public.reports set status = ''dismissed'', resolved_at = now()'),
+                      'moderator cannot PATCH reports directly');
+  perform tests.admin();
+  perform tests.eq((select status::text from reports where target_id = b), 'open', 'report still open');
+
+  -- M5: iptal/silme/temizleme geri alınamaz
+  perform tests.admin();
+  insert into needs (type, description, created_by, spot_id) values ('vet', 'Raporlu', b, tests.make_spot(lat, lng, 'N', 'public', b))
+  returning id into need;
+  insert into animals (name, created_by) values ('Raporlu', b) returning id into animal;
+  perform tests.login(rep);
+  insert into reports (reporter_id, target_type, target_id, reason) values (rep, 'need', need, 'spam'), (rep, 'animal', animal, 'spam');
+  perform tests.login(mod);
+  perform tests.eq((moderation_target_reports('need', need)->'case'->>'restorable')::boolean, true, 'live need restorable');
+  perform tests.eq(moderation_decide('need', need, 'remove')->>'status', 'ok', 'remove need');
+  perform tests.eq(moderation_target_reports('need', need)->'case'->>'content_state', 'removed', 'removed need state');
+  perform tests.eq((moderation_target_reports('need', need)->'case'->>'restorable')::boolean, false, 'removed need not restorable');
+  j := moderation_decide('need', need, 'approve');
+  perform tests.eq(j->>'status', 'invalid', 'approve after remove → invalid');
+  perform tests.eq(j->>'reason', 'not_restorable', 'approve after remove → not_restorable');
+  perform tests.eq(moderation_target_reports('need', need)->'case'->>'content_state', 'removed', 'still removed');
+  -- yeni bir rapor gelse de kaldırılmış kalır
+  perform tests.login(a);
+  insert into reports (reporter_id, target_type, target_id, reason) values (a, 'animal', animal, 'other');
+  perform tests.login(mod);
+  perform tests.eq(moderation_decide('animal', animal, 'remove')->>'status', 'ok', 'remove animal');
+  perform tests.eq(moderation_decide('animal', animal, 'approve')->>'reason', 'not_restorable', 'animal approve not_restorable');
+  perform tests.eq((select content_state from moderation_queue(true) q where q.target_id = animal), 'removed', 'closed tab removed');
+  -- sahip avatarı detayda
+  perform tests.check((moderation_target_reports('user', b)->'owner') ? 'avatar_url', 'owner avatar_url present');
 end
 $$;
 

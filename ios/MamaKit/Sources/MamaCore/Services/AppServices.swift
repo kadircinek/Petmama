@@ -1,5 +1,13 @@
 import Foundation
 
+/// Bu derlemenin APNs ortamı (`aps-environment` entitlement'ı). Sunucu her token'ı kendi ortamına gönderir.
+public enum APNsEnvironment: String, Hashable, Sendable {
+    /// Xcode'dan kurulan Debug derlemeleri.
+    case sandbox
+    /// TestFlight ve App Store.
+    case production
+}
+
 /// Uygulama yapılandırması (Info.plist / xcconfig'den okunur).
 public struct AppConfig: Hashable, Sendable {
     public var isDemo: Bool
@@ -9,6 +17,7 @@ public struct AppConfig: Hashable, Sendable {
     public var privacyPolicyURL: URL?
     public var termsURL: URL?
     public var kvkkNoticeURL: URL?
+    public var apnsEnvironment: APNsEnvironment
 
     public init(
         isDemo: Bool,
@@ -16,7 +25,8 @@ public struct AppConfig: Hashable, Sendable {
         supportEmail: String = "destek@mamaharitasi.app",
         privacyPolicyURL: URL? = nil,
         termsURL: URL? = nil,
-        kvkkNoticeURL: URL? = nil
+        kvkkNoticeURL: URL? = nil,
+        apnsEnvironment: APNsEnvironment = .production
     ) {
         self.isDemo = isDemo
         self.donation = donation
@@ -24,6 +34,7 @@ public struct AppConfig: Hashable, Sendable {
         self.privacyPolicyURL = privacyPolicyURL
         self.termsURL = termsURL
         self.kvkkNoticeURL = kvkkNoticeURL
+        self.apnsEnvironment = apnsEnvironment
     }
 }
 
@@ -37,8 +48,12 @@ public struct AppServices: Sendable {
     public var profiles: any ProfileRepository
     public var notifications: any NotificationRepository
     public var moderation: any ModerationRepository
+    /// Moderatör ekranı (Faz 3.1).
+    public var moderator: any ModeratorRepository
     public var donations: any DonationRepository
     public var community: any CommunityRepository
+    public var social: any SocialRepository
+    public var chatUpdates: any ChatUpdates
     public var media: any MediaUploader
     public var spotCache: any SpotCache
     public var checkInQueue: OfflineCheckInQueue
@@ -54,8 +69,11 @@ public struct AppServices: Sendable {
         profiles: any ProfileRepository,
         notifications: any NotificationRepository,
         moderation: any ModerationRepository,
+        moderator: any ModeratorRepository,
         donations: any DonationRepository,
         community: any CommunityRepository,
+        social: any SocialRepository,
+        chatUpdates: any ChatUpdates,
         media: any MediaUploader,
         spotCache: any SpotCache,
         checkInQueue: OfflineCheckInQueue,
@@ -70,8 +88,11 @@ public struct AppServices: Sendable {
         self.profiles = profiles
         self.notifications = notifications
         self.moderation = moderation
+        self.moderator = moderator
         self.donations = donations
         self.community = community
+        self.social = social
+        self.chatUpdates = chatUpdates
         self.media = media
         self.spotCache = spotCache
         self.checkInQueue = checkInQueue
@@ -96,8 +117,11 @@ public struct AppServices: Sendable {
             profiles: backend,
             notifications: backend,
             moderation: backend,
+            moderator: backend,
             donations: backend,
             community: backend,
+            social: backend,
+            chatUpdates: backend,
             media: backend,
             spotCache: InMemorySpotCache(),
             checkInQueue: queue,

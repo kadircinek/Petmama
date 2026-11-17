@@ -498,17 +498,22 @@ struct NotificationDTO: Decodable {
     var needId: UUID?
     /// Mahalle bildirimleri (`community_comment`, `cover_volunteered`).
     var postId: UUID?
+    /// Tanışma bildirimleri (buluşma, sohbet).
+    var meetupId: UUID?
+    var conversationId: UUID?
     var readAt: String?
     var createdAt: String?
 
     /// `notifications` tablosundan seçilen sütunlar.
-    static let columns = "id,kind,title,body,spot_id,need_id,post_id,read_at,created_at"
+    static let columns = "id,kind,title,body,spot_id,need_id,post_id,meetup_id,conversation_id,read_at,created_at"
 
     enum CodingKeys: String, CodingKey {
         case id, kind, title, body
         case spotId = "spot_id"
         case needId = "need_id"
         case postId = "post_id"
+        case meetupId = "meetup_id"
+        case conversationId = "conversation_id"
         case readAt = "read_at"
         case createdAt = "created_at"
     }
@@ -524,6 +529,8 @@ struct NotificationDTO: Decodable {
             spotId: spotId,
             needId: needId,
             postId: postId,
+            meetupId: meetupId,
+            conversationId: conversationId,
             readAt: date(readAt),
             createdAt: date(createdAt) ?? unknownDate
         )
@@ -538,8 +545,9 @@ struct NotificationPrefsDTO: Decodable {
     var followedUpdates: Bool?
     var guardianAlerts: Bool?
     var communityUpdates: Bool?
+    var socialUpdates: Bool?
 
-    static let columns = "radius_m,quiet_start,quiet_end,need_food_nearby,followed_updates,guardian_alerts,community_updates"
+    static let columns = "radius_m,quiet_start,quiet_end,need_food_nearby,followed_updates,guardian_alerts,community_updates,social_updates"
 
     enum CodingKeys: String, CodingKey {
         case radiusM = "radius_m"
@@ -549,6 +557,7 @@ struct NotificationPrefsDTO: Decodable {
         case followedUpdates = "followed_updates"
         case guardianAlerts = "guardian_alerts"
         case communityUpdates = "community_updates"
+        case socialUpdates = "social_updates"
     }
 
     func toDomain() -> NotificationPreferences {
@@ -560,7 +569,8 @@ struct NotificationPrefsDTO: Decodable {
             needFoodNearby: needFoodNearby ?? defaults.needFoodNearby,
             followedUpdates: followedUpdates ?? defaults.followedUpdates,
             guardianAlerts: guardianAlerts ?? defaults.guardianAlerts,
-            communityUpdates: communityUpdates ?? defaults.communityUpdates
+            communityUpdates: communityUpdates ?? defaults.communityUpdates,
+            socialUpdates: socialUpdates ?? defaults.socialUpdates
         )
     }
 }

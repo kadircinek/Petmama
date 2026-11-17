@@ -11,9 +11,23 @@ public protocol AuthRepository: Sendable {
     func signIn(email: String, password: String) async throws -> UserProfile
     func signUp(email: String, password: String, displayName: String) async throws -> UserProfile
     func sendPasswordReset(email: String) async throws
+    /// E-posta doğrulama / şifre sıfırlama bağlantısıyla (deep link) oturum açar.
+    func completeAuthLink(_ url: URL) async throws -> UserProfile
+    /// Oturum açıkken şifreyi değiştirir (şifre sıfırlama bağlantısından sonra).
+    func updatePassword(_ newPassword: String) async throws
     func signOut() async throws
     /// Uygulama içinden hesap silme (FR-P3). Kişisel veri silinir, topluluk verisi anonimleşir.
-    func deleteAccount() async throws
+    /// Apple ile açılmış hesapta `appleAuthorizationCode` zorunludur: sunucu Apple token'ını iptal eder
+    /// (App Store 5.1.1(v)). Kod, silmeden hemen önce yeniden Apple onayıyla alınır (tek kullanımlık, 5 dk).
+    func deleteAccount(appleAuthorizationCode: String?) async throws
+    /// Oturumdaki hesap Apple ile mi açılmış? (Silmeden önce Apple onayı gerekir mi?)
+    func usesAppleSignIn() async -> Bool
+}
+
+extension AuthRepository {
+    public func deleteAccount() async throws {
+        try await deleteAccount(appleAuthorizationCode: nil)
+    }
 }
 
 public protocol SpotRepository: Sendable {
@@ -71,7 +85,9 @@ public protocol NotificationRepository: Sendable {
     func markRead(ids: [UUID]) async throws
     func preferences() async throws -> NotificationPreferences
     func updatePreferences(_ preferences: NotificationPreferences) async throws
-    func registerDeviceToken(_ token: String) async throws
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws
+    /// Çıkıştan önce çağrılır: bu cihaz artık bu hesabın bildirimlerini almaz.
+    func unregisterDeviceToken(_ token: String) async throws
     /// Yakındaki bildirimler için yalnızca son kaba konum (D8).
     func updateNotifyCenter(_ coordinate: Coordinate) async throws
 }
@@ -81,6 +97,21 @@ public protocol ModerationRepository: Sendable {
     func block(userId: UUID) async throws
     func unblock(userId: UUID) async throws
     func blockedUserIds() async throws -> Set<UUID>
+}
+
+/// Uygulama içi moderasyon (Faz 3.1). Sunucu moderatörlüğü her çağrıda yeniden doğrular:
+/// moderatör olmayana sayaç 0, kuyruk boş, detay `permissionDenied`, eylemler `notAllowed`.
+public protocol ModeratorRepository: Sendable {
+    /// Açık raporu olan hedef sayısı (Profil rozeti).
+    func openCaseCount() async throws -> Int
+    /// `closed == false`: açık raporlar (en çok raporlanan, en eski önce). `true`: son 30 günde kapananlar.
+    func moderationQueue(closed: Bool, limit: Int) async throws -> [ModerationCase]
+    /// Hiç raporu olmayan hedefte `nil`.
+    func moderationCase(target: ReportTarget, id: UUID) async throws -> ModerationCaseDetail?
+    func decide(target: ReportTarget, id: UUID, decision: ModerationDecision, note: String?) async throws -> ModerationOutcome
+    /// Kendini ve moderatörleri uzaklaştıramaz (`notAllowed`).
+    func suspend(userId: UUID, length: SuspensionLength, note: String?) async throws -> SuspendOutcome
+    func unsuspend(userId: UUID) async throws -> ModerationOutcome
 }
 
 public protocol DonationRepository: Sendable {
@@ -123,4 +154,47 @@ public protocol SpotCache: Sendable {
 public protocol PendingCheckInStore: Sendable {
     func load() async -> [CheckInDraft]
     func save(_ drafts: [CheckInDraft]) async
+}
+
+/// Tanışma: sosyal onay/profil, buluşmalar, Hayvanseverler bağlantıları ve sohbet. Tümü giriş gerektirir.
+/// Sosyal onay yoksa yazmalar `consentRequired` döner; okumalar (buluşma listesi/detayı hariç) boş döner.
+public protocol SocialRepository: Sendable {
+    /// Onay satırı yoksa `nil`.
+    func socialProfile() async throws -> SocialProfile?
+    /// 18+ ve koşullar onayı (idempotent).
+    func giveSocialConsent() async throws -> SocialProfile
+    /// Görünür olmak için kaba konum gerekir (verilmezse önceki konum kullanılır).
+    func updateSocialProfile(isVisible: Bool, about: String, interests: [SocialInterest], at coordinate: Coordinate?) async throws -> SocialProfileOutcome
+
+    /// Yakındaki aktif, bitmemiş buluşmalar; yakından uzağa.
+    func meetups(near center: Coordinate, radiusMeters: Int) async throws -> [Meetup]
+    /// İptal edilmiş olsa da döner; düzenleyenle engel varsa `nil`.
+    func meetup(id: UUID, near center: Coordinate?) async throws -> Meetup?
+    /// Yalnızca katılanlar görür; diğerlerine boş.
+    func meetupParticipants(meetupId: UUID) async throws -> [MeetupParticipant]
+    func createMeetup(_ draft: MeetupDraft) async throws -> CreateMeetupOutcome
+    func joinMeetup(id: UUID) async throws -> JoinMeetupOutcome
+    /// `false` = düzenleyen ayrılamaz (iptal eder).
+    func leaveMeetup(id: UUID) async throws -> Bool
+    /// Yalnızca düzenleyen; çıkarılan tekrar katılamaz.
+    func removeParticipant(meetupId: UUID, userId: UUID) async throws -> Bool
+    /// Yalnızca düzenleyen, bitmemiş buluşma.
+    func cancelMeetup(id: UUID) async throws -> Bool
+    /// "Mama turuna çıkıyorum": herkese açık noktadan hemen başlayan tur (`start_feeding_tour`).
+    func startFeedingTour(spotId: UUID, durationMinutes: Int) async throws -> StartTourOutcome
+
+    /// ≤10 km içindeki görünür hayvanseverler (izleyici görünür ve konumlu olmalı).
+    func animalLovers(interest: SocialInterest?) async throws -> [AnimalLover]
+    func sendConnectionRequest(to userId: UUID, note: String?) async throws -> SendRequestOutcome
+    /// Kabulde bire bir sohbetin kimliği; reddedince ya da istek yoksa `nil`.
+    func respondToConnection(requestId: UUID, accept: Bool) async throws -> UUID?
+    func withdrawConnectionRequest(id: UUID) async throws
+    func removeConnection(userId: UUID) async throws
+    func incomingConnectionRequests() async throws -> [ConnectionRequest]
+
+    func conversations() async throws -> [ConversationSummary]
+    /// Eskiden yeniye; `before` ile daha eskiler sayfalanır.
+    func messages(conversationId: UUID, before: Date?, limit: Int) async throws -> [ChatMessage]
+    func sendMessage(conversationId: UUID, body: String) async throws -> SendMessageOutcome
+    func markConversationRead(id: UUID) async throws
 }

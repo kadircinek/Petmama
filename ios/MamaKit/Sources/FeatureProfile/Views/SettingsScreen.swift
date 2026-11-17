@@ -51,7 +51,9 @@ public struct SettingsScreen: View {
             await model.savePreferences()
         }
         .confirmationDialog(String(localized: "Hesabın silinsin mi?"), isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button(String(localized: "Hesabımı kalıcı olarak sil"), role: .destructive) {
+            Button(model.requiresAppleConfirmationToDelete
+                   ? String(localized: "Apple ile onayla ve sil")
+                   : String(localized: "Hesabımı kalıcı olarak sil"), role: .destructive) {
                 Task { await deleteAccount() }
             }
             Button(String(localized: "Vazgeç"), role: .cancel) {}
@@ -188,7 +190,19 @@ public struct SettingsScreen: View {
     // MARK: - Eylemler
 
     private func deleteAccount() async {
-        guard await model.deleteAccount(session: session) else { return }
+        // Apple ile açılan hesapta Apple token'ı iptal edilmeli: önce yeniden Apple onayı (5.1.1(v)).
+        var appleCode: String?
+        if model.requiresAppleConfirmationToDelete {
+            do {
+                appleCode = try await AppleReauthorization.authorizationCode()
+            } catch is CancellationError {
+                return
+            } catch {
+                model.error = .invalidInput(SessionStore.appleConfirmationRequiredMessage)
+                return
+            }
+        }
+        guard await model.deleteAccount(session: session, appleAuthorizationCode: appleCode) else { return }
         router.popToRoot()
         router.showToast(String(localized: "Hesabın silindi. Bugüne kadar koyduğun her kap mama için teşekkürler."), style: .info)
     }

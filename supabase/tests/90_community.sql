@@ -1105,9 +1105,9 @@ begin
   perform tests.eq(n, 2, 'author still sees own auto-hidden comment');
 
   -- moderatör raporları kapatıp yeniden onaylarsa tek yeni rapor tekrar gizlemez; reddedilen geri dönmez
-  perform tests.login(m);
-  update reports set status = 'dismissed', resolved_at = now() where target_id = pid;
+  -- (0027'den beri moderatör raporu doğrudan güncelleyemez; burada SQL Editor / service rolü gibi admin kapatır)
   perform tests.admin();
+  update reports set status = 'dismissed', resolved_at = now() where target_id = pid;
   update community_posts set moderation_state = 'approved' where id = pid;
   update community_comments set moderation_state = 'rejected' where id = cid;
   perform tests.login(r4);

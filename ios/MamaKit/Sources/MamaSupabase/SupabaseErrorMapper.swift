@@ -112,6 +112,8 @@ enum SupabaseErrorMapper {
         // Sözleşmedeki `raise exception` mesajları (supabase/migrations).
         switch lowered {
         case "not_authenticated": return .notSignedIn
+        // Uzaklaştırılmış kullanıcının yazması (0026): detail = bitiş ('infinity' = süresiz).
+        case "suspended": return suspended(detail: error.detail)
         case "rejected_content": return .rejectedContent
         case "invalid_coordinates": return .invalidInput(invalidLocationMessage)
         case "not_found": return .notFound
@@ -142,6 +144,11 @@ enum SupabaseErrorMapper {
         return .server(message)
     }
 
+    static func suspended(detail: String?) -> MamaError {
+        guard let until = suspensionDate(detail) else { return .suspended(until: nil) }
+        return MamaError.suspension(until: until)
+    }
+
     static func isUniqueViolation(_ error: any Error) -> Bool {
         (error as? PostgrestError)?.code == "23505"
     }
@@ -149,6 +156,10 @@ enum SupabaseErrorMapper {
     // MARK: - HTTP / Storage
 
     static func map(status: Int, message: String) -> MamaError {
+        // delete-account: Apple hesabında onay kodu eksik / süresi dolmuş (istemci yeniden Apple onayı alır).
+        if status == 400, message.contains("apple_reauth_required") {
+            return .invalidInput(SessionStore.appleConfirmationRequiredMessage)
+        }
         switch status {
         case 401: return .notSignedIn
         case 403: return .permissionDenied

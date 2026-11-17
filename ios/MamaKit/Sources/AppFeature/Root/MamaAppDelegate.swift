@@ -52,17 +52,10 @@ extension MamaAppDelegate: UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        let userInfo = response.notification.request.content.userInfo
-        // userInfo Sendable değil; yalnızca gereken kimlikleri ana aktöre taşı.
-        let spotId = userInfo["spot_id"] as? String
-        let needId = userInfo["need_id"] as? String
-        let postId = userInfo["post_id"] as? String
+        // userInfo Sendable değil; yalnızca dizgi alanlarını (kimlikler + kind) ana aktöre taşı.
+        let fields = PushPayload.stringFields(from: response.notification.request.content.userInfo)
         await MainActor.run {
-            var payload: [AnyHashable: Any] = [:]
-            if let spotId { payload["spot_id"] = spotId }
-            if let needId { payload["need_id"] = needId }
-            if let postId { payload["post_id"] = postId }
-            self.model.openFromPush(payload)
+            self.model.openFromPush(fields)
         }
     }
 }

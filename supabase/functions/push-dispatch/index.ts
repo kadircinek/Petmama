@@ -10,14 +10,14 @@
 // (push_status = quiet_hours | daily_cap). Günlük limit yalnızca need_food_nearby içindir.
 // Payload: kind, notification_id, spot_id, need_id, post_id (Mahalle bildirimleri → paylaşım açılır).
 //
-// Gerekli sırlar: APNS_KEY_ID, APNS_TEAM_ID, APNS_PRIVATE_KEY (.p8 PEM), APNS_BUNDLE_ID,
-//                 APNS_ENV (sandbox | production), PUSH_DISPATCH_SECRET.
+// Gerekli sırlar: APNS_KEY_ID, APNS_TEAM_ID, APNS_PRIVATE_KEY (.p8 PEM), APNS_BUNDLE_ID, PUSH_DISPATCH_SECRET.
+// APNs ortamı (sandbox | production) token başına `device_tokens.apns_env`'den gelir; APNS_ENV kullanılmaz.
 // Supabase otomatik sağlar: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
 
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import {
   APNS_JWT_TTL_SECONDS,
-  apnsOrigin,
+  apnsJobs,
   buildApnsHeaders,
   buildApnsJwt,
   buildApnsPayload,
@@ -101,9 +101,8 @@ Deno.serve(async (req: Request) => {
     if (!jwt || !bundleId) {
       for (const r of toSend) final.set(r.id, "failed");
     } else {
-      const origin = apnsOrigin(Deno.env.get("APNS_ENV"));
-      const jobs = toSend.flatMap((row) => row.tokens.map((token) => ({ row, token })));
-      const outcomes = await mapLimit(jobs, CONCURRENCY, async ({ row, token }) => {
+      const jobs = toSend.flatMap((row) => apnsJobs(row).map(({ token, origin }) => ({ row, token, origin })));
+      const outcomes = await mapLimit(jobs, CONCURRENCY, async ({ row, token, origin }) => {
         try {
           // Deno fetch, https üzerinde ALPN ile HTTP/2 kullanır (APNs yalnızca HTTP/2 kabul eder)
           const res = await fetch(`${origin}/3/device/${encodeURIComponent(token)}`, {

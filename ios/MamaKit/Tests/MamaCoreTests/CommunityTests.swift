@@ -284,6 +284,7 @@ final class InMemoryCommunityTests: XCTestCase {
 
     func testDeletePermissions() async throws {
         let backend = makeBackend()
+        await backend.setModerator(false, for: DemoData.meId) // demo kullanıcısı moderatör (Faz 3.1)
         let notMine = try await backend.deletePost(id: DemoData.id(6, 2))
         XCTAssertFalse(notMine)
         let notMyComment = try await backend.deleteComment(id: DemoData.id(7, 1))
@@ -372,6 +373,20 @@ final class CommunityRouterTests: XCTestCase {
         let router = AppRouter()
         router.present(.createPost(kind: .coverRequest, spotId: nil), session: session)
         XCTAssertEqual(router.sheet, .signIn)
+    }
+
+    func testStartTourSheetRequiresSignInAndHasStableId() async {
+        let services = AppServices.demo()
+        let session = SessionStore(auth: services.auth, profiles: services.profiles)
+        let router = AppRouter()
+        let spotId = DemoData.id(2, 1)
+        XCTAssertTrue(AppSheet.startTour(spotId: spotId).requiresSignIn)
+        XCTAssertEqual(AppSheet.startTour(spotId: spotId).id, "startTour-\(spotId.uuidString)")
+        XCTAssertEqual(AppSheet.startTour(spotId: nil).id, "startTour-")
+        router.present(.startTour(spotId: spotId), session: session)
+        XCTAssertEqual(router.sheet, .signIn)
+        router.signInFinished(success: true)
+        XCTAssertEqual(router.sheet, .startTour(spotId: spotId))
     }
 }
 

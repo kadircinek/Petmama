@@ -31,6 +31,10 @@ public final class ProfileViewModel {
     public private(set) var stats: ProfileStats = .zero
     public private(set) var hasLoadedStats = false
     public private(set) var unreadNotificationCount = 0
+    /// Sohbetlerdeki okunmamış mesajlar (Tanışma).
+    public private(set) var unreadChatCount = 0
+    /// Moderatörde açık rapor vakası sayısı (Faz 3.1).
+    public private(set) var moderationOpenCount = 0
     public private(set) var isLoading = false
     public var error: MamaError?
 
@@ -46,6 +50,8 @@ public final class ProfileViewModel {
             stats = .zero
             hasLoadedStats = false
             unreadNotificationCount = 0
+            unreadChatCount = 0
+            moderationOpenCount = 0
             error = nil
             return
         }
@@ -66,6 +72,29 @@ public final class ProfileViewModel {
         if let items = try? await services.notifications.notifications() {
             unreadNotificationCount = items.filter { !$0.isRead }.count
         }
+        if let conversations = try? await services.social.conversations() {
+            unreadChatCount = conversations.reduce(0) { $0 + $1.unreadCount }
+        }
+        if session.profile?.isModerator == true {
+            moderationOpenCount = (try? await services.moderator.openCaseCount()) ?? 0
+        } else {
+            moderationOpenCount = 0
+        }
+    }
+
+    // MARK: - Moderasyon (Faz 3.1)
+
+    /// "Moderasyon" satırı yalnızca moderatöre görünür (sunucu her çağrıda yeniden doğrular).
+    public func showsModeration(_ profile: UserProfile?) -> Bool {
+        profile?.isModerator == true
+    }
+
+    public var moderationBadgeText: String? { Self.badgeText(moderationOpenCount) }
+
+    /// Oturumdaki kullanıcı uzaklaştırılmışsa Profil'de gösterilen uyarı.
+    public func suspensionNotice(_ profile: UserProfile?) -> String? {
+        guard let until = profile?.suspendedUntil, until > services.now() else { return nil }
+        return MamaError.suspension(until: until).userMessage
     }
 
     // MARK: - Doğrulanmış besleyici (FR-P4)
@@ -105,8 +134,13 @@ public final class ProfileViewModel {
     }
 
     /// Bildirim satırındaki rozet: 99'dan fazlası "99+".
-    public var unreadBadgeText: String? {
-        guard unreadNotificationCount > 0 else { return nil }
-        return unreadNotificationCount > 99 ? "99+" : "\(unreadNotificationCount)"
+    public var unreadBadgeText: String? { Self.badgeText(unreadNotificationCount) }
+
+    /// "Sohbetler" satırındaki rozet.
+    public var unreadChatBadgeText: String? { Self.badgeText(unreadChatCount) }
+
+    private static func badgeText(_ count: Int) -> String? {
+        guard count > 0 else { return nil }
+        return count > 99 ? "99+" : "\(count)"
     }
 }

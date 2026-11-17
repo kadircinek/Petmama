@@ -1,0 +1,104 @@
+# Mama Haritası — Durum ve Yol Haritası
+
+_Son kontrol: 14 Kasım 2026 · Xcode 26.2 · macOS_
+
+## 1. Bugünkü durum (doğrulandı)
+
+| Kontrol | Sonuç |
+|---|---|
+| `xcodegen generate` + simülatör derlemesi (iPhone 17 Pro) | ✅ BUILD SUCCEEDED, 1 uyarı |
+| Uygulama simülatörde (demo modu) | ✅ Harita, pinler, maskotlar, sekmeler çalışıyor |
+| Swift paket testleri (`swift test`, macOS'ta yerel) | ✅ 414 test, 0 hata |
+| SQL testleri (`supabase/tests/run.sh`, Docker) | ✅ 10 dosya, 592 assertion |
+| iOS ↔ Supabase sözleşmesi | ✅ iOS'un çağırdığı 37 RPC'nin hepsi migration'larda var; repository'lerde boş/placeholder gövde yok |
+
+Kod tabanı sağlam. Eksikler büyük ölçüde **bağlantı (wiring), operasyon ve yayın hazırlığı**.
+
+## 2. Faz 1 — Kod hataları (backend olmadan yapılabilir)
+
+| # | Sorun | Nerede | Öncelik |
+|---|---|---|---|
+| 1.1 ✅ | E-posta onayı / şifre sıfırlama linki uygulamaya dönemiyor: `CFBundleURLTypes` yok, `onOpenURL` yok, `authRedirectURL` hiç verilmiyor | `Info.plist`, `ServiceFactory.swift:30-36`, `AppServices+Supabase.swift:20`, `config.toml:51` | 🔴 Kritik |
+| 1.2 ✅ | Çıkışta cihaz token'ı silinmiyor → eski hesap bildirim almaya devam ediyor, yeni hesap token'ı yeniden açılışa kadar alamıyor | `SessionStore.swift:49-52`, `AppModel.swift:52-56` | 🔴 Kritik |
+| 1.3 ✅ | Çevrimdışı check-in kuyruğu kullanıcıya bağlı değil, çıkışta temizlenmiyor → başka hesap adına gönderilebilir | `CheckIn.swift:73-82`, `OfflineCheckInQueue.swift:41-46` | 🔴 Kritik |
+| 1.4 ✅ | `Secrets.xcconfig` yoksa Release build sessizce demo moduna düşüyor (demo giriş ipucu, `example.org` bağış linki) | `AppConfiguration.swift:31,48`, `ServiceFactory.swift:11-13` | 🔴 Kritik |
+| 1.5 ✅ | Hesap silmede Apple token iptali (revoke) yok — Apple, SIWA hesapları için zorunlu tutuyor | `functions/delete-account/index.ts:64-65` | 🟠 Yüksek |
+| 1.6 ✅ | APNs ortamı backend genelinde tek; TestFlight token'ları production olduğu hâlde README sandbox diyor → token'lar `BadDeviceToken` ile siliniyor. Ortam token ile birlikte saklanmalı | `_shared/push_logic.ts:102-103`, `supabase/README.md:68-69` | 🟠 Yüksek |
+| 1.7 ✅ | Engelleme yalnızca Mahalle içeriğini gizliyor; engellenen kullanıcının nokta/ihtiyaç/hayvanları görünmeye devam ediyor | RPC'ler + ilgili ViewModel'ler | 🟡 Orta |
+| 1.8 | ViewModel toast/hata metinleri yalnızca Türkçe (EN eksik) | `DECISIONS.md:33` | 🟡 Orta |
+
+**1.1–1.4 tamamlandı (14 Kasım 2026):** e-posta bağlantıları (`AuthLink`, `onOpenURL`, "Yeni şifre" ekranı),
+çıkışta token silme ve yeni hesaba yeniden kayıt, kullanıcıya bağlı check-in kuyruğu, Release'de `Secrets.xcconfig`
+zorunluluğu (derleme adımı; bilerek demo için `MAMA_ALLOW_DEMO_RELEASE=YES`).
+
+**1.5–1.7 tamamlandı (14 Kasım 2026):** hesap silmede Apple token iptali (yeniden Apple onayı +
+`delete-account` → appleid.apple.com/auth/revoke), APNs ortamı token başına (`device_tokens.apns_env`), engelleme
+ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar haritada kalır).
+
+**✅ Tanışma (Buluşmalar + Hayvanseverler) tamamlandı (14 Kasım 2026):** Mahalle'de Buluşmalar sekmesi (liste, detay, katıl/ayrıl, buluşma aç, haritada buluşma pinleri ve filtre) ve Profil'de Hayvanseverler (görünürlük + yaklaşık mesafe bantları, ilgi alanları, tanışma isteği gönder/kabul/geri çek, bağlantı kaldır) eklendi. Katılma, buluşma açma ve tanışma için önce 18+ ve KVKK onayı alınıyor; buluşma sohbetleri grup, hayvanseverler arası sohbetler bire bir; mesaj raporlama ve engelleme (engellenen kişi liste ve sohbetten kayboluyor), Sohbetler kutusu ve bildirim yönlendirmesi var. Backend: 7 migration (enum'lar, tablolar, sosyal profil, buluşmalar, bağlantılar, sohbet, push) + SQL testleri (92–95); demo modunda betikli kullanıcı isteği birkaç saniye içinde kabul eder ve mesajlara cevap verir. Simülatörde demo modunda beş senaryo (katılım + grup sohbeti, buluşma açma + harita pini, Hayvanseverler isteği + bire bir sohbet, engelleme, onay kapısı) doğrulandı. Açık madde: Hayvanseverler görünürlük anahtarı simülatörde dokunuşa yanıt vermedi (kaydırma çalıştı) — gerçek cihazda elle kontrol edilecek.
+
+- [x] **Mahalle'de hayvanseverler + anlık mama turu (16 Kasım 2026, D20):** Akış'ın üstünde "Şu an turda" kartları (Katıl / Mesaj at / Sohbete git / Turu bitir) ve "Bugün besledi" / "Turda" rozetli hayvanseverler şeridi (onay ya da görünürlük yoksa davet kartı); "Mama turuna çıkıyorum" (+ Ekle ve nokta detayında "Buradan tura çık"), Buluşmalar'da ve haritada tur rozeti/pini. Backend: `20261116000025_feeding_tours.sql` + `supabase/tests/96_tours.sql`.
+
+## 3. Faz 2 — Gerçek backend kurulumu (hesap/erişim gerekiyor)
+
+- [ ] Supabase projesi (Frankfurt) oluştur, `supabase db push` ile migration'ları uygula
+- [ ] Vault: `push_dispatch_url`, `push_dispatch_secret`; konum bulanıklaştırma tuzu (fuzz salt)
+- [ ] Apple: APNs anahtarı (.p8), Sign in with Apple servis kimliği → Supabase Auth provider
+- [ ] Edge function secret'ları: APNs (`APNS_*`), Apple token iptali (`APPLE_TEAM_ID`, `APPLE_CLIENT_ID`, `APPLE_SIWA_KEY_ID`, `APPLE_SIWA_PRIVATE_KEY`)
+- [ ] `ios/App/Config/Secrets.xcconfig` (URL + publishable key) ve gerçek cihazda uçtan uca test
+- [ ] Realtime (`conversation:<id>` yayını ve `realtime.messages` politikası) ve Apple/APNs ile gerçek projede doğrulanacak.
+
+## 4. Faz 3 — Eksik özellikler
+
+| # | Özellik | Not |
+|---|---|---|
+| 3.1 ✅ | Moderasyon paneli (rapor kuyruğu, gizle/ban) | Tamamlandı (17 Kasım 2026, D21): Profil › Moderasyon, `moderation_*` RPC'leri, uzaklaştırma yazmayı engeller |
+| 3.2 | Görsel moderasyon edge function'ı | D11'de kanca bırakıldı ama fonksiyon yok; `photos` bucket'ı public |
+| 3.3 | `donation_stats` beslemesi + `donation_delivered` bildirimi | Hiçbir şey yazmıyor; "Bağışım nereye gitti?" boş kalıyor |
+| 3.4 | Realtime (harita 60 sn'de bir yokluyor) | v1.1 adayı |
+| 3.5 | USD/TRY kuru sabit config | Edge function ya da günlük cron ile güncelle |
+| 3.6 | Rozetler, bağış izi ekranı ("yakında" yer tutucuları) | `ProfileTabScreen.swift:122`, `DonationTraceViewModel.swift:11` |
+
+### Tanışma — takip edilecekler (son incelemeden ertelenenler)
+
+- Gerçek cihazda elle kontrol: Hayvanseverler görünürlük anahtarı (simülatörde dokunuşa yanıt vermedi), Apple ile hesap silme onayı, Realtime sohbet.
+- Konum hücresi istemciden serbestçe değiştirilebiliyor: birinin bandını farklı noktalardan sorgulamayı zorlaştırmak için hücre değişikliğine hız sınırı (ör. saatte bir) düşünülmeli. Hassasiyet tabanı (~1 km) korunuyor.
+- Açık sohbet her yenilemede `my_conversations` çağırıyor (200 satır sınırı; çok eski sohbet yanlışlıkla gizli sayılabilir) → tek sohbet özeti RPC'si.
+- Realtime kopunca sohbet kalıcı olarak 5 sn yenilemeye geçiyor; yeniden abone olma yok.
+- Harita her kamera hareketinde buluşmaları yeniden istiyor; debounce/merkez kontrolü.
+- Bağlantı kaldırılıp yeniden kabul edilince eski sohbet geçmişi geri geliyor (spec'e uygun); arayüzde belirtilebilir.
+- Noktadan açılan buluşmada "evine çok yakın" uyarısı yanıltıcı olabilir; sohbet yığını tekrar tekrar büyüyebilir; bazı ekranlar her sheet kapanışında yeniden yükleniyor.
+- Moderasyonda kaldırılan fotoğraflar (nokta/check-in/paylaşım) yalnızca URL'den ayrılır; dosya public `photos` bucket'ında, adresi bilen için nesne silinene dek okunabilir kalır. Kaldırmada depolama nesnesini de sil (service role gerekir: edge function ya da cron).
+- ~~Moderatörün bekleyen sohbet mesajlarını inceleyebileceği bir yol yok~~ → Faz 3.1 ile çözüldü (yalnızca raporlanan mesaj görünür).
+
+## 5. Faz 4 — Yayın hazırlığı
+
+- [ ] `DEVELOPMENT_TEAM` (`project.yml:17`), sürüm 0.1.0 → 1.0.0
+- [ ] Kalıcı uygulama ikonu ve marka adı
+- [ ] Gizlilik politikası / kullanım koşulları / KVKK URL'leri (`Base.xcconfig:11-13` boş) — App Store Connect zorunlu
+- [ ] Ortak dernek seçimi + bağış URL'si (Guideline 3.2.1(vi): harici bağış yalnızca kayıtlı dernek için)
+- [ ] Hukuk görüşü: 2860 sayılı Kanun, KVKK (yurt dışı sunucu)
+- [ ] CI'a imzalı archive/TestFlight adımı (şu an yalnızca imzasız simülatör derlemesi)
+- [ ] Ekran görüntüleri, review notları, demo hesabı
+
+## 6. Önerilen sıra
+
+1. **Faz 1.1–1.4** (kritik hatalar, testleriyle birlikte) → tek PR
+2. **Faz 1.5–1.7** → ikinci PR
+3. **Faz 2** backend kurulumu (Supabase MCP bağlı; proje oluşturma senin onayınla)
+4. **Faz 3.1–3.3** → TestFlight öncesi gerekli
+5. **Faz 4** + TestFlight
+
+## 7. Geliştirme ortamı (bu Mac için notlar)
+
+```bash
+cd ios && xcodegen generate && open MamaHaritasi.xcodeproj   # uygulama
+cd ios/MamaKit && swift test                                  # 414 Swift testi (~1 dk, Docker gerekmez)
+colima start                                                  # Docker çalışma zamanı
+PATH="/opt/homebrew/opt/libpq/bin:$PATH" MAMA_TEST_MODE=docker bash supabase/tests/run.sh   # SQL testleri
+```
+
+- `psql` için `brew install libpq` kuruldu (keg-only; yukarıdaki PATH ile kullanılır).
+- `~/.docker/config.json` içindeki `"credsStore": "desktop"` satırı eski Docker Desktop'tan kalma; Colima ile imaj çekmeyi
+  bozuyor. Silinirse SQL testleri ek ayar olmadan çalışır.
+- Simülatörde konum: `xcrun simctl location booted set 40.9877,29.0252` (Moda). Harita karoları ilk açılışta birkaç saniye gecikebilir.

@@ -35,6 +35,27 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(model.stats, .zero)
         XCTAssertEqual(model.unreadNotificationCount, 0)
         XCTAssertNil(model.unreadBadgeText)
+        XCTAssertEqual(model.unreadChatCount, 0)
+        XCTAssertNil(model.unreadChatBadgeText)
+    }
+
+    func testUnreadChatBadgeSumsConversations() async throws {
+        let env = try await makeSocialEnvironment()
+        let backend = env.backend
+        guard case .joined = try await backend.joinMeetup(id: DemoData.id(8, 1)) else { return XCTFail("katılım") }
+        try await backend.markConversationRead(id: DemoData.id(9, 1))
+        env.clock.advance(60)
+        await backend.setCurrentUser(DemoData.ayseId)
+        _ = try await backend.sendMessage(conversationId: DemoData.id(9, 1), body: "Yarın görüşürüz.")
+        _ = try await backend.sendMessage(conversationId: DemoData.id(9, 1), body: "Mamaları ben getiriyorum.")
+        await backend.setCurrentUser(DemoData.meId)
+        let session = SessionStore(auth: env.services.auth, profiles: env.services.profiles)
+        await session.restore()
+
+        let model = ProfileViewModel(services: env.services)
+        await model.load(session: session)
+        XCTAssertEqual(model.unreadChatCount, 2)
+        XCTAssertEqual(model.unreadChatBadgeText, "2")
     }
 
     func testNewFeederSeesFullVerificationProgress() async throws {

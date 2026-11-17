@@ -32,14 +32,17 @@ final class CoreLocationDriver: NSObject, LocationDriver {
         }
     }
 
+    /// Takip açıkken en güncel konum `manager.location`'dadır: hareketsiz kullanıcıya (distanceFilter) yeni
+    /// güncelleme gelmez ve iOS takip sürerken `requestLocation`'ı yanıtlamayabilir. Bu yüzden bilinen son konum
+    /// kullanılır; hiç konum yoksa takip başlatılıp ilk güncelleme beklenir (`LocationStore` zaman aşımı uygular).
     func currentLocation() async -> Coordinate? {
         guard authorization == .authorized else { return nil }
-        if let location = manager.location, abs(location.timestamp.timeIntervalSinceNow) < 15 {
+        manager.startUpdatingLocation()
+        if let location = manager.location {
             return Coordinate(location.coordinate)
         }
         return await withCheckedContinuation { continuation in
             locationWaiters.append(continuation)
-            if locationWaiters.count == 1 { manager.requestLocation() }
         }
     }
 

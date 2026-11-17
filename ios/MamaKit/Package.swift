@@ -9,6 +9,8 @@ import PackageDescription
 //   MamaSupabase    → Repository protokollerinin Supabase implementasyonu.
 //   MamaPersistence → SwiftData çevrimdışı önbellek + check-in kuyruğu.
 //   FeatureCommunity → Mahalle: besleyicilerin akışı, yorumlar, "Yerime bakar mısın?" (D17).
+//   FeatureSocial   → Tanışma: buluşmalar, Hayvanseverler, sohbet.
+//   FeatureModeration → Moderatör ekranı: rapor kuyruğu, kararlar, uzaklaştırma (Faz 3.1).
 //   Feature*        → Ekranlar + ViewModel'ler. ViewModel'ler Linux'ta derlenir;
 //                     SwiftUI dosyaları `#if canImport(SwiftUI)` ile sarılıdır.
 //   AppFeature      → Kompozisyon kökü: tab bar, rota çözümleme, servis kurulumu.
@@ -48,13 +50,16 @@ let package = Package(
         .target(name: "FeatureDonate", dependencies: ["MamaCore", "MamaDesign"]),
         .target(name: "FeatureProfile", dependencies: ["MamaCore", "MamaDesign"]),
         .target(name: "FeatureCommunity", dependencies: ["MamaCore", "MamaDesign"]),
+        .target(name: "FeatureSocial", dependencies: ["MamaCore", "MamaDesign"]),
+        .target(name: "FeatureModeration", dependencies: ["MamaCore", "MamaDesign"]),
 
         .target(
             name: "AppFeature",
             dependencies: [
                 "MamaCore", "MamaDesign", "MamaSupabase", "MamaPersistence",
                 "FeatureOnboarding", "FeatureMap", "FeatureSpots", "FeatureAnimals",
-                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity",
+                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity", "FeatureSocial",
+                "FeatureModeration",
             ]
         ),
 
@@ -68,7 +73,8 @@ let package = Package(
             name: "FeatureTests",
             dependencies: [
                 "MamaCore", "FeatureOnboarding", "FeatureMap", "FeatureSpots", "FeatureAnimals",
-                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity",
+                "FeatureNeeds", "FeatureDonate", "FeatureProfile", "FeatureCommunity", "FeatureSocial",
+                "FeatureModeration",
             ]
         ),
     ]

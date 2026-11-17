@@ -16,6 +16,15 @@ public enum AppRoute: Hashable, Sendable {
     case feedingGuide
     case vetHelp(needId: UUID?)
     case privacy
+    // Tanışma
+    case meetup(UUID)
+    case conversation(UUID)
+    case conversations
+    case animalLovers
+    case connectionRequests
+    // Moderasyon (yalnızca moderatör; Faz 3.1)
+    case moderation
+    case moderationCase(target: ReportTarget, id: UUID)
 }
 
 /// Modallar (sheet). Birden fazla feature'dan açılabilenler burada.
@@ -35,6 +44,12 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
     /// Mahalleye yaz. `kind` verilirse o türle, `spotId` verilirse o noktaya bağlı açılır
     /// (ör. nokta detayından "Yerime bakar mısın?").
     case createPost(kind: CommunityPostKind?, spotId: UUID?)
+    /// Buluşma oluştur; `spotId` verilirse o noktada.
+    case createMeetup(spotId: UUID?)
+    /// Tanışma için tek seferlik 18+ ve koşullar onayı.
+    case socialConsent
+    /// "Mama turuna çıkıyorum" (nokta detayından açılınca nokta seçili gelir).
+    case startTour(spotId: UUID?)
 
     public var id: String {
         switch self {
@@ -48,6 +63,9 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
         case .signIn: return "signIn"
         case .editProfile: return "editProfile"
         case .createPost(let kind, let spotId): return "createPost-\(kind?.rawValue ?? "")-\(spotId?.uuidString ?? "")"
+        case .createMeetup(let spotId): return "createMeetup-\(spotId?.uuidString ?? "")"
+        case .socialConsent: return "socialConsent"
+        case .startTour(let spotId): return "startTour-\(spotId?.uuidString ?? "")"
         }
     }
 
@@ -55,7 +73,8 @@ public enum AppSheet: Identifiable, Hashable, Sendable {
     public var requiresSignIn: Bool {
         switch self {
         case .addMenu, .signIn: return false
-        case .addSpot, .checkIn, .quickFeed, .createNeed, .createAnimal, .report, .editProfile, .createPost: return true
+        case .addSpot, .checkIn, .quickFeed, .createNeed, .createAnimal, .report, .editProfile, .createPost,
+             .createMeetup, .socialConsent, .startTour: return true
         }
     }
 }
@@ -70,6 +89,8 @@ public enum AppTab: String, Hashable, CaseIterable, Sendable {
 public enum CommunitySection: String, Hashable, CaseIterable, Sendable {
     /// Besleyicilerin paylaşımları.
     case feed
+    /// Yakındaki buluşmalar (Tanışma).
+    case meetups
     /// Açık ihtiyaçlar (veteriner, kısırlaştırma…).
     case needs
 }

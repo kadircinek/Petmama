@@ -193,4 +193,10 @@ final class ErrorMappingTests: XCTestCase {
         XCTAssertEqual(mapped(StorageError(statusCode: "403", message: "new row violates row-level security policy", error: "Unauthorized")), .permissionDenied)
         XCTAssertEqual(mapped(StorageError(statusCode: "413", message: "Payload too large")), .invalidInput(SupabaseErrorMapper.photoTooLargeMessage))
     }
+
+    func testDeleteAccountAppleReauthErrorMapsToFriendlyMessage() {
+        let data = Data(#"{"error":"apple_reauth_required"}"#.utf8)
+        XCTAssertEqual(SupabaseErrorMapper.mamaError(FunctionsError.httpError(code: 400, data: data)),
+                       .invalidInput(SessionStore.appleConfirmationRequiredMessage))
+    }
 }

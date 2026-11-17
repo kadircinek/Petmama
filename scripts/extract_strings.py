@@ -11,6 +11,8 @@ Neden: Metinler Swift Package modüllerinde ama `Bundle.main` üzerinden çözü
 İngilizce çeviriler `scripts/l10n/en.json` içinde (anahtar → çeviri) tutulur; betik bunları kataloğa yazar.
 Var olan katalogdaki elle girilmiş çeviriler korunur.
 """
+from __future__ import annotations
+
 import json
 import re
 import sys

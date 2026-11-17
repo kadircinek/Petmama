@@ -16,6 +16,16 @@ public struct DemoSeed: Sendable {
     public var comments: [CommunityComment]
     public var paws: [(postId: UUID, userIds: [UUID])]
     public var volunteers: [(postId: UUID, userIds: [UUID])]
+    /// Tanışma: görünür, onaylı sosyal profiller ve kaba konumlarının kaynağı (`home` yuvarlanarak saklanır).
+    /// Bu kullanıcılar demoda senaryolu davranır (isteği kabul eder, bire bir sohbette cevap yazar).
+    public var socialProfiles: [(userId: UUID, about: String, interests: [SocialInterest], home: Coordinate)] = []
+    /// Buluşma (türetilmiş alanlar okumada hesaplanır), katılımcılar (düzenleyen dahil) ve sohbeti.
+    public var meetups: [(meetup: Meetup, participantIds: [UUID], conversationId: UUID)] = []
+    public var chatMessages: [(conversationId: UUID, message: ChatMessage)] = []
+    /// Bekleyen bağlantı istekleri.
+    public var connectionRequests: [(id: UUID, from: UUID, to: UUID, note: String, createdAt: Date)] = []
+    /// Moderasyon kuyruğu boş görünmesin diye açık raporlar (demo kullanıcısı moderatördür).
+    public var reports: [(reporterId: UUID, draft: ReportDraft, createdAt: Date)] = []
     /// Demo modunda "giriş yap" ile oturum açılan kullanıcı.
     public var demoUserId: UUID
 }
@@ -30,6 +40,17 @@ public enum DemoData {
     public static let emreId = id(1, 2)
     public static let zeynepId = id(1, 3)
     public static let meId = id(1, 9)
+    /// Ayşe'nin şu an açık mama turu (Moda Sahili bankları; başlangıç `now − 20 dk`, 90 dk).
+    public static let ayseTourId = id(8, 3)
+    /// Moderasyon demosunda iki kez raporlanmış paylaşım (Zeynep'in mama paylaşımı).
+    public static let moderationPostId = id(6, 4)
+
+    /// Demo bire bir sohbetinde karşı tarafın sırayla verdiği hazır cevaplar (`InMemoryBackend.demoResponseDelay` sonra).
+    public static let cannedReplies: [String] = [
+        "Selam! Bu hafta Moda Parkı tarafındaki kaplara ben bakıyorum, istersen beraber dolduralım.",
+        "Güzel fikir. Kısırlaştırma randevusu için belediyeyi arayıp sana haber veririm.",
+        "Teşekkürler! Elimde fazladan mama var, ihtiyacı olan bir nokta varsa yaz.",
+    ]
 
     public static func make(now: Date = Date()) -> DemoSeed {
         func ago(hours: Double) -> Date { now.addingTimeInterval(-hours * 3600) }
@@ -38,7 +59,8 @@ public enum DemoData {
             UserProfile(id: ayseId, displayName: "Ayşe", neighborhood: "Moda", trustScore: 64, isVerifiedFeeder: true, createdAt: ago(hours: 24 * 120)),
             UserProfile(id: emreId, displayName: "Emre", neighborhood: "Caferağa", trustScore: 18, createdAt: ago(hours: 24 * 40)),
             UserProfile(id: zeynepId, displayName: "Zeynep", neighborhood: "Moda", trustScore: 12, createdAt: ago(hours: 24 * 10)),
-            UserProfile(id: meId, displayName: "Sen", neighborhood: "Moda", trustScore: 10, createdAt: ago(hours: 24 * 3)),
+            // Demo kullanıcısı moderatördür: Profil → Moderasyon ekranı Supabase'siz denenebilsin (Faz 3.1).
+            UserProfile(id: meId, displayName: "Sen", neighborhood: "Moda", trustScore: 10, isModerator: true, createdAt: ago(hours: 24 * 3)),
         ]
 
         // (başlık, enlem, boylam, tip, tür, son beslenme saat önce, açık talep, acil, görünürlük, not)
@@ -222,6 +244,72 @@ public enum DemoData {
 
         let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
 
+        // Tanışma. Kimlikler: buluşma id(8, n), sohbet id(9, n), mesaj id(10, n), bağlantı isteği id(11, n).
+        // Moda'ya uzaklık 400 m / 2 km / 6 km → bantlar under_1km / 1_3km / 3_10km (Moda'daki izleyiciye).
+        let socialProfiles: [(userId: UUID, about: String, interests: [SocialInterest], home: Coordinate)] = [
+            (ayseId, "Moda Parkı ve sahildeki kedilere yıllardır bakıyorum. Kısırlaştırma randevularında yardımcı olabilirim.",
+             [.cats, .neutering, .fostering], GeoMath.offset(moda, north: 0, east: 400)),
+            (emreId, "Caferağa'daki köpeklerle ilgileniyorum. Arabam var, veteriner taşımasına yardım ederim.",
+             [.dogs, .vetTransport, .foodDonation], GeoMath.offset(moda, north: 2000, east: 0)),
+            (zeynepId, "Kuşlar ve kediler için su kabı noktaları kuruyorum, sahiplendirme fotoğrafları da çekerim.",
+             [.birds, .photography, .cats], GeoMath.offset(moda, north: 6000, east: 0)),
+        ]
+        func at(_ dayOffset: Int, hour: Int) -> Date { day(dayOffset).addingTimeInterval(TimeInterval(hour) * 3600) }
+        let parkTour = Meetup(
+            id: id(8, 1), title: "Moda Parkı mama turu",
+            description: "Parktaki kapları dolduruyor, su kaplarını yeniliyoruz. Kısırlaştırılmamış kedileri de not alacağız.",
+            startsAt: at(1, hour: 10), endsAt: at(1, hour: 12), placeName: "Moda Parkı girişi",
+            coordinate: Coordinate(latitude: 40.98455, longitude: 29.02560), spotId: id(2, 1), capacity: 8,
+            organizerId: ayseId, organizerName: "Ayşe", organizerIsVerified: true, createdAt: ago(hours: 30))
+        let shelterWorkshop = Meetup(
+            id: id(8, 2), title: "Kış kulübesi yapım atölyesi",
+            description: "Strafor ve bantla köpekler için kışlık kulübe yapacağız. Malzeme getirebilen haber versin.",
+            startsAt: at(4, hour: 14), endsAt: at(4, hour: 17), placeName: "Caferağa Spor Salonu yanı",
+            coordinate: Coordinate(latitude: 40.98640, longitude: 29.02720), spotId: id(2, 5),
+            organizerId: emreId, organizerName: "Emre", createdAt: ago(hours: 30))
+        // Anlık mama turu (spec 2026-11-16): Ayşe şu an Moda Sahili'nde; Zeynep katıldı. Emre bugün mama koydu
+        // (yukarıdaki check-in'ler, "Kilise bahçesi önü" 30 dk önce): şeritte "Bugün besledi".
+        let beach = Coordinate(latitude: 40.98290, longitude: 29.02480)
+        let tourStart = now.addingTimeInterval(-20 * 60)
+        let ayseTour = Meetup(
+            id: ayseTourId, title: SocialPolicy.tourTitle(spotTitle: "Moda Sahili bankları"),
+            startsAt: tourStart, endsAt: tourStart.addingTimeInterval(TimeInterval(SocialPolicy.defaultTourDuration) * 60),
+            placeName: "Moda Sahili bankları", coordinate: beach, spotId: id(2, 2),
+            organizerId: ayseId, organizerName: "Ayşe", organizerIsVerified: true, createdAt: tourStart, isTour: true)
+        let meetups: [(meetup: Meetup, participantIds: [UUID], conversationId: UUID)] = [
+            (parkTour, [ayseId, emreId, zeynepId], id(9, 1)),
+            (shelterWorkshop, [emreId], id(9, 2)),
+            (ayseTour, [ayseId, zeynepId], id(9, 3)),
+        ]
+        let chatMessages: [(conversationId: UUID, message: ChatMessage)] = [
+            (id(9, 1), ChatMessage(id: id(10, 1), authorId: ayseId, authorName: "Ayşe",
+                                   body: "Herkese merhaba! Mamaları ben getiriyorum, su kaplarını yenileyecek biri olursa harika olur.",
+                                   createdAt: ago(hours: 5))),
+            (id(9, 1), ChatMessage(id: id(10, 2), authorId: emreId, authorName: "Emre",
+                                   body: "Ben iki yeni su kabı alırım.", createdAt: ago(hours: 4))),
+            (id(9, 1), ChatMessage(id: id(10, 3), authorId: zeynepId, authorName: "Zeynep",
+                                   body: "Ben de kısırlaştırılmamış kedilerin listesini getiririm.", createdAt: ago(hours: 1))),
+            (id(9, 3), ChatMessage(id: id(10, 4), authorId: ayseId, authorName: "Ayşe",
+                                   body: "Sahildeki kaplara geldim, su da getirdim. Yolu düşen uğrasın!",
+                                   createdAt: now.addingTimeInterval(-15 * 60))),
+            (id(9, 3), ChatMessage(id: id(10, 5), authorId: zeynepId, authorName: "Zeynep",
+                                   body: "10 dakikaya oradayım, kuru mama getiriyorum.",
+                                   createdAt: now.addingTimeInterval(-10 * 60))),
+        ]
+        let connectionRequests: [(id: UUID, from: UUID, to: UUID, note: String, createdAt: Date)] = [
+            (id(11, 1), zeynepId, meId, "Moda Parkı'ndaki kedilerin kısırlaştırma takibini beraber yapalım mı?", ago(hours: 2)),
+        ]
+
+        // Moderasyon: üç açık vaka (paylaşım 2 rapor, sohbet mesajı, kullanıcı)
+        let reports: [(reporterId: UUID, draft: ReportDraft, createdAt: Date)] = [
+            (ayseId, ReportDraft(target: .post, targetId: moderationPostId, reason: .spam,
+                                 details: "Aynı ilanı her gün paylaşıyor."), ago(hours: 6)),
+            (emreId, ReportDraft(target: .post, targetId: moderationPostId, reason: .inappropriate), ago(hours: 4)),
+            (emreId, ReportDraft(target: .chatMessage, targetId: id(10, 3), reason: .harassment,
+                                 details: "Grup sohbetinde kaba davrandı."), ago(hours: 3)),
+            (zeynepId, ReportDraft(target: .user, targetId: emreId, reason: .harassment), ago(hours: 2)),
+        ]
+
         return DemoSeed(
             users: users,
             spots: spots,
@@ -235,6 +323,11 @@ public enum DemoData {
             comments: comments,
             paws: paws,
             volunteers: volunteers,
+            socialProfiles: socialProfiles,
+            meetups: meetups,
+            chatMessages: chatMessages,
+            connectionRequests: connectionRequests,
+            reports: reports,
             demoUserId: meId
         )
     }

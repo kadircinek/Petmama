@@ -19,6 +19,7 @@ public final class SettingsViewModel {
     public private(set) var isLoading = false
     public private(set) var isSaving = false
     public private(set) var isDeletingAccount = false
+    public private(set) var requiresAppleConfirmationToDelete = false
     public var error: MamaError?
 
     @ObservationIgnored private let services: AppServices
@@ -52,6 +53,7 @@ public final class SettingsViewModel {
             preferences = loaded
             savedPreferences = loaded
             blockedUsers = try await loadBlockedUsers()
+            requiresAppleConfirmationToDelete = await services.auth.usesAppleSignIn()
             error = nil
         } catch {
             self.error = MamaError.classify(error)
@@ -92,11 +94,11 @@ public final class SettingsViewModel {
 
     /// Hesabı siler (FR-P3). Başarılıysa oturum kapanır; topluluk verisi anonim kalır (PRD 9.5).
     @discardableResult
-    public func deleteAccount(session: SessionStore) async -> Bool {
+    public func deleteAccount(session: SessionStore, appleAuthorizationCode: String? = nil) async -> Bool {
         isDeletingAccount = true
         defer { isDeletingAccount = false }
         session.clearError()
-        let deleted = await session.deleteAccount()
+        let deleted = await session.deleteAccount(appleAuthorizationCode: appleAuthorizationCode)
         if deleted {
             reset()
         } else {
@@ -143,6 +145,7 @@ public final class SettingsViewModel {
         preferences = .default
         savedPreferences = nil
         blockedUsers = []
+        requiresAppleConfirmationToDelete = false
         error = nil
     }
 }

@@ -10,6 +10,7 @@ struct SpotMapView: View {
     let model: MapViewModel
     @Binding var position: MapCameraPosition
     let onLongPress: (Coordinate) -> Void
+    let onOpenMeetup: (UUID) -> Void
 
     @State private var longPressHandled = false
     @State private var longPressCount = 0
@@ -28,6 +29,12 @@ struct SpotMapView: View {
                         ) {
                             select(cluster.id)
                         }
+                    }
+                }
+                .annotationTitles(.hidden)
+                ForEach(model.meetups) { meetup in
+                    Annotation(meetup.title, coordinate: meetup.coordinate.clCoordinate, anchor: .center) {
+                        MeetupPinView(meetup: meetup) { onOpenMeetup(meetup.id) }
                     }
                 }
                 .annotationTitles(.hidden)
@@ -79,6 +86,29 @@ struct SpotMapView: View {
         guard let coordinate = proxy.convert(point, from: .local) else { return }
         longPressCount += 1
         onLongPress(Coordinate(coordinate))
+    }
+}
+
+/// Buluşma pini: noktalardan ayrı, kümelenmez; dokununca buluşma ekranını açar.
+private struct MeetupPinView: View {
+    let meetup: Meetup
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: meetup.isTour ? "figure.walk" : "person.3.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(MamaColor.onInk)
+                .frame(width: 36, height: 36)
+                .background(Circle().fill(MamaColor.ink))
+                .overlay(Circle().strokeBorder(MamaColor.mint, lineWidth: 2.5))
+                .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+        }
+        .buttonStyle(.plain)
+        .frame(minWidth: MamaMetrics.minTapSize, minHeight: MamaMetrics.minTapSize)
+        .contentShape(Circle())
+        .accessibilityLabel(Text("Buluşma: \(meetup.title), \(meetup.startsAt.formatted(date: .abbreviated, time: .shortened))"))
+        .accessibilityHint(Text("Buluşma ayrıntısını açar"))
     }
 }
 

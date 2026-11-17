@@ -47,6 +47,22 @@ public struct AddMenuSheet: View {
                     router.present(.createPost(kind: nil, spotId: nil), session: session)
                 }
                 AddMenuRow(
+                    title: String(localized: "Mama turuna çıkıyorum"),
+                    subtitle: String(localized: "Şimdi bir noktadasın: komşular görsün, katılsın, yazsın"),
+                    systemImage: "figure.walk",
+                    tint: MamaColor.tileMint
+                ) {
+                    router.present(.startTour(spotId: nil), session: session)
+                }
+                AddMenuRow(
+                    title: String(localized: "Buluşma aç"),
+                    subtitle: String(localized: "Mama turu, kulübe atölyesi… Komşu besleyicilerle birlikte yapın"),
+                    systemImage: "person.3.fill",
+                    tint: MamaColor.tileBlue
+                ) {
+                    router.present(.createMeetup(spotId: nil), session: session)
+                }
+                AddMenuRow(
                     title: String(localized: "Mama koydum"),
                     subtitle: String(localized: "Yakındaki noktayı otomatik seçeriz"),
                     systemImage: "pawprint.fill",
@@ -67,7 +83,7 @@ public struct AddMenuSheet: View {
                 }
             }
         }
-        .presentationDetents([.fraction(0.66), .large])
+        .presentationDetents([.fraction(0.75), .large])
         .presentationDragIndicator(.visible)
     }
 }

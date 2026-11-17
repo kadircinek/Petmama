@@ -70,6 +70,9 @@ public struct MapTabScreen: View {
             if let newValue, !hasCenteredOnUser { centerOnce(on: newValue) }
             Task { await model.userLocationChanged(newValue) }
         }
+        .onChange(of: session.isSignedIn) { _, _ in
+            Task { await model.loadMeetups() }
+        }
         .onChange(of: model.isOffline) { wasOffline, isOffline in
             guard wasOffline, !isOffline, session.isSignedIn else { return }
             Task { await flushQueue() }
@@ -84,9 +87,11 @@ public struct MapTabScreen: View {
 
     private var mapLayer: some View {
         ZStack {
-            SpotMapView(model: model, position: $position) { coordinate in
+            SpotMapView(model: model, position: $position, onLongPress: { coordinate in
                 router.present(.addSpot(coordinate), session: session)
-            }
+            }, onOpenMeetup: { id in
+                router.open(.meetup(id), in: .community)
+            })
             .ignoresSafeArea(edges: .top)
 
             GeometryReader { proxy in

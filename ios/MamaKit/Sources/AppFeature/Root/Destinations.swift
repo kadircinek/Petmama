@@ -6,9 +6,11 @@ import FeatureAnimals
 import FeatureCommunity
 import FeatureDonate
 import FeatureMap
+import FeatureModeration
 import FeatureNeeds
 import FeatureOnboarding
 import FeatureProfile
+import FeatureSocial
 import FeatureSpots
 
 /// `AppRoute` → ekran. Feature modülleri birbirini tanımaz; eşleme burada yapılır.
@@ -42,6 +44,20 @@ struct RouteDestination: View {
             VetHelpScreen(needId: needId, services: services)
         case .privacy:
             PrivacyScreen(services: services)
+        case .meetup(let id):
+            MeetupDetailScreen(meetupId: id, services: services)
+        case .conversation(let id):
+            ChatScreen(conversationId: id, services: services)
+        case .conversations:
+            ConversationsScreen(services: services)
+        case .animalLovers:
+            AnimalLoversScreen(services: services)
+        case .connectionRequests:
+            ConnectionRequestsScreen(services: services)
+        case .moderation:
+            ModerationQueueScreen(services: services)
+        case .moderationCase(let target, let id):
+            ModerationCaseScreen(target: target, targetId: id, services: services)
         }
     }
 }
@@ -76,6 +92,12 @@ struct SheetDestination: View {
             EditProfileSheet(services: services)
         case .createPost(let kind, let spotId):
             CreatePostSheet(kind: kind, spotId: spotId, services: services)
+        case .createMeetup(let spotId):
+            CreateMeetupSheet(spotId: spotId, services: services)
+        case .socialConsent:
+            SocialConsentSheet(services: services)
+        case .startTour(let spotId):
+            StartTourSheet(spotId: spotId, services: services)
         }
     }
 }
@@ -84,6 +106,8 @@ struct SheetDestination: View {
 struct TabStack<Root: View>: View {
     let tab: AppTab
     let services: AppServices
+    /// Kök ekranın altında `MamaTabBar` için bırakılan boşluk (itilen ekranlarda bar gizlidir).
+    let bottomInset: CGFloat
     @ViewBuilder let root: () -> Root
     @Environment(AppRouter.self) private var router
 
@@ -93,6 +117,9 @@ struct TabStack<Root: View>: View {
             set: { router.setPath($0, for: tab) }
         )) {
             root()
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    Color.clear.frame(height: bottomInset)
+                }
                 .navigationDestination(for: AppRoute.self) { route in
                     RouteDestination(route: route, services: services)
                 }

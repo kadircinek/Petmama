@@ -28,6 +28,9 @@ struct NotificationPreferencesSection: View {
             Toggle(isOn: $model.preferences.communityUpdates) {
                 rowLabel(String(localized: "Mahalle"), detail: String(localized: "Paylaşımına yorum gelince veya biri \"Ben bakarım\" deyince"), icon: "person.2.fill")
             }
+            Toggle(isOn: $model.preferences.socialUpdates) {
+                rowLabel(String(localized: "Buluşmalar ve tanışma"), detail: String(localized: "Buluşmalar, tanışma istekleri ve yeni sohbet mesajları"), icon: "person.3.fill")
+            }
         } header: {
             Text("Bildirimler")
         } footer: {

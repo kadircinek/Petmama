@@ -4,7 +4,7 @@
 //  * Sessiz saat: kullanıcının quiet_start–quiet_end aralığı, Europe/Istanbul saatine göre.
 //    quiet_start == quiet_end → sessiz saat kapalı. Aralık gece yarısını aşabilir (22–7).
 //  * need_food_nearby için İstanbul günü başına en fazla 3 push. Limit YALNIZCA bu tür içindir;
-//    Mahalle bildirimleri (community_comment, cover_volunteered) sessiz saate uyar ama limite takılmaz.
+//    Mahalle ve sosyal (buluşma, bağlantı, sohbet) bildirimleri sessiz saate uyar ama limite takılmaz.
 //  * Uygulanmayan (sessiz saat / limit / token yok) bildirimler ERTELENMEZ; uygulama içinde kalır,
 //    push_status ile işaretlenir.
 
@@ -21,7 +21,13 @@ export type NotificationKind =
   | "thanks_fed"
   | "donation_delivered"
   | "community_comment"
-  | "cover_volunteered";
+  | "cover_volunteered"
+  | "meetup_joined"
+  | "meetup_cancelled"
+  | "meetup_reminder"
+  | "connection_request"
+  | "connection_accepted"
+  | "chat_message";
 
 /** `push_claim_batch` RPC'sinin döndürdüğü satır. */
 export interface PushRow {
@@ -34,11 +40,18 @@ export interface PushRow {
   need_id: string | null;
   /** Mahalle bildirimlerinde (community_comment, cover_volunteered) dolu; uygulama paylaşımı açar. */
   post_id: string | null;
+  /** Buluşma bildirimlerinde (meetup_joined/cancelled/reminder) dolu. */
+  meetup_id: string | null;
+  /** chat_message bildirimlerinde dolu; uygulama sohbeti açar. */
+  conversation_id: string | null;
   created_at: string;
   quiet_start: number;
   quiet_end: number;
   need_food_pushed_today: number;
+  /** production APNs token'ları (TestFlight / App Store). */
   tokens: string[];
+  /** sandbox APNs token'ları (Xcode'dan kurulan Debug derlemeleri). */
+  sandbox_tokens: string[];
 }
 
 export type Decision = "send" | "quiet_hours" | "daily_cap" | "no_token";
@@ -80,7 +93,7 @@ export function decidePushes(rows: PushRow[], now: Date): Map<string, Decision> 
     if (!sentToday.has(row.user_id)) sentToday.set(row.user_id, row.need_food_pushed_today ?? 0);
 
     let decision: Decision;
-    if (!row.tokens || row.tokens.length === 0) {
+    if ((row.tokens?.length ?? 0) + (row.sandbox_tokens?.length ?? 0) === 0) {
       decision = "no_token";
     } else if (isQuietHour(hour, row.quiet_start ?? 22, row.quiet_end ?? 7)) {
       decision = "quiet_hours";
@@ -101,6 +114,14 @@ export function decidePushes(rows: PushRow[], now: Date): Map<string, Decision> 
 
 export function apnsOrigin(env: string | undefined): string {
   return env === "production" ? "https://api.push.apple.com" : "https://api.sandbox.push.apple.com";
+}
+
+/** Her token kendi ortamının APNs adresine gider (token ortamı `device_tokens.apns_env`). */
+export function apnsJobs(row: PushRow): { token: string; origin: string }[] {
+  return [
+    ...(row.tokens ?? []).map((token) => ({ token, origin: apnsOrigin("production") })),
+    ...(row.sandbox_tokens ?? []).map((token) => ({ token, origin: apnsOrigin("sandbox") })),
+  ];
 }
 
 export function base64url(input: Uint8Array | string): string {
@@ -155,14 +176,16 @@ export function buildApnsPayload(row: PushRow): Record<string, unknown> {
     aps: {
       alert: { title: row.title, body: row.body },
       sound: "default",
-      // Bildirim Merkezi'nde gruplama: paylaşım > nokta > tür
-      "thread-id": row.post_id ?? row.spot_id ?? row.kind,
+      // Bildirim Merkezi'nde gruplama: sohbet > paylaşım > nokta > tür
+      "thread-id": row.conversation_id ?? row.post_id ?? row.spot_id ?? row.kind,
     },
     kind: row.kind,
     notification_id: row.id,
     spot_id: row.spot_id,
     need_id: row.need_id,
     post_id: row.post_id ?? null,
+    meetup_id: row.meetup_id ?? null,
+    conversation_id: row.conversation_id ?? null,
   };
 }
 
@@ -182,7 +205,7 @@ export function buildApnsHeaders(
     "content-type": "application/json",
   };
   // aynı paylaşım / nokta için art arda gelen bildirimler kilit ekranında tek bildirimde birleşir (≤ 64 bayt)
-  const subject = row.post_id ?? row.spot_id;
+  const subject = row.conversation_id ?? row.post_id ?? row.meetup_id ?? row.spot_id;
   if (subject) headers["apns-collapse-id"] = `${row.kind}:${subject}`;
   return headers;
 }

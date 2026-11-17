@@ -121,6 +121,13 @@ struct MapFilterSheet: View {
                     .font(MamaFont.caption)
                     .foregroundStyle(MamaColor.textSecondary)
             }
+            Toggle(isOn: $draft.showsMeetups) {
+                Text("Buluşmalar")
+                    .font(MamaFont.headline)
+                    .foregroundStyle(MamaColor.textPrimary)
+            }
+            .tint(MamaColor.statusFed)
+            .padding(.top, 8)
         }
     }
 

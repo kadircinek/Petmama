@@ -13,7 +13,8 @@ private actor StubNotificationRepository: NotificationRepository {
     func markRead(ids: [UUID]) async throws { markedIds.append(contentsOf: ids) }
     func preferences() async throws -> NotificationPreferences { .default }
     func updatePreferences(_ preferences: NotificationPreferences) async throws {}
-    func registerDeviceToken(_ token: String) async throws {}
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {}
+    func unregisterDeviceToken(_ token: String) async throws {}
     func updateNotifyCenter(_ coordinate: Coordinate) async throws {}
 }
 
@@ -120,5 +121,16 @@ final class NotificationsViewModelTests: XCTestCase {
         XCTAssertEqual(NotificationsViewModel.route(for: spotOnly), .spot(spotId))
         XCTAssertEqual(NotificationsViewModel.route(for: donation), .donationTrace)
         XCTAssertNil(NotificationsViewModel.route(for: bare))
+
+        let meetupId = DemoData.id(8, 1)
+        let conversationId = DemoData.id(9, 1)
+        let chat = AppNotification(kind: .chatMessage, title: "", body: "", meetupId: meetupId, conversationId: conversationId)
+        let cancelled = AppNotification(kind: .meetupCancelled, title: "", body: "", spotId: spotId, meetupId: meetupId)
+        XCTAssertEqual(NotificationsViewModel.route(for: chat), .conversation(conversationId))
+        XCTAssertEqual(NotificationsViewModel.route(for: cancelled), .meetup(meetupId))
+        let request = AppNotification(kind: .connectionRequest, title: "", body: "")
+        let accepted = AppNotification(kind: .connectionAccepted, title: "", body: "")
+        XCTAssertEqual(NotificationsViewModel.route(for: request), .connectionRequests)
+        XCTAssertEqual(NotificationsViewModel.route(for: accepted), .conversations)
     }
 }

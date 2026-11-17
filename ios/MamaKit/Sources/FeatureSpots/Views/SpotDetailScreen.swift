@@ -87,6 +87,7 @@ public struct SpotDetailScreen: View {
                         onEdit: { requireSignIn { showsGuardianEditor = true } },
                         onAskCover: { router.present(.createPost(kind: .coverRequest, spotId: spot.id), session: session) }
                     )
+                    meetupButton(spot)
                     FeedingGuideLink()
                 }
                 .padding(.horizontal, 20)
@@ -94,6 +95,34 @@ public struct SpotDetailScreen: View {
             .padding(.bottom, 32)
         }
         .refreshable { await load() }
+    }
+
+    /// Tanışma: bu noktada buluşma aç (D19). Buluşma noktası ve yer adı noktadan dolar.
+    private func meetupButton(_ spot: Spot) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            // Anlık mama turu yalnızca herkese açık noktadan (spec 2026-11-16).
+            if spot.visibility == .public {
+                Button {
+                    router.present(.startTour(spotId: spot.id), session: session)
+                } label: {
+                    Text("Buradan tura çık")
+                }
+                .buttonStyle(.mamaPrimary(systemImage: "figure.walk"))
+                Text("Şu an buradaysan komşular turunu görsün, katılsın ve sana yazsın.")
+                    .font(MamaFont.caption)
+                    .foregroundStyle(MamaColor.textSecondary)
+                    .padding(.bottom, 4)
+            }
+            Button {
+                router.present(.createMeetup(spotId: spot.id), session: session)
+            } label: {
+                Text("Burada buluşma aç")
+            }
+            .buttonStyle(.mamaSecondary(systemImage: "person.3.fill"))
+            Text("Komşu besleyicilerle bu noktada mama turu ya da bakım günü planla.")
+                .font(MamaFont.caption)
+                .foregroundStyle(MamaColor.textSecondary)
+        }
     }
 
     private func checkInButtons(_ spot: Spot) -> some View {

@@ -24,6 +24,8 @@ public final class MapViewModel {
     /// Ana sayfa içeriği ("en yakın nokta", "mama gereken noktalar") için arama yarıçapı.
     public static let nearbyRadiusMeters = 1500
     /// Konum değişince ana sayfa içeriğini yenileme eşiği.
+    /// Buluşma pinleri için görünür bölge merkezinden arama yarıçapı.
+    static let meetupRadiusMeters = 10_000
     static let homeReloadDistance: Double = 75
 
     public var mode: Mode = .map
@@ -34,6 +36,8 @@ public final class MapViewModel {
 
     public internal(set) var regionSpots: [Spot] = []
     public internal(set) var clusters: [SpotCluster] = []
+    /// Haritadaki buluşma pinleri; yalnızca oturum açıkken ve filtre izin veriyorsa dolu.
+    public internal(set) var meetups: [Meetup] = []
     public internal(set) var listSpots: [Spot] = []
     public internal(set) var needs: [Need] = []
     public internal(set) var followedIds: Set<UUID> = []
@@ -57,6 +61,7 @@ public final class MapViewModel {
     @ObservationIgnored private let debounceNanoseconds: UInt64
     @ObservationIgnored private var loadedBounds: GeoBounds?
     @ObservationIgnored private var regionRequest = 0
+    @ObservationIgnored private var meetupRequest = 0
     @ObservationIgnored private var debounceTask: Task<Void, Never>?
     @ObservationIgnored var homeCenter: Coordinate?
 
@@ -128,6 +133,26 @@ public final class MapViewModel {
 
     /// Görünür bölgenin noktalarını yükler. Bağlantı yoksa son görülen noktaları önbellekten gösterir (FR-H8).
     public func loadRegion(force: Bool = false) async {
+        await loadRegionSpots(force: force)
+        await loadMeetups()
+    }
+
+    /// Görünür bölge merkezindeki buluşmaları yükler. Oturum kapalıysa veya filtre kapalıysa boşaltır;
+    /// hata sessizce yok sayılır ve nokta yüklemesini etkilemez.
+    public func loadMeetups() async {
+        meetupRequest += 1
+        let request = meetupRequest
+        guard filter.showsMeetups, let center = visibleBounds?.center,
+              await services.auth.currentUserId() != nil else {
+            meetups = []
+            return
+        }
+        let fetched = (try? await services.social.meetups(near: center, radiusMeters: Self.meetupRadiusMeters)) ?? []
+        guard request == meetupRequest else { return }
+        meetups = fetched
+    }
+
+    private func loadRegionSpots(force: Bool) async {
         guard let bounds = visibleBounds else { return }
         if !force, !isOffline, let loadedBounds, loadedBounds.contains(bounds) { return }
         let query = bounds.expanded(by: Self.queryExpansion)

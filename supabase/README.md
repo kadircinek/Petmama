@@ -43,8 +43,9 @@ tests/                      SQL testleri + run.sh
 2. **Auth** (Dashboard → Authentication → Providers):
    - Email: açık, e-posta doğrulaması açık.
    - Apple: açık. *Client IDs* = `app.petmama.mamaharitasi` (yerel iOS girişi; web akışı yoksa secret gerekmez).
-   - Site URL: şifre sıfırlama/e-posta doğrulama bağlantılarının açılacağı web sayfası. iOS uygulaması henüz
-     deep link işlemiyor; eklenince `mamaharitasi://auth-callback` Redirect URL'lere eklenmeli.
+   - Site URL: `mamaharitasi://auth-callback`. Redirect URL'lere `mamaharitasi://auth-callback` ve
+     `mamaharitasi://auth-callback**` ekleyin (şifre sıfırlama bağlantısı `?flow=recovery` ile döner). Uygulama
+     bağlantıyı `onOpenURL` ile alır (`AuthLink`); sıfırlamada "Yeni şifre" ekranını açar.
 
 3. **Bulanıklaştırma tuzu** (PRD 9.1): migration rastgele 32 baytlık tuz üretir (`private.app_settings`,
    anahtar `fuzz_salt`). Elle belirlemek için **yayından önce** SQL Editor'de:
@@ -59,14 +60,20 @@ tests/                      SQL testleri + run.sh
    ```sh
    supabase secrets set \
      APNS_KEY_ID=XXXXXXXXXX APNS_TEAM_ID=YYYYYYYYYY \
-     APNS_BUNDLE_ID=app.petmama.mamaharitasi APNS_ENV=production \
+     APNS_BUNDLE_ID=app.petmama.mamaharitasi \
      APNS_PRIVATE_KEY="$(cat AuthKey_XXXXXXXXXX.p8)" \
+     APPLE_TEAM_ID=YYYYYYYYYY APPLE_CLIENT_ID=app.petmama.mamaharitasi \
+     APPLE_SIWA_KEY_ID=ZZZZZZZZZZ APPLE_SIWA_PRIVATE_KEY="$(cat AuthKey_ZZZZZZZZZZ.p8)" \
      PUSH_DISPATCH_SECRET="$(openssl rand -hex 32)"
    supabase functions deploy push-dispatch --no-verify-jwt
    supabase functions deploy delete-account
    ```
-   `SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` Supabase tarafından otomatik verilir. TestFlight/geliştirme
-   derlemeleri sandbox token üretir: o ortamda `APNS_ENV=sandbox`.
+   `SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` Supabase tarafından otomatik verilir. APNs ortamı token başına
+   saklanır (`device_tokens.apns_env`): Xcode'dan kurulan Debug derlemeleri `sandbox`, TestFlight ve App Store
+   `production` token'ı kaydeder; push-dispatch her token'ı kendi ortamına gönderir. `APNS_ENV` sırrı gerekmez.
+   Aynı .p8 anahtarı iki ortamda da çalışır. `APPLE_SIWA_*`: "Sign in with Apple" yetkili anahtar (Apple Developer →
+   Keys); `delete-account` hesap silinirken Apple token'ını iptal eder. Eksikse silme yapılır ama iptal atlanır
+   (loglanır) — App Store incelemesinden önce mutlaka ayarlayın.
 
 5. **Cron → push-dispatch bağlantısı**: URL ve paylaşılan sır veritabanında saklanır (koda gömülmez).
    Vault (önerilen):
@@ -78,7 +85,8 @@ tests/                      SQL testleri + run.sh
    İkisi de yoksa `push-dispatch` cron işi hiçbir şey yapmaz. Kuyruk boşken edge function çağrılmaz.
    Kontrol: `select * from cron.job;` ve `select * from net._http_response order by created desc limit 5;`
 
-6. **Moderatör**: `update public.profiles set is_moderator = true where id = '<uuid>';` (SQL Editor).
+6. **Moderatör**: `update public.profiles set is_moderator = true where id = '<uuid>';` (SQL Editor). Moderatör
+   raporları uygulamada Profil › **Moderasyon**'dan inceler (D21); geri almak için `is_moderator = false`.
 
 ## Davranış notları
 
@@ -92,16 +100,20 @@ tests/                      SQL testleri + run.sh
 - **Hata eşlemesi**: iş kuralları jsonb `status` döner. Exception mesajları: `not_authenticated` (42501),
   `invalid_coordinates` / `invalid_parameter` / `invalid_title` / `invalid_kind` (22023),
   `not_found` (P0002, detail = spot/need/animal/post/comment),
-  `rejected_content` (P0001, hint = profanity; `create_need`, profil adı, hayvan metinleri).
+  `rejected_content` (P0001, hint = profanity; `create_need`, profil adı, hayvan metinleri),
+  `suspended` (P0001, hint = suspended, detail = bitiş ISO 8601 / `infinity`; uzaklaştırılmış kullanıcının yazmaları).
 - **Mahalle** (D17): dört tablo da yalnızca RPC ile okunur/yazılır ve RPC'lerin hiçbiri anon'a açık değildir.
   Paylaşımın yalnızca kaba konumu (`cell`, 2 ondalık ≈ 1,1 km) saklanır; bulanık/özel noktaya bağlı paylaşımda
   `cell` gösterilen (bulanık) konumdan türetilir. `pending` içerik (güven puanı < 5 ya da 3 farklı kullanıcının
-  **açık** raporu) yalnızca yazarına ve moderatöre görünür. Moderatör incelemesi (SQL Editor):
-  ```sql
-  update public.reports set status = 'dismissed', resolved_at = now() where target_type = 'post' and target_id = '<uuid>';
-  update public.community_posts set moderation_state = 'approved' where id = '<uuid>';   -- ya da 'rejected'
-  ```
-  Raporlar kapatılmadan yeniden onaylanan içerik bir sonraki raporda tekrar gizlenir.
+  **açık** raporu) yalnızca yazarına ve moderatöre görünür.
+- **Moderasyon** (D21, `docs/backend-contract.md` → Moderasyon): inceleme için SQL Editor artık gerekmez. Moderatör
+  uygulamada Profil › Moderasyon'dan rapor kuyruğunu görür; **Uygun** (içerik onaylanır, raporlar `dismissed`),
+  **Kaldır** (içerik gizlenir/iptal/silinir, raporlar `actioned`) ve **uzaklaştırma** (7 / 30 gün / süresiz) kararları
+  `moderation_*` RPC'leriyle verilir ve `moderation_actions`'a yazılır. Uzaklaştırılan kullanıcının her yazması
+  `suspended` istisnası alır (P0001, detail = bitiş ya da `infinity`); okumaları açık kalır. `profiles` okuma yetkisi
+  sütun bazlıdır: `suspended_until` başkalarına görünmez, `select=*` hata verir. Moderatörün `reports` üzerinde
+  doğrudan güncelleme yetkisi yoktur (0027); kararlar yalnızca `moderation_decide` ile ve kayıt altında verilir.
+  Acil durumda elle: `update public.profiles set suspended_until = 'infinity' where id = '<uuid>';`
   Akış ve özet yarıçapı sunucuda **1000–10 000 m**'ye sıkıştırılır (`cell` ≈ 1,1 km'lik ızgara; daha küçük yarıçap
   kullanıcının kendi paylaşımını kaçırırdı), `max_rows` 1–50'ye. Paylaşım satırındaki `created_at` milisaniyeye
   kırpılmış döner; `community_feed` `p_before`'u aynı kırpılmış değerle karşılaştırır (istemci son satırın

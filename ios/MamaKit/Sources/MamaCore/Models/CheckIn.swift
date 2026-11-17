@@ -74,6 +74,9 @@ public struct CheckInDraft: Identifiable, Hashable, Codable, Sendable {
     /// İstemci tarafı kimlik. Kuyruktan tekrar gönderimlerde çift kaydı önlemek için.
     public let id: UUID
     public var spotId: UUID
+    /// Kuyruğa giren taslağın sahibi. Kuyruk yalnızca o anki oturumun taslaklarını gönderir.
+    /// Eski sürümlerden kalan taslaklarda yoktur (nil).
+    public var userId: UUID?
     public var kind: CheckInKind
     public var amount: FoodAmount?
     public var photoURL: URL?
@@ -85,6 +88,7 @@ public struct CheckInDraft: Identifiable, Hashable, Codable, Sendable {
         id: UUID = UUID(),
         spotId: UUID,
         kind: CheckInKind,
+        userId: UUID? = nil,
         amount: FoodAmount? = nil,
         photoURL: URL? = nil,
         userCoordinate: Coordinate,
@@ -92,6 +96,7 @@ public struct CheckInDraft: Identifiable, Hashable, Codable, Sendable {
     ) {
         self.id = id
         self.spotId = spotId
+        self.userId = userId
         self.kind = kind
         self.amount = amount
         self.photoURL = photoURL

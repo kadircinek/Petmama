@@ -39,7 +39,7 @@ extension InMemoryBackend: CommunityRepository {
     }
 
     public func createPost(_ draft: CommunityPostDraft) async throws -> CreatePostOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let author = users[userId] else { throw MamaError.notSignedIn }
         let body = draft.body.trimmingCharacters(in: .whitespacesAndNewlines)
         if body.isEmpty { return .invalid(.bodyEmpty) }
@@ -84,7 +84,7 @@ extension InMemoryBackend: CommunityRepository {
     }
 
     public func addComment(postId: UUID, body: String) async throws -> CommentOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let author = users[userId] else { throw MamaError.notSignedIn }
         if let error = CommunityPolicy.validateComment(body) { return .invalid(error) }
         let text = body.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -116,7 +116,7 @@ extension InMemoryBackend: CommunityRepository {
     }
 
     public func togglePaw(postId: UUID) async throws -> PawToggleResult? {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let post = posts[postId], presentPost(post, viewer: userId, origin: nil) != nil else { return nil }
         var set = paws[postId] ?? []
         let pawed = !set.contains(userId)
@@ -126,7 +126,7 @@ extension InMemoryBackend: CommunityRepository {
     }
 
     public func toggleVolunteer(postId: UUID) async throws -> CoverVolunteerOutcome {
-        let userId = try requireUser()
+        let userId = try requireWriter()
         guard let post = posts[postId], presentPost(post, viewer: userId, origin: nil) != nil else { return .postNotFound }
         guard post.kind == .coverRequest else { return .notCoverRequest }
         guard post.authorId != userId else { return .ownPost }
@@ -196,7 +196,7 @@ extension InMemoryBackend: CommunityRepository {
         let feeders = Set(recent.filter { $0.kind == .fed || $0.kind == .water }.compactMap(\.userId))
 
         let nearbyPosts = posts.values.filter { post in
-            guard !post.isPendingModeration, let cell = postCells[post.id] else { return false }
+            guard !post.isPendingModeration, !rejectedPostIds.contains(post.id), let cell = postCells[post.id] else { return false }
             return GeoMath.distance(center, cell) <= radius
         }
         return CommunitySummary(
@@ -215,6 +215,7 @@ extension InMemoryBackend {
     func presentPost(_ post: CommunityPost, viewer: UUID, origin: Coordinate?) -> CommunityPost? {
         guard let author = users[post.authorId], !isBlocked(viewer, post.authorId) else { return nil }
         let isModerator = users[viewer]?.isModerator ?? false
+        if rejectedPostIds.contains(post.id), !isModerator { return nil }
         if post.isPendingModeration, post.authorId != viewer, !isModerator { return nil }
 
         var result = post
@@ -250,7 +251,7 @@ extension InMemoryBackend {
 
     func visibleComments(of postId: UUID, viewer: UUID) -> [CommunityComment] {
         (commentsByPost[postId] ?? [])
-            .filter { !hiddenCommentIds.contains($0.id) && !isBlocked(viewer, $0.authorId) }
+            .filter { !hiddenCommentIds.contains($0.id) && !rejectedCommentIds.contains($0.id) && !isBlocked(viewer, $0.authorId) }
             .compactMap { comment -> CommunityComment? in
                 guard let author = users[comment.authorId] else { return nil }
                 var copy = comment
@@ -291,6 +292,7 @@ extension InMemoryBackend {
         switch target {
         case .post: posts[id]?.isPendingModeration = true
         case .comment: hiddenCommentIds.insert(id)
+        case .chatMessage: markChatMessagePending(id)
         default: break
         }
     }

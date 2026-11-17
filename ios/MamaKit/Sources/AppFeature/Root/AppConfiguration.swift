@@ -42,6 +42,8 @@ public struct AppConfiguration: Equatable, Sendable {
         app.privacyPolicyURL = url("MAMA_PRIVACY_URL")
         app.termsURL = url("MAMA_TERMS_URL")
         app.kvkkNoticeURL = url("MAMA_KVKK_URL")
+        // Info.plist: MAMA_APNS_ENV = $(APS_ENVIRONMENT) → "development" (Debug) | "production" (Release).
+        if string("MAMA_APNS_ENV") == "development" { app.apnsEnvironment = .sandbox }
 
         if isDemo, donation.donationURL == nil {
             // Demo modunda bağış akışı denenebilsin diye örnek alan adı.

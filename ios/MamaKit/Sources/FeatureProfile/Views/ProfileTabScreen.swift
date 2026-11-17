@@ -29,6 +29,10 @@ public struct ProfileTabScreen: View {
         .navigationTitle(String(localized: "Profil"))
         .task(id: session.userId) { await model.load(session: session) }
         .refreshable { await model.load(session: session) }
+        // Sohbet ya da bildirimden köke dönünce okunmamış rozetleri tazele.
+        .onChange(of: router.path(for: .profile).isEmpty) { _, isRoot in
+            if isRoot { Task { await model.load(session: session) } }
+        }
     }
 
     // MARK: - Oturum açık
@@ -38,6 +42,9 @@ public struct ProfileTabScreen: View {
         header(profile)
         if let error = model.error {
             BannerView(error.userMessage, style: .warning)
+        }
+        if let notice = model.suspensionNotice(profile) {
+            BannerView(notice, style: .warning, systemImage: "hand.raised.fill")
         }
         if !model.isVerified(profile), model.hasLoadedStats {
             verificationProgress
@@ -49,6 +56,24 @@ public struct ProfileTabScreen: View {
                 MenuRow(title: String(localized: "Takip ettiklerim"), systemImage: "heart.fill", tint: MamaColor.tilePeach)
             }
             MenuDivider()
+            NavigationLink(value: AppRoute.animalLovers) {
+                MenuRow(
+                    title: String(localized: "Hayvanseverler"),
+                    systemImage: "person.2.fill",
+                    tint: MamaColor.tileMint,
+                    subtitle: String(localized: "Çevrendeki besleyicilerle tanış")
+                )
+            }
+            MenuDivider()
+            NavigationLink(value: AppRoute.conversations) {
+                MenuRow(
+                    title: String(localized: "Sohbetler"),
+                    systemImage: "bubble.left.and.bubble.right.fill",
+                    tint: MamaColor.tileBlue,
+                    badge: model.unreadChatBadgeText
+                )
+            }
+            MenuDivider()
             NavigationLink(value: AppRoute.notifications) {
                 MenuRow(
                     title: String(localized: "Bildirimler"),
@@ -56,6 +81,19 @@ public struct ProfileTabScreen: View {
                     tint: MamaColor.tileBlue,
                     badge: model.unreadBadgeText
                 )
+            }
+            if model.showsModeration(profile) {
+                MenuDivider()
+                // FeatureProfile FeatureModeration'ı tanımaz: rotayı AppFeature çözer.
+                NavigationLink(value: AppRoute.moderation) {
+                    MenuRow(
+                        title: String(localized: "Moderasyon"),
+                        systemImage: "checkmark.shield.fill",
+                        tint: MamaColor.tilePeach,
+                        subtitle: String(localized: "Raporları incele, karar ver"),
+                        badge: model.moderationBadgeText
+                    )
+                }
             }
             MenuDivider()
             NavigationLink(value: AppRoute.settings) {

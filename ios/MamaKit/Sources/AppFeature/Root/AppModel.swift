@@ -12,20 +12,26 @@ public final class AppModel {
     public let location: LocationStore
 
     @ObservationIgnored private var lastNotifyCenter: Coordinate?
-    @ObservationIgnored private var pendingDeviceToken: String?
+    /// APNs'ten gelen son token. Uygulama ömrü boyunca saklanır: hesap değişince yeni hesaba kaydedilir.
+    @ObservationIgnored private var deviceToken: String?
+    /// Token'ın sunucuda kayıtlı olduğu kullanıcı.
+    @ObservationIgnored private var deviceTokenOwner: UUID?
 
     public init(services: AppServices, locationDriver: any LocationDriver) {
         self.services = services
         self.session = SessionStore(auth: services.auth, profiles: services.profiles)
         self.router = AppRouter()
         self.location = LocationStore(driver: locationDriver)
+        session.willEndSession = { [weak self] in await self?.sessionWillEnd() }
+        session.didEndSession = { [weak self] in await self?.sessionDidEnd() }
     }
 
     public func start() async {
         await session.restore()
+        await services.checkInQueue.setOwner(session.userId)
         location.start()
         await flushOfflineQueue()
-        await registerPendingDeviceToken()
+        await registerDeviceTokenIfNeeded()
     }
 
     /// Bağlantı gelince ve uygulama öne gelince (FR-H8).
@@ -40,19 +46,38 @@ public final class AppModel {
     }
 
     public func didReceiveDeviceToken(_ token: String) async {
-        pendingDeviceToken = token
-        await registerPendingDeviceToken()
+        if token != deviceToken { deviceTokenOwner = nil }
+        deviceToken = token
+        await registerDeviceTokenIfNeeded()
     }
 
     public func signedInStateChanged() async {
-        await registerPendingDeviceToken()
+        await services.checkInQueue.setOwner(session.userId)
+        await registerDeviceTokenIfNeeded()
+        if session.isSignedIn { await flushOfflineQueue() }
     }
 
-    private func registerPendingDeviceToken() async {
-        guard session.isSignedIn, let token = pendingDeviceToken else { return }
-        if (try? await services.notifications.registerDeviceToken(token)) != nil {
-            pendingDeviceToken = nil
+    private func registerDeviceTokenIfNeeded() async {
+        guard let userId = session.userId, let token = deviceToken, deviceTokenOwner != userId else { return }
+        if (try? await services.notifications.registerDeviceToken(token, environment: services.config.apnsEnvironment)) != nil {
+            deviceTokenOwner = userId
         }
+    }
+
+    /// Oturum hâlâ açıkken: bu cihaz artık çıkan hesabın bildirimlerini almasın.
+    private func sessionWillEnd() async {
+        if let token = deviceToken, deviceTokenOwner != nil {
+            try? await services.notifications.unregisterDeviceToken(token)
+        }
+        deviceTokenOwner = nil
+    }
+
+    /// Çıkış ya da hesap silme sonrası: bekleyen check-in'ler bir sonraki hesaba geçmesin.
+    private func sessionDidEnd() async {
+        deviceTokenOwner = nil
+        lastNotifyCenter = nil
+        await services.checkInQueue.clear()
+        await services.checkInQueue.setOwner(nil)
     }
 
     /// Yakındaki "mama gerekli" bildirimleri için son kaba konum (D8). 300 m'den az hareketi göndermez.
@@ -64,6 +89,19 @@ public final class AppModel {
         if (try? await services.notifications.updateNotifyCenter(coordinate)) != nil {
             lastNotifyCenter = coordinate
         }
+    }
+
+    /// `onOpenURL`: e-posta doğrulama / şifre sıfırlama bağlantıları. Tanımadığı adresi `false` ile bırakır.
+    @discardableResult
+    public func handleOpenURL(_ url: URL) async -> Bool {
+        guard let kind = await session.handleAuthLink(url) else { return false }
+        switch kind {
+        case .emailConfirmed: router.showToast("E-postan doğrulandı. Hoş geldin!")
+        case .passwordRecovery: break  // "Yeni şifre" ekranı `session.isRecoveringPassword` ile açılır.
+        case .failed(let message): router.showToast(message, style: .warning)
+        }
+        await signedInStateChanged()
+        return true
     }
 
     public func openFromPush(_ userInfo: [AnyHashable: Any]) {

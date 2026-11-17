@@ -8,6 +8,7 @@ import FeatureMap
 import FeatureNeeds
 import FeatureOnboarding
 import FeatureProfile
+import FeatureSocial
 
 /// Uygulamanın kök görünümü: açılış → ilk kullanım akışı → sekmeler.
 public struct AppRootView: View {
@@ -59,6 +60,20 @@ public struct AppRootView: View {
         .onChange(of: model.session.isSignedIn) { _, _ in
             Task { await model.signedInStateChanged() }
         }
+        // E-posta doğrulama / şifre sıfırlama bağlantıları (mamaharitasi://auth-callback).
+        .onOpenURL { url in
+            Task { await model.handleOpenURL(url) }
+        }
+        .sheet(isPresented: Binding(
+            get: { model.session.isRecoveringPassword },
+            set: { if !$0 { model.session.dismissPasswordRecovery() } }
+        )) {
+            NewPasswordScreen { saved in
+                model.session.dismissPasswordRecovery()
+                if saved { model.router.showToast("Yeni şifren kaydedildi.") }
+            }
+            .environment(model.session)
+        }
         .task(id: notifyCenterKey) {
             await model.updateNotifyCenterIfNeeded(model.location.coordinate)
         }
@@ -72,35 +87,57 @@ public struct AppRootView: View {
 }
 
 /// Beş sekmeli ana görünüm. Sistem tab bar'ı gizli; yerine `MamaTabBar`.
+///
+/// `MamaTabBar` TabView'un üstüne bindirilir ve yalnızca sekmenin kök ekranında görünür: bir ekran itilince
+/// (`hidesBottomBarWhenPushed` gibi) kayarak gizlenir, böylece sohbet ve yorum kutuları gibi alt çubuklar
+/// tab bar'ın altında kalmaz. `TabView` üzerindeki `safeAreaInset` sekme içeriğine yayılmadığı için kök
+/// ekranlara bar yüksekliği `TabStack` tarafından alt boşluk olarak verilir.
 struct MainTabView: View {
     let services: AppServices
     @Environment(AppRouter.self) private var router
     @Environment(SessionStore.self) private var session
+    @State private var tabBarHeight: CGFloat = 0
+
+    private var showsTabBar: Bool { router.path(for: router.selectedTab).isEmpty }
 
     var body: some View {
         @Bindable var router = router
         TabView(selection: $router.selectedTab) {
-            TabStack(tab: .map, services: services) { MapTabScreen(services: services) }
+            TabStack(tab: .map, services: services, bottomInset: tabBarHeight) { MapTabScreen(services: services) }
                 .tag(AppTab.map)
                 .toolbar(.hidden, for: .tabBar)
-            TabStack(tab: .community, services: services) {
-                // Mahalle: besleyicilerin akışı + İhtiyaçlar bölümü (D17).
-                CommunityTabScreen(services: services) { NeedsTabScreen(services: services) }
+            TabStack(tab: .community, services: services, bottomInset: tabBarHeight) {
+                // Mahalle: besleyicilerin akışı, Buluşmalar (D19) ve İhtiyaçlar bölümü (D17).
+                CommunityTabScreen(services: services) { refreshToken in
+                    // Akış'ın üstü: "Şu an turda" + mahalledeki hayvanseverler (spec 2026-11-16).
+                    NeighborhoodSocialSection(services: services, refreshToken: refreshToken)
+                } meetups: {
+                    MeetupsListView(services: services)
+                } needs: {
+                    NeedsTabScreen(services: services)
+                }
             }
                 .tag(AppTab.community)
                 .toolbar(.hidden, for: .tabBar)
-            TabStack(tab: .donate, services: services) { DonateTabScreen(services: services) }
+            TabStack(tab: .donate, services: services, bottomInset: tabBarHeight) { DonateTabScreen(services: services) }
                 .tag(AppTab.donate)
                 .toolbar(.hidden, for: .tabBar)
-            TabStack(tab: .profile, services: services) { ProfileTabScreen(services: services) }
+            TabStack(tab: .profile, services: services, bottomInset: tabBarHeight) { ProfileTabScreen(services: services) }
                 .tag(AppTab.profile)
                 .toolbar(.hidden, for: .tabBar)
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            MamaTabBar(selected: router.selectedTab) { tab in
-                router.select(tab)
+        .overlay(alignment: .bottom) {
+            if showsTabBar {
+                MamaTabBar(selected: router.selectedTab) { tab in
+                    router.select(tab)
+                }
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { tabBarHeight = $0 }
+                // Klavye açılınca bar klavyenin üstüne çıkmasın (alt kutular klavyeyle yükselir).
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .animation(.easeInOut(duration: 0.25), value: showsTabBar)
         .sheet(item: $router.sheet) { sheet in
             SheetDestination(sheet: sheet, services: services)
         }

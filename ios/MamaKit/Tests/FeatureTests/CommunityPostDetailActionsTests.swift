@@ -70,7 +70,9 @@ final class CommunityPostDetailActionsTests: XCTestCase {
     }
 
     func testStrangerCannotDeleteComment() async {
-        let model = PostDetailViewModel(postId: questionId, services: makeServices(makeBackend()))
+        let backend = makeBackend()
+        await backend.setModerator(false, for: DemoData.meId) // demo kullanıcısı moderatör (Faz 3.1)
+        let model = PostDetailViewModel(postId: questionId, services: makeServices(backend))
         await model.load(near: .modaKadikoy)
 
         let result = await model.deleteComment(DemoData.id(7, 1))
@@ -97,6 +99,7 @@ final class CommunityPostDetailActionsTests: XCTestCase {
 
     func testDeleteSomeoneElsesPostIsNotAllowed() async {
         let backend = makeBackend()
+        await backend.setModerator(false, for: DemoData.meId) // demo kullanıcısı moderatör (Faz 3.1)
         let model = PostDetailViewModel(postId: questionId, services: makeServices(backend))
         await model.load(near: .modaKadikoy)
 

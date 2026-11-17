@@ -30,6 +30,13 @@ final class AppConfigurationTests: XCTestCase {
         XCTAssertEqual(config.app.supportEmail, "iletisim@ornek.org")
     }
 
+    func testAPNsEnvironmentFromEntitlement() {
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: ["MAMA_APNS_ENV": "development"]).app.apnsEnvironment, .sandbox)
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: ["MAMA_APNS_ENV": "production"]).app.apnsEnvironment, .production)
+        XCTAssertEqual(AppConfiguration.from(infoDictionary: [:]).app.apnsEnvironment, .production,
+                       "bilinmiyorsa sunucu varsayılanı")
+    }
+
     func testProductionWithoutPartnerKeepsDonationDisabled() {
         let config = AppConfiguration.from(infoDictionary: [
             "MAMA_SUPABASE_URL": "https://abc.supabase.co",
@@ -51,6 +58,56 @@ final class AppConfigurationTests: XCTestCase {
         XCTAssertEqual(PushPayload.route(from: ["spot_id": spot.uuidString])?.route, .spot(spot))
         XCTAssertNil(PushPayload.route(from: ["spot_id": "bozuk"]))
         XCTAssertEqual(PushPayload.hexToken(Data([0x0a, 0xff, 0x01])), "0aff01")
+
+        // Tanışma: sohbet > buluşma > paylaşım > ihtiyaç > nokta.
+        let conversation = UUID()
+        let meetup = UUID()
+        let chat = PushPayload.route(from: [
+            "conversation_id": conversation.uuidString, "meetup_id": meetup.uuidString, "post_id": post.uuidString,
+        ])
+        XCTAssertEqual(chat?.route, .conversation(conversation))
+        XCTAssertEqual(chat?.tab, .profile)
+        let meetupTarget = PushPayload.route(from: ["meetup_id": meetup.uuidString, "spot_id": spot.uuidString])
+        XCTAssertEqual(meetupTarget?.route, .meetup(meetup))
+        XCTAssertEqual(meetupTarget?.tab, .community)
+        // Kimlik yoksa türe göre: bağlantı istekleri / sohbetler (Profil).
+        let request = PushPayload.route(from: ["kind": "connection_request"])
+        XCTAssertEqual(request?.route, .connectionRequests)
+        XCTAssertEqual(request?.tab, .profile)
+        let accepted = PushPayload.route(from: ["kind": "connection_accepted"])
+        XCTAssertEqual(accepted?.route, .conversations)
+        XCTAssertEqual(accepted?.tab, .profile)
+        XCTAssertNil(PushPayload.route(from: ["kind": "thanks_fed"]))
+    }
+
+    /// Gerçekçi APNs userInfo (aps sözlüğü + push_logic.ts alanları) → çıkarım → yönlendirme.
+    func testPushStringFieldsExtractionFromAPNsUserInfo() {
+        let conversation = UUID()
+        let meetup = UUID()
+        let aps: [String: Any] = ["alert": ["title": "Yeni mesaj", "body": "Ayşe"], "sound": "default", "badge": 3]
+        let chatInfo: [AnyHashable: Any] = [
+            "aps": aps, "kind": "chat_message", "conversation_id": conversation.uuidString,
+            "meetup_id": meetup.uuidString, "notification_id": UUID().uuidString, "count": 2,
+        ]
+        let chatFields = PushPayload.stringFields(from: chatInfo)
+        XCTAssertEqual(chatFields["conversation_id"], conversation.uuidString)
+        XCTAssertEqual(chatFields["meetup_id"], meetup.uuidString)
+        XCTAssertEqual(chatFields["kind"], "chat_message")
+        XCTAssertNil(chatFields["aps"])
+        XCTAssertNil(chatFields["count"])
+        XCTAssertEqual(PushPayload.route(from: chatFields)?.route, .conversation(conversation))
+
+        let meetupInfo: [AnyHashable: Any] = ["aps": aps, "kind": "meetup_updated", "meetup_id": meetup.uuidString]
+        XCTAssertEqual(PushPayload.route(from: PushPayload.stringFields(from: meetupInfo))?.route, .meetup(meetup))
+
+        let requestInfo: [AnyHashable: Any] = ["aps": aps, "kind": "connection_request"]
+        let request = PushPayload.route(from: PushPayload.stringFields(from: requestInfo))
+        XCTAssertEqual(request?.route, .connectionRequests)
+        XCTAssertEqual(request?.tab, .profile)
+
+        let spot = UUID()
+        let legacy: [AnyHashable: Any] = ["aps": aps, "spot_id": spot.uuidString, "need_id": "x", "post_id": "y"]
+        XCTAssertEqual(PushPayload.stringFields(from: legacy)["spot_id"], spot.uuidString)
     }
 }
 
@@ -72,5 +129,141 @@ final class AppModelTests: XCTestCase {
         // Kayıt hatasız tamamlanmalı; bir sonraki çağrı no-op.
         await model.signedInStateChanged()
         XCTAssertTrue(model.session.isSignedIn)
+    }
+
+    // MARK: - Oturum değişimi: cihaz token'ı ve çevrimdışı kuyruk
+
+    private static let token = "a1b2c3d4e5f60718"
+
+    private func makeModel(pending: [CheckInDraft] = [], apnsEnvironment: APNsEnvironment = .production) -> (AppModel, SpyNotifications) {
+        var services = AppServices.demo()
+        services.config.apnsEnvironment = apnsEnvironment
+        let spy = SpyNotifications(base: services.notifications)
+        services.notifications = spy
+        let queue = OfflineCheckInQueue(store: InMemoryPendingCheckInStore(pending), repository: services.checkIns)
+        services.checkIns = queue
+        services.checkInQueue = queue
+        return (AppModel(services: services, locationDriver: StaticLocationDriver()), spy)
+    }
+
+    private func signIn(_ model: AppModel) async {
+        _ = await model.session.signIn(email: "demo@mamaharitasi.app", password: "demo1234")
+        await model.signedInStateChanged()
+    }
+
+    func testSignOutUnregistersDeviceTokenBeforeEndingSession() async {
+        let (model, spy) = makeModel()
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+
+        await model.session.signOut()
+
+        let unregistered = await spy.unregistered
+        XCTAssertEqual(unregistered, [Self.token])
+        let signedInWhileUnregistering = await spy.unregisterSawSignedInUser
+        XCTAssertEqual(signedInWhileUnregistering, [true], "token oturum hâlâ açıkken silinmeli (RLS)")
+    }
+
+    func testDeviceTokenRegisteredAgainForNextAccount() async {
+        let (model, spy) = makeModel()
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+        await model.session.signOut()
+        await model.signedInStateChanged()
+
+        _ = await model.session.signUp(email: "ikinci@ornek.org", password: "sifre1234", displayName: "İkinci")
+        await model.signedInStateChanged()
+
+        let registered = await spy.registered
+        XCTAssertEqual(registered, [Self.token, Self.token], "yeni hesap uygulama yeniden açılmadan bildirim almalı")
+    }
+
+    func testDeviceTokenRegisteredWithBuildsAPNsEnvironment() async {
+        let (model, spy) = makeModel(apnsEnvironment: .sandbox)
+        await model.didReceiveDeviceToken(Self.token)
+        await signIn(model)
+        let environments = await spy.registeredEnvironments
+        XCTAssertEqual(environments, [.sandbox])
+    }
+
+    func testSignOutClearsOfflineQueue() async {
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        let (model, _) = makeModel(pending: [draft])
+        await signIn(model)
+
+        await model.session.signOut()
+
+        let pending = await model.services.checkInQueue.pendingCount()
+        XCTAssertEqual(pending, 0)
+    }
+
+    func testDeleteAccountClearsOfflineQueue() async {
+        let draft = CheckInDraft(spotId: UUID(), kind: .fed, userCoordinate: .modaKadikoy)
+        let (model, _) = makeModel(pending: [draft])
+        await signIn(model)
+
+        let deleted = await model.session.deleteAccount()
+
+        XCTAssertTrue(deleted)
+        let pending = await model.services.checkInQueue.pendingCount()
+        XCTAssertEqual(pending, 0)
+    }
+
+    // MARK: - E-posta bağlantıları (deep link)
+
+    func testExpiredAuthLinkShowsErrorToast() async {
+        let (model, _) = makeModel()
+        let handled = await model.handleOpenURL(URL(string: "mamaharitasi://auth-callback#error=access_denied&error_code=otp_expired")!)
+        XCTAssertTrue(handled)
+        XCTAssertEqual(model.router.toast?.message, AuthLink.expiredMessage)
+        XCTAssertEqual(model.router.toast?.style, .warning)
+    }
+
+    func testForeignURLIsIgnored() async {
+        let (model, _) = makeModel()
+        let handled = await model.handleOpenURL(URL(string: "https://ornek.org")!)
+        XCTAssertFalse(handled)
+        XCTAssertNil(model.router.toast)
+    }
+
+    func testSignInSetsQueueOwner() async {
+        let (model, _) = makeModel()
+        await signIn(model)
+        let owner = await model.services.checkInQueue.owner
+        XCTAssertEqual(owner, model.session.userId)
+    }
+}
+
+/// Bildirim deposunu sarar; token kayıt/silme çağrılarını kaydeder.
+actor SpyNotifications: NotificationRepository {
+    let base: any NotificationRepository
+    private(set) var registered: [String] = []
+    private(set) var registeredEnvironments: [APNsEnvironment] = []
+    private(set) var unregistered: [String] = []
+    private(set) var unregisterSawSignedInUser: [Bool] = []
+
+    init(base: any NotificationRepository) { self.base = base }
+
+    func notifications() async throws -> [AppNotification] { try await base.notifications() }
+    func markRead(ids: [UUID]) async throws { try await base.markRead(ids: ids) }
+    func preferences() async throws -> NotificationPreferences { try await base.preferences() }
+    func updatePreferences(_ preferences: NotificationPreferences) async throws { try await base.updatePreferences(preferences) }
+    func updateNotifyCenter(_ coordinate: Coordinate) async throws { try await base.updateNotifyCenter(coordinate) }
+
+    func registerDeviceToken(_ token: String, environment: APNsEnvironment) async throws {
+        try await base.registerDeviceToken(token, environment: environment)
+        registered.append(token)
+        registeredEnvironments.append(environment)
+    }
+
+    func unregisterDeviceToken(_ token: String) async throws {
+        // Demo backend oturum yoksa `requireUser` ile hata atar: başarı = oturum açıktı.
+        do {
+            try await base.unregisterDeviceToken(token)
+            unregisterSawSignedInUser.append(true)
+        } catch {
+            unregisterSawSignedInUser.append(false)
+        }
+        unregistered.append(token)
     }
 }

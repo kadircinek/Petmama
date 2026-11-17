@@ -23,44 +23,6 @@ public struct ModerationCaseScreen: View {
             .navigationTitle(String(localized: "Rapor"))
             .navigationBarTitleDisplayMode(.inline)
             .task { await model.load() }
-            .confirmationDialog(
-                decisionDialogTitle,
-                isPresented: Binding(get: { pendingDecision != nil }, set: { if !$0 { pendingDecision = nil } }),
-                titleVisibility: .visible,
-                presenting: pendingDecision
-            ) { decision in
-                switch decision {
-                case .approve:
-                    Button("Uygun, yayında kalsın") { run { await model.decide(.approve) } }
-                case .remove:
-                    Button("Kaldır", role: .destructive) { run { await model.decide(.remove) } }
-                }
-                Button("Vazgeç", role: .cancel) {}
-            } message: { decision in
-                switch decision {
-                case .approve: Text("İçerik yayında kalır (gizlendiyse geri açılır), açık raporlar kapanır.")
-                case .remove: Text(removeMessage)
-                }
-            }
-            .confirmationDialog(
-                String(localized: "Kullanıcı uzaklaştırılsın mı?"),
-                isPresented: Binding(get: { pendingSuspension != nil }, set: { if !$0 { pendingSuspension = nil } }),
-                titleVisibility: .visible,
-                presenting: pendingSuspension
-            ) { length in
-                Button(String(localized: "\(length.label) uzaklaştır"), role: .destructive) { run { await model.suspend(length) } }
-                Button("Vazgeç", role: .cancel) {}
-            } message: { _ in
-                Text("Uzaklaştırılan kişi uygulamayı okumaya devam eder ama hiçbir şey yazamaz: nokta, check-in, paylaşım, yorum, mesaj, buluşma, istek.")
-            }
-            .confirmationDialog(
-                String(localized: "Uzaklaştırma kaldırılsın mı?"),
-                isPresented: $showsUnsuspendDialog,
-                titleVisibility: .visible
-            ) {
-                Button("Uzaklaştırmayı kaldır") { run { await model.unsuspend() } }
-                Button("Vazgeç", role: .cancel) {}
-            }
             .sensoryFeedback(.success, trigger: successFeedback)
     }
 
@@ -131,6 +93,25 @@ public struct ModerationCaseScreen: View {
         }
         .disabled(model.isBusy || model.isNoteTooLong)
         .mamaCard()
+        .confirmationDialog(
+            decisionDialogTitle,
+            isPresented: Binding(get: { pendingDecision != nil }, set: { if !$0 { pendingDecision = nil } }),
+            titleVisibility: .visible,
+            presenting: pendingDecision
+        ) { decision in
+            switch decision {
+            case .approve:
+                Button("Uygun, yayında kalsın") { run { await model.decide(.approve) } }
+            case .remove:
+                Button("Kaldır", role: .destructive) { run { await model.decide(.remove) } }
+            }
+            Button("Vazgeç", role: .cancel) {}
+        } message: { decision in
+            switch decision {
+            case .approve: Text("İçerik yayında kalır (gizlendiyse geri açılır), açık raporlar kapanır.")
+            case .remove: Text(removeMessage)
+            }
+        }
     }
 
     private func decidedSection(_ decision: ModerationDecision, at date: Date?) -> some View {
@@ -193,6 +174,25 @@ public struct ModerationCaseScreen: View {
             }
         }
         .mamaCard()
+        .confirmationDialog(
+            String(localized: "Kullanıcı uzaklaştırılsın mı?"),
+            isPresented: Binding(get: { pendingSuspension != nil }, set: { if !$0 { pendingSuspension = nil } }),
+            titleVisibility: .visible,
+            presenting: pendingSuspension
+        ) { length in
+            Button(String(localized: "\(length.label) uzaklaştır"), role: .destructive) { run { await model.suspend(length) } }
+            Button("Vazgeç", role: .cancel) {}
+        } message: { _ in
+            Text("Uzaklaştırılan kişi uygulamayı okumaya devam eder ama hiçbir şey yazamaz: nokta, check-in, paylaşım, yorum, mesaj, buluşma, istek.")
+        }
+        .confirmationDialog(
+            String(localized: "Uzaklaştırma kaldırılsın mı?"),
+            isPresented: $showsUnsuspendDialog,
+            titleVisibility: .visible
+        ) {
+            Button("Uzaklaştırmayı kaldır") { run { await model.unsuspend() } }
+            Button("Vazgeç", role: .cancel) {}
+        }
     }
 
     // MARK: - Raporlar

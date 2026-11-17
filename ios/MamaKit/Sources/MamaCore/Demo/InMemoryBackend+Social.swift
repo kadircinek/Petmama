@@ -79,9 +79,21 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func updateSocialProfile(isVisible: Bool, about: String, interests: [SocialInterest], at coordinate: Coordinate?) async throws -> SocialProfileOutcome {
-        let me = try requireWriter()
-        guard hasConsented(me), var record = socialProfiles[me] else { return .consentRequired }
+        let me = try requireUser()
+        guard hasConsented(me), var record = socialProfiles[me] else {
+            _ = try requireWriter()
+            return .consentRequired
+        }
         let text = SocialPolicy.trimmed(about)
+        // Uzaklaştırılmış kişi yalnızca kendini gizleyebilir (hakkımda/ilgi aynı kalmalı): güvenlik eylemi.
+        if isSuspended(me) {
+            guard !isVisible, text == record.about, Set(interests) == Set(record.interests) else {
+                _ = try requireWriter()
+                return .saved
+            }
+            socialProfiles[me]?.isVisible = false
+            return .saved
+        }
         if SocialPolicy.length(text) > SocialPolicy.maxAbout { return .aboutTooLong }
         if ContentFilter.containsProfanity(text) { return .rejectedContent }
         if isVisible, coordinate == nil, record.cell == nil { return .locationRequired }
@@ -350,7 +362,8 @@ extension InMemoryBackend: SocialRepository {
     }
 
     public func respondToConnection(requestId: UUID, accept: Bool) async throws -> UUID? {
-        let me = try requireWriter()
+        // Reddetmek bir güvenlik eylemi: uzaklaştırmada da açık; kabul etmek yazmadır.
+        let me = accept ? try requireWriter() : try requireUser()
         settleScriptedConnections()
         guard let request = connections[requestId], request.addresseeId == me, request.status == .pending,
               !isBlocked(me, request.requesterId) else { return nil }

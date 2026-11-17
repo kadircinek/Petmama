@@ -206,7 +206,6 @@ final class ModerationBackendTests: XCTestCase {
         await assertThrows(expected) { try await backend.joinMeetup(id: DemoData.id(8, 1)) }
         await assertThrows(expected) { try await backend.sendConnectionRequest(to: DemoData.ayseId, note: nil) }
         await assertThrows(expected) { try await backend.startFeedingTour(spotId: DemoData.id(2, 1), durationMinutes: 60) }
-        await assertThrows(expected) { try await backend.report(ReportDraft(target: .user, targetId: DemoData.ayseId, reason: .spam)) }
         await assertThrows(expected) { try await backend.setFollowing(true, target: .spot, id: DemoData.id(2, 1)) }
         await assertThrows(expected) { try await backend.setGuardian(spotId: DemoData.id(2, 1), schedule: [.monday]) }
         await assertThrows(expected) { try await backend.createAnimal(AnimalDraft(species: .cat, name: "Yeni")) }
@@ -222,7 +221,13 @@ final class ModerationBackendTests: XCTestCase {
         let conversations = try await backend.conversations()
         XCTAssertFalse(conversations.isEmpty)
         try await backend.block(userId: DemoData.ayseId)
-        _ = try await backend.updateProfile(displayName: "Emre K.", neighborhood: nil, avatarURL: nil)
+        _ = try await backend.updateProfile(displayName: "Emre", neighborhood: "Moda", avatarURL: nil)
+        await assertThrows(expected) { try await backend.updateProfile(displayName: "Emre K.", neighborhood: nil, avatarURL: nil) }
+        await assertThrows(expected) {
+            try await backend.updateProfile(displayName: "Emre", neighborhood: nil, avatarURL: URL(string: "https://x.test/a.jpg"))
+        }
+        // güvenlik eylemleri: raporlamak ve isteği reddetmek açık; kabul etmek kapalı
+        try await backend.report(ReportDraft(target: .user, targetId: DemoData.ayseId, reason: .harassment))
         try await backend.updatePreferences(.default)
         try await backend.setFollowing(false, target: .spot, id: DemoData.id(2, 1))
         try await backend.setGuardian(spotId: DemoData.id(2, 5), schedule: nil)
@@ -255,7 +260,7 @@ final class ModerationBackendTests: XCTestCase {
         let outcome = try await backend.suspend(userId: DemoData.zeynepId, length: .indefinite, note: nil)
         XCTAssertEqual(outcome, .suspended(until: .distantFuture))
         await backend.setCurrentUser(DemoData.zeynepId)
-        await assertThrows(MamaError.suspended(until: nil)) { try await backend.togglePaw(postId: DemoData.id(6, 2)) }
+        await assertThrows(MamaError.suspendedIndefinitely) { try await backend.togglePaw(postId: DemoData.id(6, 2)) }
         await backend.setCurrentUser(DemoData.meId)
         let longNote = try await backend.suspend(userId: DemoData.emreId, length: .week, note: String(repeating: "x", count: 501))
         XCTAssertEqual(longNote, .invalid(reason: "note_too_long"))
@@ -287,11 +292,66 @@ final class ModerationBackendTests: XCTestCase {
         let dated = MamaError.suspended(until: date).userMessage
         XCTAssertTrue(dated.hasPrefix("Hesabın"), dated)
         XCTAssertTrue(dated.contains("tarihine kadar askıya alındı"), dated)
-        let indefinite = MamaError.suspended(until: nil).userMessage
+        let indefinite = MamaError.suspendedIndefinitely.userMessage
         XCTAssertTrue(indefinite.contains("süresiz"), indefinite)
-        XCTAssertEqual(MamaError.suspension(until: .distantFuture), .suspended(until: nil))
+        XCTAssertEqual(MamaError.suspension(until: .distantFuture), .suspendedIndefinitely)
+        let unknown = MamaError.suspended(until: nil).userMessage
+        XCTAssertFalse(unknown.contains("süresiz"), "bitiş bilinmiyorsa süresiz denmez")
+        XCTAssertTrue(unknown.contains("askıya alındı"), unknown)
         XCTAssertEqual(MamaError.suspension(until: date), .suspended(until: date))
         XCTAssertFalse(MamaError.suspended(until: nil).isConnectivity, "çevrimdışı kuyruğa alınmaz")
+    }
+
+    func testSuspendedUserCanDeclineAndHideButNotAcceptOrEdit() async throws {
+        let backend = makeBackend()
+        // seed: Zeynep → Sen bekleyen istek; ikinci istek Emre'den
+        _ = try await backend.giveSocialConsent()
+        let profile = try await backend.updateSocialProfile(isVisible: true, about: "Merhaba", interests: [.cats], at: .modaKadikoy)
+        XCTAssertEqual(profile, .saved)
+        await backend.setCurrentUser(DemoData.emreId)
+        _ = try await backend.giveSocialConsent()
+        _ = try await backend.sendConnectionRequest(to: DemoData.meId, note: nil)
+        await backend.setCurrentUser(DemoData.meId)
+        let requests = try await backend.incomingConnectionRequests()
+        XCTAssertEqual(requests.count, 2)
+        await backend.setModerator(false, for: DemoData.meId)
+        await backend.setSuspendedUntil(now.addingTimeInterval(86_400), for: DemoData.meId)
+        let expected = MamaError.suspended(until: now.addingTimeInterval(86_400))
+
+        let declined = try await backend.respondToConnection(requestId: requests[0].id, accept: false)
+        XCTAssertNil(declined)
+        await assertThrows(expected) { try await backend.respondToConnection(requestId: requests[1].id, accept: true) }
+        await assertThrows(expected) {
+            try await backend.updateSocialProfile(isVisible: true, about: "Merhaba", interests: [.cats], at: nil)
+        }
+        await assertThrows(expected) {
+            try await backend.updateSocialProfile(isVisible: false, about: "Yeni metin", interests: [.cats], at: nil)
+        }
+        let hidden = try await backend.updateSocialProfile(isVisible: false, about: "Merhaba", interests: [.cats], at: nil)
+        XCTAssertEqual(hidden, .saved)
+        let social = try await backend.socialProfile()
+        XCTAssertEqual(social?.isVisible, false)
+        XCTAssertEqual(social?.about, "Merhaba")
+    }
+
+    func testRemovedMeetupNeedAnimalCannotBeApproved() async throws {
+        let backend = makeBackend()
+        let needId = DemoData.id(5, 3)
+        await backend.setCurrentUser(DemoData.ayseId)
+        try await backend.report(ReportDraft(target: .need, targetId: needId, reason: .spam))
+        await backend.setCurrentUser(DemoData.meId)
+        let before = try await backend.moderationCase(target: .need, id: needId)
+        XCTAssertEqual(before?.moderationCase.isRestorable, true)
+        _ = try await backend.decide(target: .need, id: needId, decision: .remove, note: nil)
+        let approve = try await backend.decide(target: .need, id: needId, decision: .approve, note: nil)
+        XCTAssertEqual(approve, .invalid(reason: "not_restorable"))
+        let after = try await backend.moderationCase(target: .need, id: needId)
+        XCTAssertEqual(after?.moderationCase.isRestorable, false)
+        XCTAssertEqual(after?.moderationCase.contentState, .removed)
+        // post kaldırması geri alınabilir
+        let post = try await backend.moderationCase(target: .post, id: DemoData.moderationPostId)
+        XCTAssertEqual(post?.moderationCase.isRestorable, true)
+        XCTAssertEqual(post?.owner?.avatarURL, nil)
     }
 
     func testSuspensionLengthDays() {

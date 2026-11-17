@@ -94,13 +94,19 @@ struct ModerationCaseCard: View {
     let item: ModerationCase
     let now: Date
 
+    private var reportTimes: String {
+        let times = ModerationFormat.reportTimes(first: item.firstReportedAt, last: item.lastReportedAt, now: now)
+        guard let last = times.last else { return times.first }
+        return String(localized: "İlk \(times.first) · son \(last)")
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 TagChip(item.target.label, systemImage: item.target.systemImage, style: .info)
                 ModerationStateChip(state: item.contentState)
                 Spacer(minLength: 0)
-                Text(verbatim: MamaFormat.relative(item.lastReportedAt, now: now))
+                Text(verbatim: reportTimes)
                     .font(MamaFont.caption)
                     .foregroundStyle(MamaColor.textSecondary)
             }

@@ -140,6 +140,50 @@ final class ModerationViewModelTests: XCTestCase {
         XCTAssertFalse(outcome)
     }
 
+    func testRemovedNeedCannotBeApprovedFromCaseScreen() async throws {
+        let (backend, services) = makeEnvironment()
+        let needId = DemoData.id(5, 3)
+        await backend.setCurrentUser(DemoData.ayseId)
+        try await backend.report(ReportDraft(target: .need, targetId: needId, reason: .spam))
+        await backend.setCurrentUser(DemoData.meId)
+        let model = ModerationCaseViewModel(target: .need, targetId: needId, services: services)
+        await model.load()
+        XCTAssertTrue(model.canApprove)
+        _ = await model.decide(.remove)
+        // yeni bir rapor gelir: vaka yeniden açık ama geri açılamaz
+        await backend.setCurrentUser(DemoData.zeynepId)
+        try await backend.report(ReportDraft(target: .need, targetId: needId, reason: .other))
+        await backend.setCurrentUser(DemoData.meId)
+        await model.load()
+        XCTAssertTrue(model.canDecide)
+        XCTAssertFalse(model.canApprove)
+        let approved = await model.decide(.approve)
+        XCTAssertFalse(approved)
+        let removed = await model.decide(.remove)
+        XCTAssertTrue(removed)
+        XCTAssertEqual(ModerationFormat.failureMessage(.invalid(reason: "not_restorable")), ModerationFormat.notRestorableMessage)
+    }
+
+    func testReportTimesShowFirstAndLastWhenTheyDiffer() async {
+        let now = moderationNow
+        let same = ModerationFormat.reportTimes(first: now.addingTimeInterval(-7200), last: now.addingTimeInterval(-7200), now: now, language: .turkish)
+        XCTAssertEqual(same.first, "2 sa önce")
+        XCTAssertNil(same.last)
+        let differ = ModerationFormat.reportTimes(first: now.addingTimeInterval(-6 * 3600), last: now.addingTimeInterval(-4 * 3600), now: now, language: .turkish)
+        XCTAssertEqual(differ.first, "6 sa önce")
+        XCTAssertEqual(differ.last, "4 sa önce")
+    }
+
+    func testCaseDetailCarriesOwnerAvatar() async throws {
+        let (backend, services) = makeEnvironment()
+        await backend.setCurrentUser(DemoData.zeynepId)
+        _ = try await services.profiles.updateProfile(displayName: "Zeynep", neighborhood: "Moda", avatarURL: URL(string: "https://x.test/z.jpg"))
+        await backend.setCurrentUser(DemoData.meId)
+        let model = ModerationCaseViewModel(target: .post, targetId: DemoData.moderationPostId, services: services)
+        await model.load()
+        XCTAssertEqual(model.detail?.owner?.avatarURL, URL(string: "https://x.test/z.jpg"))
+    }
+
     func testUnknownCaseIsNotFound() async {
         let (_, services) = makeEnvironment()
         let model = ModerationCaseViewModel(target: .post, targetId: UUID(), services: services)

@@ -36,6 +36,11 @@ public final class ModerationCaseViewModel {
         return detail.reports.contains { $0.status == .open }
     }
 
+    /// "Uygun, yayında kalsın": iptal edilmiş/silinmiş/temizlenmiş içerik geri açılamaz.
+    public var canApprove: Bool {
+        canDecide && (detail?.moderationCase.isRestorable ?? false)
+    }
+
     /// İçerik sahibi biliniyor, moderatör değil ve kişinin kendisi değil (sunucu yeniden denetler).
     public var canSuspend: Bool {
         guard let owner = detail?.owner else { return false }
@@ -63,7 +68,7 @@ public final class ModerationCaseViewModel {
 
     @discardableResult
     public func decide(_ decision: ModerationDecision) async -> Bool {
-        guard canDecide, !isNoteTooLong else { return false }
+        guard canDecide, !isNoteTooLong, decision == .remove || canApprove else { return false }
         return await act { [services, target, targetId, note] in
             let outcome = try await services.moderator.decide(target: target, id: targetId, decision: decision, note: note)
             switch outcome {

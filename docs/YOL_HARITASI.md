@@ -68,6 +68,7 @@ ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar hari
 - Harita her kamera hareketinde buluşmaları yeniden istiyor; debounce/merkez kontrolü.
 - Bağlantı kaldırılıp yeniden kabul edilince eski sohbet geçmişi geri geliyor (spec'e uygun); arayüzde belirtilebilir.
 - Noktadan açılan buluşmada "evine çok yakın" uyarısı yanıltıcı olabilir; sohbet yığını tekrar tekrar büyüyebilir; bazı ekranlar her sheet kapanışında yeniden yükleniyor.
+- Moderasyonda kaldırılan fotoğraflar (nokta/check-in/paylaşım) yalnızca URL'den ayrılır; dosya public `photos` bucket'ında, adresi bilen için nesne silinene dek okunabilir kalır. Kaldırmada depolama nesnesini de sil (service role gerekir: edge function ya da cron).
 - ~~Moderatörün bekleyen sohbet mesajlarını inceleyebileceği bir yol yok~~ → Faz 3.1 ile çözüldü (yalnızca raporlanan mesaj görünür).
 
 ## 5. Faz 4 — Yayın hazırlığı

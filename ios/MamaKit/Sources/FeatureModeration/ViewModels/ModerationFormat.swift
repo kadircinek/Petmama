@@ -7,6 +7,7 @@ public enum ModerationFormat {
     public static let notFoundMessage = "Bu rapor artık bulunamadı."
     public static let invalidMessage = "Not en fazla 500 karakter olabilir."
     public static let unsuspendedMessage = "Uzaklaştırma kaldırıldı."
+    public static let notRestorableMessage = "Bu içerik iptal edildi ya da silindi; geri açılamaz."
 
     public static func reportCount(_ count: Int) -> String { "\(count) rapor" }
 
@@ -46,8 +47,16 @@ public enum ModerationFormat {
         case .done: return ""
         case .notAllowed: return notAllowedMessage
         case .notFound: return notFoundMessage
-        case .invalid: return invalidMessage
+        case .invalid(let reason): return reason == "not_restorable" ? notRestorableMessage : invalidMessage
         }
+    }
+
+    /// Kuyruk kartındaki zamanlar: ilk ve son rapor farklıysa ikisi (`last`), aynıysa yalnızca `first`.
+    public static func reportTimes(first: Date, last: Date, now: Date,
+                                   language: MamaFormat.Language = .current) -> (first: String, last: String?) {
+        let firstText = MamaFormat.relative(first, now: now, language: language)
+        let lastText = MamaFormat.relative(last, now: now, language: language)
+        return (firstText, lastText == firstText ? nil : lastText)
     }
 
     /// "24 Kasım 2026 tarihine kadar" / "Süresiz".

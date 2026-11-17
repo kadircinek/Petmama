@@ -84,6 +84,7 @@ struct ModerationDetailDTO: Decodable {
         var contentState: String?
         var decision: String?
         var decidedAt: String?
+        var restorable: Bool?
 
         enum CodingKeys: String, CodingKey {
             case targetType = "target_type"
@@ -95,6 +96,7 @@ struct ModerationDetailDTO: Decodable {
             case contentState = "content_state"
             case decision
             case decidedAt = "decided_at"
+            case restorable
         }
     }
 
@@ -131,6 +133,7 @@ struct ModerationDetailDTO: Decodable {
     struct OwnerDTO: Decodable {
         var userId: UUID
         var displayName: String?
+        var avatarUrl: String?
         var isModerator: Bool?
         var removedCount90d: Int?
         var suspensionCount90d: Int?
@@ -139,6 +142,7 @@ struct ModerationDetailDTO: Decodable {
         enum CodingKeys: String, CodingKey {
             case userId = "user_id"
             case displayName = "display_name"
+            case avatarUrl = "avatar_url"
             case isModerator = "is_moderator"
             case removedCount90d = "removed_count_90d"
             case suspensionCount90d = "suspension_count_90d"
@@ -149,6 +153,7 @@ struct ModerationDetailDTO: Decodable {
             ModerationOwnerHistory(
                 userId: userId,
                 displayName: displayName,
+                avatarURL: avatarUrl?.nonEmptyURL,
                 isModerator: isModerator ?? false,
                 removedCount90d: removedCount90d ?? 0,
                 suspensionCount90d: suspensionCount90d ?? 0,
@@ -191,7 +196,8 @@ struct ModerationDetailDTO: Decodable {
             lastReportedAt: dates.max() ?? Date(timeIntervalSince1970: 0),
             contentState: row.contentState.flatMap(ModerationContentState.init(rawValue:)) ?? .live,
             decision: open.isEmpty ? row.decision.flatMap(ModerationDecision.init(rawValue:)) : nil,
-            decidedAt: open.isEmpty ? row.decidedAt.flatMap(PostgresDate.parse) : nil
+            decidedAt: open.isEmpty ? row.decidedAt.flatMap(PostgresDate.parse) : nil,
+            isRestorable: row.restorable ?? true
         )
         return ModerationCaseDetail(moderationCase: summary, reports: entries, owner: owner?.toDomain())
     }

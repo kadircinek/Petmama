@@ -960,5 +960,8 @@
   "İçerik yayında kalsın mı?": "Keep this content up?",
   "İçerik yayında kalır (gizlendiyse geri açılır), açık raporlar kapanır.": "The content stays up (restored if it was hidden) and open reports are closed.",
   "İşleme alındı": "Actioned",
-  "Şu an uzaklaştırılmış: %@": "Currently suspended: %@"
+  "Şu an uzaklaştırılmış: %@": "Currently suspended: %@",
+  "Bu içerik daha önce kaldırıldı (iptal edildi ya da silindi); geri açılamaz. Raporları kapatmak için yine Kaldır'ı seç.": "This content was already removed (cancelled or deleted) and can't be restored. To close the reports, choose Remove again.",
+  "Hesabın askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin.": "Your account is suspended. Meanwhile you can keep reading, but you can't post or send messages.",
+  "İlk %@ · son %@": "First %@ · last %@"
 }

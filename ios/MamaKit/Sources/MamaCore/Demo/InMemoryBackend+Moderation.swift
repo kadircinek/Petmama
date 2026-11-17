@@ -93,8 +93,15 @@ extension InMemoryBackend {
         moderationActions.last { $0.target == target && $0.targetId == id && ($0.action == "approve" || $0.action == "remove") }
     }
 
+    /// Sunucuda `private.moderation_restorable`.
+    func isRestorable(_ target: ReportTarget, _ id: UUID) -> Bool {
+        !(ModerationPolicy.nonRestorableTargets.contains(target)
+          && moderationActions.contains { $0.target == target && $0.targetId == id && $0.action == "remove" })
+    }
+
     func contentState(_ target: ReportTarget, _ id: UUID, _ preview: Preview) -> ModerationContentState {
         if target == .user { return preview.found ? .live : .gone }
+        if !isRestorable(target, id) { return .removed }
         if lastDecision(target, id)?.action == "remove" { return .removed }
         if !preview.found { return .gone }
         if preview.rejected { return .removed }
@@ -124,7 +131,8 @@ extension InMemoryBackend {
             lastReportedAt: dates.max() ?? now(),
             contentState: contentState(target, id, preview),
             decision: decision.flatMap { ModerationDecision(rawValue: $0.action) },
-            decidedAt: decided ? (decision?.createdAt ?? records.compactMap(\.resolvedAt).max()) : nil
+            decidedAt: decided ? (decision?.createdAt ?? records.compactMap(\.resolvedAt).max()) : nil,
+            isRestorable: isRestorable(target, id)
         )
     }
 
@@ -200,6 +208,7 @@ extension InMemoryBackend: ModeratorRepository {
             return ModerationOwnerHistory(
                 userId: ownerId,
                 displayName: users[ownerId]?.displayName,
+                avatarURL: users[ownerId]?.avatarURL,
                 isModerator: isModerator(ownerId),
                 removedCount90d: recent.filter { $0.ownerId == ownerId && $0.action == "remove" && $0.target != .user }.count,
                 suspensionCount90d: recent.filter { $0.target == .user && $0.targetId == ownerId && $0.action == "suspend" }.count,
@@ -216,6 +225,7 @@ extension InMemoryBackend: ModeratorRepository {
         if (text?.count ?? 0) > ModerationPolicy.maxNoteLength { return .invalid(reason: "note_too_long") }
         guard reportRecords.contains(where: { $0.draft.target == target && $0.draft.targetId == id }) else { return .notFound }
 
+        if decision == .approve, !isRestorable(target, id) { return .invalid(reason: "not_restorable") }
         let owner = moderationPreview(target, id).ownerId
         switch decision {
         case .approve: approveContent(target, id)

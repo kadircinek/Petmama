@@ -2841,6 +2841,23 @@
         }
       }
     },
+    "Bu içerik daha önce kaldırıldı (iptal edildi ya da silindi); geri açılamaz. Raporları kapatmak için yine Kaldır'ı seç.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu içerik daha önce kaldırıldı (iptal edildi ya da silindi); geri açılamaz. Raporları kapatmak için yine Kaldır'ı seç."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This content was already removed (cancelled or deleted) and can't be restored. To close the reports, choose Remove again."
+          }
+        }
+      }
+    },
     "Bu işlem geri alınamaz.": {
       "extractionState": "manual",
       "localizations": {
@@ -6798,6 +6815,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your account is suspended until %@. Until then you can keep reading, but you can't post or send messages."
+          }
+        }
+      }
+    },
+    "Hesabın askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin.": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hesabın askıya alındı. Bu sürede okuyabilirsin ama paylaşım yapamaz, mesaj gönderemezsin."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account is suspended. Meanwhile you can keep reading, but you can't post or send messages."
           }
         }
       }
@@ -15672,6 +15706,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your interests"
+          }
+        }
+      }
+    },
+    "İlk %@ · son %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk %@ · son %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First %@ · last %@"
           }
         }
       }

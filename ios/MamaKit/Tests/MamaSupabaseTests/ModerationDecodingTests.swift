@@ -47,13 +47,13 @@ final class ModerationDecodingTests: XCTestCase {
         {"status":"ok",
          "case":{"target_type":"user","target_id":"00000000-0000-4000-8001-000000000002","title":"Emre","body":null,
                  "photo_url":null,"owner_id":"00000000-0000-4000-8001-000000000002","owner_name":"Emre",
-                 "content_state":"live","decision":null,"decided_at":null},
+                 "content_state":"live","decision":null,"decided_at":null,"restorable":false},
          "reports":[{"id":"00000000-0000-4000-8099-000000000001","reason":"harassment","details":"Kaba","created_at":"2026-11-17T10:00:00+00:00",
                      "reporter_id":"00000000-0000-4000-8001-000000000003","reporter_name":"Zeynep","status":"open"},
                     {"id":"00000000-0000-4000-8099-000000000002","reason":"spam","details":null,"created_at":"2026-11-10T10:00:00+00:00",
                      "reporter_id":null,"reporter_name":null,"status":"actioned"}],
          "owner":{"user_id":"00000000-0000-4000-8001-000000000002","display_name":"Emre","is_moderator":false,
-                  "removed_count_90d":2,"suspension_count_90d":1,"suspended_until":"infinity"}}
+                  "avatar_url":"https://x.test/emre.jpg","removed_count_90d":2,"suspension_count_90d":1,"suspended_until":"infinity"}}
         """
         let detail = try XCTUnwrap(try SupabaseDecoding.moderationCaseDetail(from: data(json)))
         XCTAssertEqual(detail.moderationCase.target, .user)
@@ -68,6 +68,8 @@ final class ModerationDecodingTests: XCTestCase {
         XCTAssertEqual(detail.owner?.removedCount90d, 2)
         XCTAssertEqual(detail.owner?.suspensionCount90d, 1)
         XCTAssertEqual(detail.owner?.suspendedUntil, .distantFuture, "'infinity' = süresiz")
+        XCTAssertEqual(detail.owner?.avatarURL, URL(string: "https://x.test/emre.jpg"))
+        XCTAssertFalse(detail.moderationCase.isRestorable)
 
         XCTAssertNil(try SupabaseDecoding.moderationCaseDetail(from: data(#"{"status":"not_found"}"#)))
         XCTAssertThrowsError(try SupabaseDecoding.moderationCaseDetail(from: data(#"{"status":"not_allowed"}"#))) { error in
@@ -124,8 +126,11 @@ final class ModerationDecodingTests: XCTestCase {
         let dated = SupabaseErrorMapper.map(PostgrestError(detail: "2026-11-24T10:00:00Z", hint: "suspended", code: "P0001", message: "suspended"))
         XCTAssertEqual(dated as? MamaError, .suspended(until: until))
         let indefinite = SupabaseErrorMapper.map(PostgrestError(detail: "infinity", hint: "suspended", code: "P0001", message: "suspended"))
-        XCTAssertEqual(indefinite as? MamaError, .suspended(until: nil))
+        XCTAssertEqual(indefinite as? MamaError, .suspendedIndefinitely)
         let noDetail = SupabaseErrorMapper.map(PostgrestError(code: "P0001", message: "suspended"))
-        XCTAssertEqual(noDetail as? MamaError, .suspended(until: nil))
+        XCTAssertEqual(noDetail as? MamaError, .suspended(until: nil), "bitiş bilinmiyor: süresiz denmez")
+        let garbage = SupabaseErrorMapper.map(PostgrestError(detail: "yarın", hint: "suspended", code: "P0001", message: "suspended"))
+        XCTAssertEqual(garbage as? MamaError, .suspended(until: nil))
+        XCTAssertFalse(MamaError.suspended(until: nil).userMessage.contains("süresiz"))
     }
 }

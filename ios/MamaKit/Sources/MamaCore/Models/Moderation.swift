@@ -97,6 +97,8 @@ public struct ModerationCase: Identifiable, Hashable, Sendable {
     /// Kapananlar'da verilen karar.
     public var decision: ModerationDecision?
     public var decidedAt: Date?
+    /// `false`: içerik iptal edildi/silindi/temizlendi; "Uygun" ile geri açılamaz.
+    public var isRestorable: Bool
 
     public var id: String { "\(target.rawValue)-\(targetId.uuidString)" }
 
@@ -114,7 +116,8 @@ public struct ModerationCase: Identifiable, Hashable, Sendable {
         lastReportedAt: Date,
         contentState: ModerationContentState,
         decision: ModerationDecision? = nil,
-        decidedAt: Date? = nil
+        decidedAt: Date? = nil,
+        isRestorable: Bool = true
     ) {
         self.target = target
         self.targetId = targetId
@@ -130,6 +133,7 @@ public struct ModerationCase: Identifiable, Hashable, Sendable {
         self.contentState = contentState
         self.decision = decision
         self.decidedAt = decidedAt
+        self.isRestorable = isRestorable
     }
 
     /// Henüz karar verilmemiş (Açık sekmesi).
@@ -162,15 +166,17 @@ public struct ModerationReportEntry: Identifiable, Hashable, Sendable {
 public struct ModerationOwnerHistory: Hashable, Sendable {
     public var userId: UUID
     public var displayName: String?
+    public var avatarURL: URL?
     public var isModerator: Bool
     public var removedCount90d: Int
     public var suspensionCount90d: Int
     /// Şu an uzaklaştırılmışsa bitiş; süresiz `Date.distantFuture`.
     public var suspendedUntil: Date?
 
-    public init(userId: UUID, displayName: String?, isModerator: Bool = false, removedCount90d: Int, suspensionCount90d: Int, suspendedUntil: Date?) {
+    public init(userId: UUID, displayName: String?, avatarURL: URL? = nil, isModerator: Bool = false, removedCount90d: Int, suspensionCount90d: Int, suspendedUntil: Date?) {
         self.userId = userId
         self.displayName = displayName
+        self.avatarURL = avatarURL
         self.isModerator = isModerator
         self.removedCount90d = removedCount90d
         self.suspensionCount90d = suspensionCount90d
@@ -214,6 +220,9 @@ public enum ModerationPolicy {
     public static let closedWindowDays = 30
     /// Sahip geçmişi penceresi.
     public static let historyWindowDays = 90
+
+    /// Kaldırması geri alınamayan hedefler (iptal / silme / fotoğraf temizleme).
+    public static let nonRestorableTargets: Set<ReportTarget> = [.meetup, .need, .animal, .checkin, .photo]
 
     /// Süresiz uzaklaştırma (`'infinity'` / `Date.distantFuture`).
     public static func isIndefinite(_ until: Date) -> Bool {

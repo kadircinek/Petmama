@@ -111,7 +111,8 @@ tests/                      SQL testleri + run.sh
   **Kaldır** (içerik gizlenir/iptal/silinir, raporlar `actioned`) ve **uzaklaştırma** (7 / 30 gün / süresiz) kararları
   `moderation_*` RPC'leriyle verilir ve `moderation_actions`'a yazılır. Uzaklaştırılan kullanıcının her yazması
   `suspended` istisnası alır (P0001, detail = bitiş ya da `infinity`); okumaları açık kalır. `profiles` okuma yetkisi
-  sütun bazlıdır: `suspended_until` başkalarına görünmez, `select=*` hata verir.
+  sütun bazlıdır: `suspended_until` başkalarına görünmez, `select=*` hata verir. Moderatörün `reports` üzerinde
+  doğrudan güncelleme yetkisi yoktur (0027); kararlar yalnızca `moderation_decide` ile ve kayıt altında verilir.
   Acil durumda elle: `update public.profiles set suspended_until = 'infinity' where id = '<uuid>';`
   Akış ve özet yarıçapı sunucuda **1000–10 000 m**'ye sıkıştırılır (`cell` ≈ 1,1 km'lik ızgara; daha küçük yarıçap
   kullanıcının kendi paylaşımını kaçırırdı), `max_rows` 1–50'ye. Paylaşım satırındaki `created_at` milisaniyeye

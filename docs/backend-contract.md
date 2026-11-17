@@ -99,7 +99,7 @@ Doğrudan tablo erişimi (RLS ile)
 | animal_spots | herkes | RPC ile | RPC ile | — |
 | guardians | herkes | kendi | kendi | kendi |
 | follows | kendi | kendi | — | kendi |
-| reports | moderatör | kendi | moderatör | — |
+| reports | moderatör | kendi (uzaklaştırmada da) | — (yalnızca `moderation_decide`, 0027) | — |
 | blocks | kendi | kendi | — | kendi |
 | notifications | kendi | — (sunucu) | kendi (`read_at`) | kendi |
 | device_tokens | — | RPC ile | RPC ile | kendi |
@@ -550,9 +550,14 @@ infinity'` atar. Okuma RPC'leri ve izin verilen yazmalar (`register_device_token
 `mark_conversation_read`, `leave_meetup`, `cancel_meetup`, `withdraw_connection_request`, `remove_connection`,
 `delete_community_post`, `delete_community_comment`) uzaklaştırmayı denetlemeyen `private.require_reader()`'ı kullanır.
 RPC'yi atlayan doğrudan yazmalar RLS `with check` içinde `public.assert_can_write()` ile aynı istisnayı atar:
-`animals` insert/update, `follows` insert, `guardians` insert/update, `reports` insert. Açık kalanlar: `blocks`,
-`profiles` (kendi), `notification_prefs`, `notifications` (okundu/sil), takipten/koruyuculuktan çıkma, hesap silme,
-Storage yüklemesi (profil fotoğrafı). İstemci istisnayı `MamaError.suspended(until:)` olarak gösterir.
+`animals` insert/update, `follows` insert, `guardians` insert/update ve (0027) Storage `photos` insert/update.
+`profiles` güncellemesinde `display_name` / `avatar_url` değişirse trigger aynı istisnayı atar (0027).
+Açık kalanlar: `blocks`, `reports` insert (taciz edilen kişi bildirebilsin), kendi `profiles.neighborhood`,
+`notification_prefs`, `notifications` (okundu/sil), takipten/koruyuculuktan çıkma, Storage silme, hesap silme.
+Güvenlik eylemleri (0027): `respond_connection(…, false)` (reddetmek; kabul kapalı) ve `update_social_profile(false, …)`
+yalnızca hakkımda/ilgi değişmeden gizlenmek için (görünür olmak ya da metin düzenlemek kapalı).
+İstemci istisnayı `MamaError.suspended(until:)` (tarihli; bitiş okunamazsa genel mesaj) ya da
+`.suspendedIndefinitely` olarak gösterir.
 
 ## RPC'ler (hepsi auth, moderatörlük her çağrıda `profiles.is_moderator` ile yeniden doğrulanır)
 
@@ -561,7 +566,7 @@ Storage yüklemesi (profil fotoğrafı). İstemci istisnayı `MamaError.suspende
 | `moderation_open_count` | — | `int` (açık raporu olan hedef sayısı) | `0` |
 | `moderation_queue` | `p_closed boolean default false, max_rows int default 50` (1–200) | satırlar ↓ | 0 satır |
 | `moderation_target_reports` | `p_target_type report_target, p_target_id uuid` | `jsonb` ↓ | `{status:'not_allowed'}` |
-| `moderation_decide` | `p_target_type, p_target_id, p_action text (approve\|remove), p_note text default null` | `{status:'ok', closed_reports}` \| `not_found` \| `{status:'invalid', reason:'action'\|'note_too_long'}` | `{status:'not_allowed'}` |
+| `moderation_decide` | `p_target_type, p_target_id, p_action text (approve\|remove), p_note text default null` | `{status:'ok', closed_reports}` \| `not_found` \| `{status:'invalid', reason:'action'\|'note_too_long'\|'not_restorable'}` | `{status:'not_allowed'}` |
 | `moderation_suspend_user` | `p_user_id uuid, p_days int (7\|30\|null = süresiz), p_note text default null` | `{status:'ok', suspended_until:'<ISO>'\|'infinity'}` \| `not_found` \| `{status:'invalid', reason:'days'\|'note_too_long'}`; kendisi ya da moderatör → `not_allowed` | `{status:'not_allowed'}` |
 | `moderation_unsuspend_user` | `p_user_id uuid` | `{status:'ok'}` \| `not_found` | `{status:'not_allowed'}` |
 | `my_suspension` | — | `timestamptz` (yoksa/dolduysa `null`; süresiz `infinity`) | — |
@@ -575,9 +580,9 @@ check-in'in noktası; ihtiyaç ve paylaşımda tür anahtarı (`vet`, `note`…)
 mesajın metni** döner; sohbetin geri kalanı hiçbir moderasyon RPC'sinde yoktur.
 
 `moderation_target_reports`: `{status:'ok', case:{target_type, target_id, title, body, photo_url, owner_id,
-owner_name, content_state, decision, decided_at}, reports:[{id, reason, details, created_at, reporter_id,
-reporter_name, status}], owner:{user_id, display_name, is_moderator, removed_count_90d, suspension_count_90d,
-suspended_until}|null}`; hiç raporu olmayan hedef → `{status:'not_found'}`.
+owner_name, content_state, decision, decided_at, restorable}, reports:[{id, reason, details, created_at, reporter_id,
+reporter_name, status}], owner:{user_id, display_name, avatar_url, is_moderator, removed_count_90d,
+suspension_count_90d, suspended_until}|null}`; hiç raporu olmayan hedef → `{status:'not_found'}`.
 
 ### Kararların etkisi
 
@@ -590,5 +595,7 @@ suspended_until}|null}`; hiç raporu olmayan hedef → `{status:'not_found'}`.
 | `photo` | — | check-in fotoğrafı; o id'de check-in yoksa noktanın fotoğrafı temizlenir |
 | `user` | — | içerik yok; yalnızca raporlar kapanır (uzaklaştırma ayrı karar) |
 
+Buluşma iptali, ihtiyaç/hayvan silme ve check-in/fotoğraf temizleme **geri alınamaz** (0027): bu hedeflerde bir
+`remove` kaydı varsa durum hep `removed`, `restorable = false` ve `approve` → `{status:'invalid', reason:'not_restorable'}`.
 `approve` açık raporları `dismissed`, `remove` `actioned` yapar (`resolved_at = now()`); her karar
 `moderation_actions`'a yazılır. Kapanan raporlar otomatik gizleme sayımına girmez (yalnızca açık raporlar).

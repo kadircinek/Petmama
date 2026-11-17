@@ -118,8 +118,14 @@ public struct ModerationCaseScreen: View {
                     .font(MamaFont.caption)
                     .foregroundStyle(model.isNoteTooLong ? MamaColor.statusUrgent : MamaColor.textSecondary)
             }
-            Button { pendingDecision = .approve } label: { Text("Uygun, yayında kalsın") }
-                .buttonStyle(.mamaPrimary(accent: MamaColor.statusFed, systemImage: "checkmark"))
+            if model.canApprove {
+                Button { pendingDecision = .approve } label: { Text("Uygun, yayında kalsın") }
+                    .buttonStyle(.mamaPrimary(accent: MamaColor.statusFed, systemImage: "checkmark"))
+            } else {
+                Text("Bu içerik daha önce kaldırıldı (iptal edildi ya da silindi); geri açılamaz. Raporları kapatmak için yine Kaldır'ı seç.")
+                    .font(MamaFont.caption)
+                    .foregroundStyle(MamaColor.textSecondary)
+            }
             Button { pendingDecision = .remove } label: { Text("Kaldır") }
                 .buttonStyle(.mamaSecondary(tint: MamaColor.statusUrgent, systemImage: "trash"))
         }
@@ -153,7 +159,7 @@ public struct ModerationCaseScreen: View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(model.target == .user ? String(localized: "Raporlanan kullanıcı") : String(localized: "İçerik sahibi"))
             HStack(spacing: 12) {
-                AvatarView(name: owner.displayName ?? "?", url: nil, size: 44)
+                AvatarView(name: owner.displayName ?? "?", url: owner.avatarURL, size: 44)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(verbatim: owner.displayName ?? String(localized: "Silinmiş kullanıcı"))
                         .font(MamaFont.headline)

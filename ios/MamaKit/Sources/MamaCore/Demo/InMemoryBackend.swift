@@ -147,6 +147,10 @@ public actor InMemoryBackend {
 
     /// Yazma kapısı (sunucuda `private.require_uid()`): oturum + uzaklaştırma. Okumalar ve izin verilen
     /// yazmalar (engelleme, profil, bildirim ayarları, ayrılma/silme) `requireUser()` kullanır.
+    func isSuspended(_ userId: UUID) -> Bool {
+        ModerationPolicy.isSuspended(until: users[userId]?.suspendedUntil, now: now())
+    }
+
     func requireWriter() throws -> UUID {
         let userId = try requireUser()
         if let until = users[userId]?.suspendedUntil, until > now() {
@@ -694,6 +698,10 @@ extension InMemoryBackend: ProfileRepository {
 
     public func updateProfile(displayName: String, neighborhood: String?, avatarURL: URL?) async throws -> UserProfile {
         let userId = try requireUser()
+        // Herkese görünen ad ve fotoğraf uzaklaştırmada değişmez (semt açık).
+        if displayName != users[userId]?.displayName || (avatarURL != nil && avatarURL != users[userId]?.avatarURL) {
+            _ = try requireWriter()
+        }
         guard !ContentFilter.containsProfanity(displayName) else { throw MamaError.rejectedContent }
         guard var user = users[userId] else { throw MamaError.notFound }
         user.displayName = displayName
@@ -787,7 +795,8 @@ extension InMemoryBackend: NotificationRepository {
 
 extension InMemoryBackend: ModerationRepository {
     public func report(_ draft: ReportDraft) async throws {
-        let reporter = try requireWriter()
+        // Taciz edilen uzaklaştırılmış kullanıcı da bildirebilsin: rapor eklemek açık.
+        let reporter = try requireUser()
         reportRecords.append(ReportRecord(reporterId: reporter, draft: draft, createdAt: now()))
         guard [.post, .comment, .chatMessage].contains(draft.target) else { return }
         // Sunucuyla aynı: hedefin AÇIK raporlarını yazan farklı kişi sayısı.

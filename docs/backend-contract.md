@@ -94,7 +94,7 @@ Doğrudan tablo erişimi (RLS ile)
 
 | Tablo | select | insert | update | delete |
 |---|---|---|---|---|
-| profiles | herkes (public alanlar) | kendi | kendi (trust/verified/moderator hariç) | — |
+| profiles | herkes (public alanlar; `suspended_until` hariç, sütun bazlı yetki) | kendi | kendi (trust/verified/moderator/suspended_until hariç) | — |
 | animals | herkes | authenticated, `created_by = auth.uid()` | oluşturan veya doğrulanmış besleyici | — |
 | animal_spots | herkes | RPC ile | RPC ile | — |
 | guardians | herkes | kendi | kendi | kendi |
@@ -526,3 +526,69 @@ konu `conversation:<conversation_id>`, olay `message`, payload yalnızca `{conve
 `conversation_messages` ile çeker). `realtime.messages` üzerindeki `chat_members_can_listen` politikası dinlemeyi
 `can_listen_conversation(realtime.topic())` ile üyelere sınırlar. `realtime.send` yoksa (yerel test imajı) kurulum
 atlanır; istemci bağlantı yoksa 5 sn'de bir yeniler.
+
+# Moderasyon — v0.4 (Faz 3.1, D21)
+
+Spec: `docs/superpowers/specs/2026-11-17-moderasyon-design.md`. Migration: `20261117000026_moderation.sql`,
+testler: `supabase/tests/97_moderation.sql`.
+
+## Tablolar
+
+- `profiles.suspended_until timestamptz null` — `'infinity'` = süresiz. Başkalarına okunmaz: `profiles` okuma yetkisi
+  sütun bazlıdır (`id, display_name, avatar_url, neighborhood, trust_score, is_verified_feeder, is_moderator,
+  created_at`). **`select=*` artık hata verir**; istemci sütunları açıkça seçer.
+- `moderation_actions(id, moderator_id → profiles on delete set null, target_type report_target, target_id,
+  target_owner_id → profiles on delete set null, action text check (approve|remove|suspend|unsuspend),
+  note ≤ 500, suspend_days int null, created_at)` — RLS açık, doğrudan erişim yok. `target_owner_id` sözleşmeye ek:
+  içerik silinse de sahibinin "son 90 günde kaldırılan" sayısı tutulur.
+
+## Uzaklaştırma
+
+Uzaklaştırılan kullanıcı **okur ama yazamaz**. `private.require_uid()` (her yazma RPC'sinin ilk işi) `suspended_until >
+now()` ise `raise exception 'suspended' using errcode = 'P0001', hint = 'suspended', detail = '<ISO 8601 UTC> |
+infinity'` atar. Okuma RPC'leri ve izin verilen yazmalar (`register_device_token`, `update_notify_center`,
+`mark_conversation_read`, `leave_meetup`, `cancel_meetup`, `withdraw_connection_request`, `remove_connection`,
+`delete_community_post`, `delete_community_comment`) uzaklaştırmayı denetlemeyen `private.require_reader()`'ı kullanır.
+RPC'yi atlayan doğrudan yazmalar RLS `with check` içinde `public.assert_can_write()` ile aynı istisnayı atar:
+`animals` insert/update, `follows` insert, `guardians` insert/update, `reports` insert. Açık kalanlar: `blocks`,
+`profiles` (kendi), `notification_prefs`, `notifications` (okundu/sil), takipten/koruyuculuktan çıkma, hesap silme,
+Storage yüklemesi (profil fotoğrafı). İstemci istisnayı `MamaError.suspended(until:)` olarak gösterir.
+
+## RPC'ler (hepsi auth, moderatörlük her çağrıda `profiles.is_moderator` ile yeniden doğrulanır)
+
+| RPC | Parametreler | Dönüş | Moderatör değilse |
+|---|---|---|---|
+| `moderation_open_count` | — | `int` (açık raporu olan hedef sayısı) | `0` |
+| `moderation_queue` | `p_closed boolean default false, max_rows int default 50` (1–200) | satırlar ↓ | 0 satır |
+| `moderation_target_reports` | `p_target_type report_target, p_target_id uuid` | `jsonb` ↓ | `{status:'not_allowed'}` |
+| `moderation_decide` | `p_target_type, p_target_id, p_action text (approve\|remove), p_note text default null` | `{status:'ok', closed_reports}` \| `not_found` \| `{status:'invalid', reason:'action'\|'note_too_long'}` | `{status:'not_allowed'}` |
+| `moderation_suspend_user` | `p_user_id uuid, p_days int (7\|30\|null = süresiz), p_note text default null` | `{status:'ok', suspended_until:'<ISO>'\|'infinity'}` \| `not_found` \| `{status:'invalid', reason:'days'\|'note_too_long'}`; kendisi ya da moderatör → `not_allowed` | `{status:'not_allowed'}` |
+| `moderation_unsuspend_user` | `p_user_id uuid` | `{status:'ok'}` \| `not_found` | `{status:'not_allowed'}` |
+| `my_suspension` | — | `timestamptz` (yoksa/dolduysa `null`; süresiz `infinity`) | — |
+
+`moderation_queue` satırı: `target_type, target_id, title, body (≤300), photo_url, owner_id, owner_name, report_count,
+reasons report_reason[], first_reported_at, last_reported_at, content_state ('live'|'pending'|'removed'|'gone'),
+decision ('approve'|'remove'|null), decided_at`. **Açık**: açık raporu olan hedefler, sayılar açık raporlar; sıra
+rapor sayısı azalan, ilk rapor artan. **Kapananlar** (`p_closed`): açık raporu kalmamış ve son raporu **son 30 günde**
+kapanmış hedefler, son kararla; yeniden eskiye. Önizlemede `title`: nokta/hayvan adı, buluşma başlığı, kullanıcı adı,
+check-in'in noktası; ihtiyaç ve paylaşımda tür anahtarı (`vet`, `note`…). **Sohbet mesajında yalnızca raporlanan
+mesajın metni** döner; sohbetin geri kalanı hiçbir moderasyon RPC'sinde yoktur.
+
+`moderation_target_reports`: `{status:'ok', case:{target_type, target_id, title, body, photo_url, owner_id,
+owner_name, content_state, decision, decided_at}, reports:[{id, reason, details, created_at, reporter_id,
+reporter_name, status}], owner:{user_id, display_name, is_moderator, removed_count_90d, suspension_count_90d,
+suspended_until}|null}`; hiç raporu olmayan hedef → `{status:'not_found'}`.
+
+### Kararların etkisi
+
+| Hedef | `approve` | `remove` |
+|---|---|---|
+| `spot`, `post`, `comment`, `chat_message` | `moderation_state = 'approved'` (otomatik gizlendiyse geri açılır) | `moderation_state = 'rejected'` (görünürlük yardımcıları değişmedi: nokta/paylaşım/yorum yalnızca moderatöre, mesaj kimseye) |
+| `meetup` | — | `status = 'cancelled'`, sohbet `closed_at` (katılanlara `meetup_cancelled` bildirimi) |
+| `need`, `animal` | — | satır silinir |
+| `checkin` | — | `photo_url = null` |
+| `photo` | — | check-in fotoğrafı; o id'de check-in yoksa noktanın fotoğrafı temizlenir |
+| `user` | — | içerik yok; yalnızca raporlar kapanır (uzaklaştırma ayrı karar) |
+
+`approve` açık raporları `dismissed`, `remove` `actioned` yapar (`resolved_at = now()`); her karar
+`moderation_actions`'a yazılır. Kapanan raporlar otomatik gizleme sayımına girmez (yalnızca açık raporlar).

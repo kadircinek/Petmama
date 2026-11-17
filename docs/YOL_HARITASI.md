@@ -52,7 +52,7 @@ ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar hari
 
 | # | Özellik | Not |
 |---|---|---|
-| 3.1 | Moderasyon paneli (rapor kuyruğu, gizle/ban) | Şu an yalnızca SQL Editor; App Review UGC raporlarına hızlı müdahale bekliyor |
+| 3.1 ✅ | Moderasyon paneli (rapor kuyruğu, gizle/ban) | Tamamlandı (17 Kasım 2026, D21): Profil › Moderasyon, `moderation_*` RPC'leri, uzaklaştırma yazmayı engeller |
 | 3.2 | Görsel moderasyon edge function'ı | D11'de kanca bırakıldı ama fonksiyon yok; `photos` bucket'ı public |
 | 3.3 | `donation_stats` beslemesi + `donation_delivered` bildirimi | Hiçbir şey yazmıyor; "Bağışım nereye gitti?" boş kalıyor |
 | 3.4 | Realtime (harita 60 sn'de bir yokluyor) | v1.1 adayı |
@@ -68,7 +68,7 @@ ihtiyaç/hayvan/koruyucu/nokta notu-fotoğrafına da uygulanıyor (noktalar hari
 - Harita her kamera hareketinde buluşmaları yeniden istiyor; debounce/merkez kontrolü.
 - Bağlantı kaldırılıp yeniden kabul edilince eski sohbet geçmişi geri geliyor (spec'e uygun); arayüzde belirtilebilir.
 - Noktadan açılan buluşmada "evine çok yakın" uyarısı yanıltıcı olabilir; sohbet yığını tekrar tekrar büyüyebilir; bazı ekranlar her sheet kapanışında yeniden yükleniyor.
-- Moderatörün bekleyen sohbet mesajlarını inceleyebileceği bir yol yok (Faz 3.1 moderasyon paneliyle birlikte).
+- ~~Moderatörün bekleyen sohbet mesajlarını inceleyebileceği bir yol yok~~ → Faz 3.1 ile çözüldü (yalnızca raporlanan mesaj görünür).
 
 ## 5. Faz 4 — Yayın hazırlığı
 

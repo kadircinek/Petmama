@@ -85,7 +85,8 @@ tests/                      SQL testleri + run.sh
    İkisi de yoksa `push-dispatch` cron işi hiçbir şey yapmaz. Kuyruk boşken edge function çağrılmaz.
    Kontrol: `select * from cron.job;` ve `select * from net._http_response order by created desc limit 5;`
 
-6. **Moderatör**: `update public.profiles set is_moderator = true where id = '<uuid>';` (SQL Editor).
+6. **Moderatör**: `update public.profiles set is_moderator = true where id = '<uuid>';` (SQL Editor). Moderatör
+   raporları uygulamada Profil › **Moderasyon**'dan inceler (D21); geri almak için `is_moderator = false`.
 
 ## Davranış notları
 
@@ -99,16 +100,19 @@ tests/                      SQL testleri + run.sh
 - **Hata eşlemesi**: iş kuralları jsonb `status` döner. Exception mesajları: `not_authenticated` (42501),
   `invalid_coordinates` / `invalid_parameter` / `invalid_title` / `invalid_kind` (22023),
   `not_found` (P0002, detail = spot/need/animal/post/comment),
-  `rejected_content` (P0001, hint = profanity; `create_need`, profil adı, hayvan metinleri).
+  `rejected_content` (P0001, hint = profanity; `create_need`, profil adı, hayvan metinleri),
+  `suspended` (P0001, hint = suspended, detail = bitiş ISO 8601 / `infinity`; uzaklaştırılmış kullanıcının yazmaları).
 - **Mahalle** (D17): dört tablo da yalnızca RPC ile okunur/yazılır ve RPC'lerin hiçbiri anon'a açık değildir.
   Paylaşımın yalnızca kaba konumu (`cell`, 2 ondalık ≈ 1,1 km) saklanır; bulanık/özel noktaya bağlı paylaşımda
   `cell` gösterilen (bulanık) konumdan türetilir. `pending` içerik (güven puanı < 5 ya da 3 farklı kullanıcının
-  **açık** raporu) yalnızca yazarına ve moderatöre görünür. Moderatör incelemesi (SQL Editor):
-  ```sql
-  update public.reports set status = 'dismissed', resolved_at = now() where target_type = 'post' and target_id = '<uuid>';
-  update public.community_posts set moderation_state = 'approved' where id = '<uuid>';   -- ya da 'rejected'
-  ```
-  Raporlar kapatılmadan yeniden onaylanan içerik bir sonraki raporda tekrar gizlenir.
+  **açık** raporu) yalnızca yazarına ve moderatöre görünür.
+- **Moderasyon** (D21, `docs/backend-contract.md` → Moderasyon): inceleme için SQL Editor artık gerekmez. Moderatör
+  uygulamada Profil › Moderasyon'dan rapor kuyruğunu görür; **Uygun** (içerik onaylanır, raporlar `dismissed`),
+  **Kaldır** (içerik gizlenir/iptal/silinir, raporlar `actioned`) ve **uzaklaştırma** (7 / 30 gün / süresiz) kararları
+  `moderation_*` RPC'leriyle verilir ve `moderation_actions`'a yazılır. Uzaklaştırılan kullanıcının her yazması
+  `suspended` istisnası alır (P0001, detail = bitiş ya da `infinity`); okumaları açık kalır. `profiles` okuma yetkisi
+  sütun bazlıdır: `suspended_until` başkalarına görünmez, `select=*` hata verir.
+  Acil durumda elle: `update public.profiles set suspended_until = 'infinity' where id = '<uuid>';`
   Akış ve özet yarıçapı sunucuda **1000–10 000 m**'ye sıkıştırılır (`cell` ≈ 1,1 km'lik ızgara; daha küçük yarıçap
   kullanıcının kendi paylaşımını kaçırırdı), `max_rows` 1–50'ye. Paylaşım satırındaki `created_at` milisaniyeye
   kırpılmış döner; `community_feed` `p_before`'u aynı kırpılmış değerle karşılaştırır (istemci son satırın
